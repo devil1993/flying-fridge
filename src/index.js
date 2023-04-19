@@ -5,14 +5,20 @@ import './index.css';
 import App from './App';
 import reportWebVitals from './reportWebVitals';
 import SignIn from './SignIn';
+import TopNav from './TopNav';
+import EditThanks from './EditThanks';
+import Published from './Published';
 
 const router = createBrowserRouter([
-  { path: '/', element: <App /> },
-  { path: '/signin', element: <SignIn /> }
+  { path: '/login', element: <SignIn /> },
+  { path: '/dashboard', element: <EditThanks /> },
+  { path: '/published-gratitude', element: <Published /> },
+  { path: '/', element: <App /> }
 ]);
 const root = ReactDOM.createRoot(document.getElementById('root'));
 root.render(
   <React.StrictMode>
+    <TopNav />
     <RouterProvider router={router} />
   </React.StrictMode>
 );
