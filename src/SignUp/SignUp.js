@@ -30,13 +30,15 @@ function Copyright(props) {
 const theme = createTheme();
 
 export default function SignUp() {
+  let [error, setError] = React.useState('');
   const handleSubmit = (event) => {
     event.preventDefault();
     const data = new FormData(event.currentTarget);
-    console.log({
-      email: data.get('email'),
-      password: data.get('password'),
-    });
+    console.log(data);
+
+    if (data.get('password') !== data.get('cnfmPassword')){
+      setError('Password and Confirm Password does not match.')
+    }
   };
 
   let navigate = useNavigate();
@@ -78,6 +80,8 @@ export default function SignUp() {
               type="password"
               id="password"
               autoComplete="enter-password"
+              error={error !== ''}
+              helperText={error}
             />
              <TextField
               margin="normal"
@@ -88,6 +92,9 @@ export default function SignUp() {
               type="password"
               id="cnfmPassword"
               autoComplete="confirm-password"
+              error={error !== ''}
+              helperText={error}
+
             />
 
             <Button
