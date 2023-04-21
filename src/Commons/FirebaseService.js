@@ -16,20 +16,17 @@ const firebaseConfig = {
 // Initialize Firebase
 const app = initializeApp(firebaseConfig);
 
-class FirebaseLoginService{
-    register(){
-
-    }
-    logIn(){
-
-    }
-    logOut(){
-
-    }
-}
-
-class FirebaseGratitudeService{
+function registerToApp(){
 
 }
+
+function signInToApp(){
+
+}
+
+function signOutFromApp(){
+
+}
+
 
 export default { FirebaseGratitudeService, FirebaseLoginService }
