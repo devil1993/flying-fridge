@@ -18,8 +18,14 @@ const firebaseConfig = {
 const app = initializeApp(firebaseConfig);
 const auth = getAuth();
 
-async function registerToApp(email, password){
-  let userinfo = await createUserWithEmailAndPassword(auth, email, password);
+export async function registerToApp(email, password){
+  try{
+    let userinfo = await createUserWithEmailAndPassword(auth, email, password);
+    return [true, userinfo];
+  }
+  catch(e){
+    return [false, e];
+  }
 }
 
 function signInToApp(){
@@ -31,4 +37,3 @@ function signOutFromApp(){
 }
 
 
-export default { FirebaseGratitudeService, FirebaseLoginService }

@@ -5,7 +5,7 @@ import CssBaseline from '@mui/material/CssBaseline';
 import TextField from '@mui/material/TextField';
 import FormControlLabel from '@mui/material/FormControlLabel';
 import Checkbox from '@mui/material/Checkbox';
-import {Link} from 'react-router-dom';
+import { Link } from 'react-router-dom';
 import Grid from '@mui/material/Grid';
 import Box from '@mui/material/Box';
 import LockOutlinedIcon from '@mui/icons-material/LockOutlined';
@@ -13,6 +13,10 @@ import Typography from '@mui/material/Typography';
 import Container from '@mui/material/Container';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
 import { useNavigate } from 'react-router-dom';
+import { Alert } from '@mui/material';
+
+
+import { registerToApp } from '../Commons/FirebaseService';
 
 function Copyright(props) {
   return (
@@ -31,17 +35,34 @@ const theme = createTheme();
 
 export default function SignUp() {
   let [error, setError] = React.useState('');
+  let navigate = useNavigate();
   const handleSubmit = (event) => {
     event.preventDefault();
     const data = new FormData(event.currentTarget);
-    console.log(data);
-
-    if (data.get('password') !== data.get('cnfmPassword')){
+    if (data.get('password') !== data.get('confirmPassword')){
       setError('Password and Confirm Password does not match.')
+    }
+    else{
+      setError('');
+      registerToApp(data.get('email'), data.get('password'))
+      .then(([signUpSuccess, response]) => {
+        if(signUpSuccess){
+          alert("Successfully registered. Now Sign in using the credentials.");
+          navigate('/login');
+        }
+        else{
+          setError(response.message);
+        }
+      })
+      
     }
   };
 
-  let navigate = useNavigate();
+  let errorDisplay = <></>;
+  if(error !== ''){
+    errorDisplay = <Alert severity="error">{error}</Alert>
+  }
+  
   return (
     <ThemeProvider theme={theme}>
       <Container component="main" maxWidth="xs">
@@ -80,8 +101,8 @@ export default function SignUp() {
               type="password"
               id="password"
               autoComplete="enter-password"
-              error={error !== ''}
-              helperText={error}
+              // error={error !== ''}
+              // helperText={error}
             />
              <TextField
               margin="normal"
@@ -92,8 +113,8 @@ export default function SignUp() {
               type="password"
               id="cnfmPassword"
               autoComplete="confirm-password"
-              error={error !== ''}
-              helperText={error}
+              // error={error !== ''}
+              // helperText={error}
 
             />
 
@@ -113,6 +134,9 @@ export default function SignUp() {
               </Grid>
             </Grid>
           </Box>
+        </Box>
+        <Box>
+        {errorDisplay}
         </Box>
         <Copyright sx={{ mt: 8, mb: 4 }} />
       </Container>
