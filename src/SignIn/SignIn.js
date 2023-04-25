@@ -6,13 +6,15 @@ import TextField from '@mui/material/TextField';
 import FormControlLabel from '@mui/material/FormControlLabel';
 import Checkbox from '@mui/material/Checkbox';
 // import Link from '@mui/material/Link';
-import {Link} from 'react-router-dom';
+import {Link, useNavigate} from 'react-router-dom';
 import Grid from '@mui/material/Grid';
 import Box from '@mui/material/Box';
 import LockOutlinedIcon from '@mui/icons-material/LockOutlined';
 import Typography from '@mui/material/Typography';
 import Container from '@mui/material/Container';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
+import { checkUserLoggedIn, signInToApp } from '../Commons/FirebaseService';
+import { Alert } from '@mui/material';
 
 function Copyright(props) {
   return (
@@ -30,13 +32,34 @@ function Copyright(props) {
 const theme = createTheme();
 
 export default function SignIn() {
-  const handleSubmit = (event) => {
+  let user = checkUserLoggedIn();
+  let navigate = useNavigate();
+  let [errorDisplay, setErrorDisplay] = React.useState('');
+  if(user){
+    alert('You are already logged in, dashboard will open.');
+    navigate('/dashboard');
+  }
+  const handleSubmit = async (event) => {
     event.preventDefault();
     const data = new FormData(event.currentTarget);
-    console.log({
-      email: data.get('email'),
-      password: data.get('password'),
-    });
+    let email = data.get('email');
+    let password = data.get('password');
+    if(email.trim() === ''){
+      setErrorDisplay(<Alert severity="error">Please enter valid email.</Alert>);
+      return;
+    }
+    if(password === ''){
+      setErrorDisplay(<Alert severity="error">Please enter a password.</Alert>);
+      return;
+    }
+    try{
+      let user = await signInToApp(email, password);
+      navigate('/dashboard');
+    }
+    catch(e){
+      setErrorDisplay(<Alert severity="error">{e.message}</Alert>);
+      return;
+    }
   };
 
   return (
@@ -79,7 +102,7 @@ export default function SignIn() {
               autoComplete="current-password"
             />
             <FormControlLabel
-              control={<Checkbox value="remember" color="primary" />}
+              control={<Checkbox disabled value="remember" color="primary" />}
               label="Remember me"
             />
             <Button
@@ -103,6 +126,9 @@ export default function SignIn() {
               </Grid>
             </Grid>
           </Box>
+        </Box>
+        <Box>
+        {errorDisplay}
         </Box>
         <Copyright sx={{ mt: 8, mb: 4 }} />
       </Container>

@@ -5,6 +5,7 @@ import Button from '@mui/material/Button';
 import IconButton from '@mui/material/IconButton';
 import MenuIcon from '@mui/icons-material/Menu';
 import { Link, Outlet, useNavigate } from "react-router-dom";
+import { checkUserLoggedIn, signOutFromApp } from "./FirebaseService";
   
 function TopNavRouter(props){
   const navigate = useNavigate();
@@ -12,6 +13,16 @@ function TopNavRouter(props){
   function onLoginClick(event){
     navigate("/login");
   }
+
+  function onLogOutClick(event){
+    signOutFromApp()
+    .then(() => {
+      navigate("/");
+    });
+  }
+
+  let user = checkUserLoggedIn();
+
   return (
     <>
       <AppBar position="static">
@@ -28,7 +39,14 @@ function TopNavRouter(props){
             <Typography variant="h6" component="div" sx={{ flexGrow: 1 }}>
               Gratitude
             </Typography>
-            <Button onClick={onLoginClick} color="inherit">Login</Button>
+            {!user && <Button onClick={onLoginClick} color="inherit">Login</Button>}
+            {user && 
+            <>
+            <Button onClick={() => {navigate("/dashboard")}} color="inherit">Dashboard</Button>
+            <Button onClick={onLogOutClick} color="inherit">Log Out</Button>
+            </>
+            }
+
           </Toolbar>
         </AppBar>
         <Outlet />
