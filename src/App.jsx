@@ -48,7 +48,7 @@ function Hi(){
                     <Stack direction="row" spacing={2}>
                       <Stack width="75%" spacing={2}>
                         <TextField id="outlined-basic" label="Name" variant="outlined" />
-                        <TextField id="outlined-basic" label="Description" variant="outlined" />
+                        <TextField id="outlined-basic" label="Description" variant="outlined" multiline />
                         <TextField id="outlined-basic" label="Image URL" variant="outlined" />
                         <Button 
                             variant="contained"
@@ -63,7 +63,7 @@ function Hi(){
                         </Button>
                         {/* <Input type='file' id="outlined-basic" label="Image" variant="outlined" /> */}
                       </Stack>
-                      <Box width="25%" sx={{border: "1px solid red"}}></Box>
+                      <Box width="25%" minWidth={150} sx={{border: "1px solid red"}}></Box>
                     </Stack>
                   </CardContent>
                   <CardActions sx={{
