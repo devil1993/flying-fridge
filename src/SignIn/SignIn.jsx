@@ -16,7 +16,7 @@ import { createTheme, ThemeProvider } from '@mui/material/styles';
 import { checkUserLoggedIn, signInToApp } from '../Commons/FirebaseService';
 import { Alert } from '@mui/material';
 
-function Copyright(props) {
+function Copyright({props}) {
   return (
     <Typography variant="body2" color="text.secondary" align="center" {...props}>
       {'Copyright © '}
@@ -31,14 +31,10 @@ function Copyright(props) {
 
 const theme = createTheme();
 
-export default function SignIn() {
-  let user = checkUserLoggedIn();
-  let navigate = useNavigate();
+export default function SignIn({onLogin}) {
+  console.log("in signin page");
   let [errorDisplay, setErrorDisplay] = React.useState('');
-  if(user){
-    alert('You are already logged in, dashboard will open.');
-    navigate('/dashboard');
-  }
+ 
   const handleSubmit = async (event) => {
     event.preventDefault();
     const data = new FormData(event.currentTarget);
@@ -54,14 +50,14 @@ export default function SignIn() {
     }
     try{
       let user = await signInToApp(email, password);
-      navigate('/dashboard');
+      onLogin(event);
     }
     catch(e){
       setErrorDisplay(<Alert severity="error">{e.message}</Alert>);
       return;
     }
   };
-
+  console.log("rendering login component.")
   return (
     <ThemeProvider theme={theme}>
       <Container component="main" maxWidth="xs">

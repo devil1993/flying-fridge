@@ -11,7 +11,7 @@ function TopNavRouter(props){
   const navigate = useNavigate();
 
   function onLoginClick(event){
-    navigate("/login");
+    navigate("/");
   }
 
   function onLogOutClick(event){
@@ -42,7 +42,7 @@ function TopNavRouter(props){
             {!user && <Button onClick={onLoginClick} color="inherit">Login</Button>}
             {user && 
             <>
-            <Button onClick={() => {navigate("/dashboard")}} color="inherit">Dashboard</Button>
+            <Button onClick={() => {navigate("/")}} color="inherit">Dashboard</Button>
             <Button onClick={onLogOutClick} color="inherit">Log Out</Button>
             </>
             }

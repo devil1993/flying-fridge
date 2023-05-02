@@ -1,23 +1,26 @@
 import { useNavigate } from 'react-router-dom';
-import { checkUserLoggedIn } from '../Commons/FirebaseService'
-import { Alert, Button } from '@mui/material';
+import { checkUserLoggedIn, getUserDetails } from '../Commons/FirebaseService'
+import { Alert, Button, Container, Grid } from '@mui/material';
+import ProfileInfo from './ProfileInfo';
+import GratitudeList from './GratitudeList';
+import GratitudeCard from '../Commons/GratitudeCard';
+import { useState } from 'react';
+import { useEffect } from 'react';
 
 function EditThanks(){
-    let user = checkUserLoggedIn();
-    const navigate = useNavigate();
-    const navigateToLogin = (event) => {
-        navigate('/login');
-    }
-    if (!user){
-        return (
-            <Alert severity="error" action={ <Button color="inherit" size="small" onClick={navigateToLogin}> Log In </Button> }>
-                You are not logged in, please log in to view this page.
-            </Alert>
-        )
-    }
-
-
-    return <h1>Place to edit your gratitude list, {user.email}</h1>
+    return (<Container maxWidth="xl">
+    <Grid container spacing={2}>
+      <Grid item md={12} sm={12} xs={12} lg={12}>
+        <ProfileInfo />
+      </Grid>
+      <Grid item sm={12} md={12} xs={12} lg={8}>
+        <GratitudeList />
+      </Grid>
+      <Grid item sm={12} md={12} xs={12} lg={4}>
+        <GratitudeCard />
+      </Grid>
+    </Grid>
+  </Container>);
 }
 
 export default EditThanks;

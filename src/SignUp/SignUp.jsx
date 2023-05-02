@@ -48,7 +48,7 @@ export default function SignUp() {
       .then(([signUpSuccess, response]) => {
         if(signUpSuccess){
           alert("Successfully registered. Now Sign in using the credentials.");
-          navigate('/login');
+          navigate('/');
         }
         else{
           setError(response.message);
@@ -128,7 +128,7 @@ export default function SignUp() {
             </Button>
             <Grid container>
               <Grid item>
-                <Link to="/login" variant="body2">
+                <Link to="/" variant="body2">
                   {"Already have an account? Sign In"}
                 </Link>
               </Grid>

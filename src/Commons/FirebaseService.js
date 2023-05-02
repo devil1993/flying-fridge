@@ -1,49 +1,55 @@
 // Import the functions you need from the SDKs you need
 import { initializeApp } from "firebase/app";
-import { createUserWithEmailAndPassword, getAuth, signInWithEmailAndPassword, signOut} from "firebase/auth"
-// TODO: Add SDKs for Firebase products that you want to use
-// https://firebase.google.com/docs/web/setup#available-libraries
-
-// Your web app's Firebase configuration
-const firebaseConfig = {
-  apiKey: "AIzaSyB3zcVKb6WbJsugOoMJYBE2GeTS6DHU3nU",
-  authDomain: "flying-fridge.firebaseapp.com",
-  projectId: "flying-fridge",
-  storageBucket: "flying-fridge.appspot.com",
-  messagingSenderId: "709977221159",
-  appId: "1:709977221159:web:ed256516db1d14493a8602"
-};
-
+import {
+  createUserWithEmailAndPassword,
+  getAuth,
+  signInWithEmailAndPassword,
+  signOut,
+} from "firebase/auth";
+import { getFirestore, collection, addDoc, doc, setDoc, getDoc } from "firebase/firestore";
+import firebaseConfig from "../FirebaseConfig";
 // Initialize Firebase
 const app = initializeApp(firebaseConfig);
 const auth = getAuth();
+const db = getFirestore(app);
 
-export async function registerToApp(email, password){
-  try{
+export async function getUserDetails(userid){
+  let docref = doc(db, 'users', userid);
+  let userDataRef = await getDoc(docref);
+  return userDataRef.data()
+}
+
+export async function registerToApp(email, password) {
+  try {
+
     let userinfo = await createUserWithEmailAndPassword(auth, email, password);
+    let userData = {
+      userName: 'test',
+      description: '',
+      profileImageUrl: ''
+    }
+    let userRef = doc(db, 'users', userinfo.user.uid);
+
+    setDoc(userRef, userData, {merge: true});
     return [true, userinfo];
-  }
-  catch(e){
+  } catch (e) {
     return [false, e];
   }
 }
 
-export function checkUserLoggedIn(){
+export function checkUserLoggedIn() {
   return auth.currentUser;
 }
 
-export async function signInToApp(email, password){
-  try{
+export async function signInToApp(email, password) {
+  try {
     let userinfo = await signInWithEmailAndPassword(auth, email, password);
     return userinfo;
-  }
-  catch(e){
+  } catch (e) {
     throw new Error(e.message);
   }
 }
 
-export async function signOutFromApp(){
+export async function signOutFromApp() {
   await signOut(auth);
 }
-
-
