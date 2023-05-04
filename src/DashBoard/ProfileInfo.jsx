@@ -10,21 +10,62 @@ import {
   CardActions,
 } from "@mui/material";
 import { FileUpload, Save } from "@mui/icons-material";
-import { checkUserLoggedIn, getUserDetails } from "../Commons/FirebaseService";
-import { useState } from "react";
+import { uploadUserDetails, getUserDetails } from "../Commons/FirebaseService";
+import { useContext, useState } from "react";
 import { useEffect } from "react";
+import AuthContext from "../Store/auth-store";
 
 function ProfileInfo() {
-  console.log("in profile info:")
-  let [userData, setUserData] = useState({})
-  useEffect(()=>{
-      let user = checkUserLoggedIn();
-      getUserDetails(user.uid).then(result => {
-        setUserData(result)
-      })
-  }, [])
-  console.log(userData
-    )
+  let authcontext = useContext(AuthContext);
+  let [userData, setUserData] = useState({
+    userName: '',
+    description: '',
+    profileImageUrl: ''
+  });
+  let [savedUserData, setSavedUserData] = useState({});
+  useEffect(() => {
+    getUserDetails(authcontext.currentUser.uid).then((result) => {
+      setUserData(result);
+      setSavedUserData(result);
+    });
+  }, [authcontext.currentUser]);
+  function updateName(event){
+    let name = event.target.value;
+    setUserData((prevState) => {
+      return {
+        ...prevState,
+        userName: name
+      }
+    })
+  }
+  function updateDescription(event){
+    let desc = event.target.value;
+    setUserData((prevState) => {
+      return {
+        ...prevState,
+        description: desc
+      }
+    })
+  }
+  function updateUrl(event){
+    let url = event.target.value;
+    setUserData((prevState) => {
+      return {
+        ...prevState,
+        profileImageUrl: url
+      }
+    })
+  }
+  const saveData = async (event) => {
+    try{
+      await uploadUserDetails(authcontext.currentUser.uid, userData);
+      alert("Your data has been saved successfully");
+      setSavedUserData(userData);
+    }
+    catch(e){
+      console.log(e)
+    }
+  }
   return (
     <>
       <Card sx={{ minWidth: 275, marginTop: 2 }} elevation={4}>
@@ -37,7 +78,7 @@ function ProfileInfo() {
                 }}
               >
                 <Typography variant="h4" sx={{ color: "primary.dark", p: 1 }}>
-                  Welcome {userData && userData.userName}
+                  Welcome {savedUserData && savedUserData.userName}
                 </Typography>
                 <Typography
                   variant="h5"
@@ -53,19 +94,25 @@ function ProfileInfo() {
                   id="outlined-basic"
                   label="Name"
                   variant="outlined"
-                  defaultValue={userData.userName}
+                  value={userData.userName || ''}
+                  onChange={updateName}
                 />
                 <TextField
                   id="outlined-basic"
                   label="Description"
                   variant="outlined"
                   multiline
-                  defaultValue={userData.description}
+                  value={userData.description || ''}
+                  onChange={updateDescription}
+
                 />
                 <TextField
                   id="outlined-basic"
                   label="Image URL"
                   variant="outlined"
+                  value={userData.profileImageUrl || ''}
+                  onChange={updateUrl}
+
                 />
                 <Button variant="contained" component="label">
                   <Typography padding={2}>Upload Image</Typography>
@@ -77,8 +124,10 @@ function ProfileInfo() {
               <Box
                 width="25%"
                 minWidth={150}
-                sx={{ border: "1px solid red" }}
-              ></Box>
+              >
+                <img src={savedUserData.profileImageUrl}  width="90%"  alt={savedUserData.userName}
+            />
+              </Box>
             </Stack>
           </Grid>
         </CardContent>
@@ -91,7 +140,7 @@ function ProfileInfo() {
             marginRight: 5,
           }}
         >
-          <Button variant="contained" size="large" color="success">
+          <Button variant="contained" size="large" color="success" onClick={saveData}>
             {" "}
             Save <Save />{" "}
           </Button>

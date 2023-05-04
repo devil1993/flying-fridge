@@ -69,7 +69,6 @@ export default function SignIn() {
       return;
     }
   };
-  console.log("rendering login component.")
   return (
     <ThemeProvider theme={theme}>
       <Container component="main" maxWidth="xs">

@@ -19,18 +19,23 @@ export async function getUserDetails(userid){
   return userDataRef.data()
 }
 
+export async function uploadUserDetails(userid, userData){
+  let docref = doc(db, 'users', userid );
+  await setDoc(docref, userData, {merge: true})
+}
+
 export async function registerToApp(email, password) {
   try {
 
     let userinfo = await createUserWithEmailAndPassword(auth, email, password);
     let userData = {
-      userName: 'test',
+      userName: '',
       description: '',
       profileImageUrl: ''
     }
     let userRef = doc(db, 'users', userinfo.user.uid);
 
-    setDoc(userRef, userData, {merge: true});
+    await setDoc(userRef, userData, {merge: true});
     return [true, userinfo];
   } catch (e) {
     return [false, e];
