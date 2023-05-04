@@ -1,8 +1,9 @@
 import { useState } from "react";
 import { checkUserLoggedIn, getUserDetails } from "./Commons/FirebaseService";
 import SignIn from "./SignIn/SignIn";
-import EditThanks from "./DashBoard/EditThanks";
+import Dashboard from "./DashBoard/Dashboard";
 import { useEffect } from "react";
+import { redirect } from "react-router-dom";
 
 function IndexPage(){
     let [userLoggedIn, setUserLoggedIn] = useState(false);
@@ -18,9 +19,9 @@ function IndexPage(){
         setUserLoggedIn(true);
     }
     if(! userLoggedIn)
-        return <SignIn onLogin={loginHandler}/>
+        return redirect("/login")
     else
-        return <EditThanks  />
+        return redirect("/dashboard")
 }
 
 export default IndexPage;

@@ -23,7 +23,8 @@ function ProfileInfo() {
         setUserData(result)
       })
   }, [])
-  console.log(userData)
+  console.log(userData
+    )
   return (
     <>
       <Card sx={{ minWidth: 275, marginTop: 2 }} elevation={4}>
