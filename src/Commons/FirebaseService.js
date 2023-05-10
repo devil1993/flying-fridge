@@ -13,10 +13,21 @@ const app = initializeApp(firebaseConfig);
 const auth = getAuth();
 const db = getFirestore(app);
 
-export async function getUserDetails(userid){
-  let docref = doc(db, 'users', userid);
+export async function getUserGratitude(userid) {
+  let docref = doc(db, "gratitudes", userid);
+  let userGratitudeRef = await getDoc(docref);
+  return userGratitudeRef.data();
+}
+
+export async function setUserGratitude(userid, usergGratitudes) {
+  let docref = doc(db, "gratitudes", userid);
+  return setDoc(docref, usergGratitudes, { merge: true });
+}
+
+export async function getUserDetails(userid) {
+  let docref = doc(db, "users", userid);
   let userDataRef = await getDoc(docref);
-  return userDataRef.data()
+  return userDataRef.data();
 }
 
 export async function uploadUserDetails(userid, userData){
@@ -26,7 +37,6 @@ export async function uploadUserDetails(userid, userData){
 
 export async function registerToApp(email, password) {
   try {
-
     let userinfo = await createUserWithEmailAndPassword(auth, email, password);
     let userData = {
       userName: '',
@@ -34,8 +44,9 @@ export async function registerToApp(email, password) {
       profileImageUrl: ''
     }
     let userRef = doc(db, 'users', userinfo.user.uid);
-
+    let gratitudeRef = doc(db, 'gratitudes', userinfo.user.uid)
     await setDoc(userRef, userData, {merge: true});
+    await setDoc(gratitudeRef,{ gratitudes: [{id: Date.now(), name: "my gratitudes", description: "helped me a lot", imagesrc: null}]});
     return [true, userinfo];
   } catch (e) {
     return [false, e];
