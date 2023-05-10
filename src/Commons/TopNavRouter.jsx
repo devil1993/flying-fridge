@@ -4,8 +4,7 @@ import Typography from "@mui/material/Typography";
 import Button from "@mui/material/Button";
 import IconButton from "@mui/material/IconButton";
 import MenuIcon from "@mui/icons-material/Menu";
-import { Link, Outlet, useNavigate } from "react-router-dom";
-import { checkUserLoggedIn, signOutFromApp } from "./FirebaseService";
+import { Outlet, useNavigate } from "react-router-dom";
 import AuthContext from "../Store/auth-store";
 import { useContext } from "react";
 
@@ -24,7 +23,7 @@ function TopNavRouter(props) {
     });
   }
 
-  let user = checkUserLoggedIn();
+  let user = authcontext.currentUser;
 
   return (
     <>

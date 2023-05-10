@@ -17,12 +17,12 @@ function Dashboard() {
     if (authContext.currentUser) {
       getUserGratitude(authContext.currentUser.uid).then(
         (gratitudes_response) => {
-          console.log("My Gratitides: ", gratitudes_response);
-          setGratitude(gratitudes_response);
+          console.log("My Gratitides: ", gratitudes_response.gratitudes);
+          setGratitude(gratitudes_response.gratitudes);
         }
       );
     }
-  }, []);
+  }, [authContext.currentUser]);
 
   if (!authContext.currentUser) {
     return (
