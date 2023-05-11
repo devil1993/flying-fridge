@@ -10,13 +10,14 @@ import {
   CardActions,
 } from "@mui/material";
 import { FileUpload, Save } from "@mui/icons-material";
-import { uploadUserDetails, getUserDetails } from "../Commons/FirebaseService";
-import { useContext, useState } from "react";
+import { uploadUserDetails, getUserDetails, uploadProfileImage } from "../Commons/FirebaseService";
+import { useContext, useRef, useState } from "react";
 import { useEffect } from "react";
 import AuthContext from "../Store/auth-store";
 
 function ProfileInfo() {
   let authcontext = useContext(AuthContext);
+  let fileInputRef = useRef();
   let [userData, setUserData] = useState({
     userName: '',
     description: '',
@@ -56,8 +57,12 @@ function ProfileInfo() {
       }
     })
   }
+
   const saveData = async (event) => {
     try{
+      if(fileInputRef.current.files.length > 0){
+        var uploadedImageUrl = await uploadProfileImage(authcontext.currentUser.uid, fileInputRef.current.files[0])
+      }
       await uploadUserDetails(authcontext.currentUser.uid, userData);
       alert("Your data has been saved successfully");
       setSavedUserData(userData);
@@ -117,7 +122,7 @@ function ProfileInfo() {
                 <Button variant="contained" component="label">
                   <Typography padding={2}>Upload Image</Typography>
                   <FileUpload />
-                  <input type="file" hidden />
+                  <input type="file" hidden ref={fileInputRef}/>
                 </Button>
                 {/* <Input type='file' id="outlined-basic" label="Image" variant="outlined" /> */}
               </Stack>

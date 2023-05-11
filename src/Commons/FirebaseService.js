@@ -7,11 +7,13 @@ import {
   signOut,
 } from "firebase/auth";
 import { getFirestore, collection, addDoc, doc, setDoc, getDoc } from "firebase/firestore";
+import { ref, getStorage, uploadBytes, getDownloadURL } from 'firebase/storage'
 import firebaseConfig from "../FirebaseConfig";
 // Initialize Firebase
 const app = initializeApp(firebaseConfig);
 const auth = getAuth();
 const db = getFirestore(app);
+const storage = getStorage(app);
 
 export async function getUserGratitude(userid) {
   let docref = doc(db, "gratitudes", userid);
@@ -33,6 +35,15 @@ export async function getUserDetails(userid) {
 export async function uploadUserDetails(userid, userData){
   let docref = doc(db, 'users', userid );
   await setDoc(docref, userData, {merge: true})
+}
+
+export async function uploadProfileImage(userid, fileinfo){
+  const imageRef = ref(storage, `profileImages/${userid}`);
+  uploadBytes(imageRef, fileinfo).then((snapshot) => {
+    getDownloadURL(snapshot.ref).then((url) => {
+      return url;
+    });
+  });
 }
 
 export async function registerToApp(email, password) {
