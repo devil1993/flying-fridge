@@ -10,82 +10,66 @@ import {
   CardActions,
 } from "@mui/material";
 import { FileUpload, Save } from "@mui/icons-material";
-import { uploadUserDetails, getUserDetails, uploadProfileImage } from "../Commons/FirebaseService";
+import {
+  uploadUserDetails,
+  getUserDetails,
+  uploadProfileImage,
+} from "../Commons/FirebaseService";
 import { useContext, useRef, useState } from "react";
 import { useEffect } from "react";
 import AuthContext from "../Store/auth-store";
+import IdentityForm from "../Commons/IdentityForm";
 
 function ProfileInfo() {
   let authcontext = useContext(AuthContext);
   let fileInputRef = useRef();
+
   let [userData, setUserData] = useState({
-    userName: '',
-    description: '',
-    profileImageUrl: ''
+    userName: "",
+    description: "",
+    profileImageUrl: "",
   });
   let [savedUserData, setSavedUserData] = useState({});
-  let [selectedFile, setSelectedFile] = useState('No files selected for upload');
+  
   useEffect(() => {
     getUserDetails(authcontext.currentUser.uid).then((result) => {
       setUserData(result);
       setSavedUserData(result);
     });
   }, [authcontext.currentUser]);
-  function updateName(event){
-    let name = event.target.value;
-    setUserData((prevState) => {
-      return {
-        ...prevState,
-        userName: name
-      }
-    })
-  }
-  function updateDescription(event){
-    let desc = event.target.value;
-    setUserData((prevState) => {
-      return {
-        ...prevState,
-        description: desc
-      }
-    })
-  }
-  function updateUrl(event){
-    let url = event.target.value;
-    setUserData((prevState) => {
-      return {
-        ...prevState,
-        profileImageUrl: url
-      }
-    })
-  }
 
-  const saveData = async (event) => {
-    try{
-      let selectedImageUrl = userData.profileImageUrl;
-      console.log(selectedImageUrl)
-      if(fileInputRef.current.files.length > 0){
-        selectedImageUrl = await uploadProfileImage(authcontext.currentUser.uid, fileInputRef.current.files[0])
-        console.log(selectedImageUrl)
+  const saveHandler = async (emittedUserData, profileImageFile) => {
+    try {
+      let selectedImageUrl = emittedUserData.profileImageUrl;
+      console.log(selectedImageUrl);
+      if (profileImageFile) {
+        selectedImageUrl = await uploadProfileImage(
+          authcontext.currentUser.uid,
+          profileImageFile
+        );
+        console.log(selectedImageUrl);  
       }
-      await uploadUserDetails(authcontext.currentUser.uid, {...userData, profileImageUrl: selectedImageUrl});
+      await uploadUserDetails(authcontext.currentUser.uid, {
+        ...emittedUserData,
+        profileImageUrl: selectedImageUrl,
+      });
       setUserData((prevState) => {
         return {
-          ...prevState,
-          profileImageUrl: selectedImageUrl
-        }
-      })
+          ...emittedUserData,
+          profileImageUrl: selectedImageUrl,
+        };
+      });
       setSavedUserData((prevState) => {
         return {
-          ...prevState,
-          profileImageUrl: selectedImageUrl
-        }
+          ...emittedUserData,
+          profileImageUrl: selectedImageUrl,
+        };
       });
       alert("Your data has been saved successfully");
+    } catch (e) {
+      console.log(e);
     }
-    catch(e){
-      console.log(e)
-    }
-  }
+  };
   return (
     <>
       <Card sx={{ minWidth: 275, marginTop: 2 }} elevation={4}>
@@ -109,62 +93,17 @@ function ProfileInfo() {
               </Box>
             </Grid>
             <Stack direction="row" spacing={2} width="100%">
-              <Stack width="75%" spacing={2}>
-                <TextField
-                  id="outlined-basic"
-                  label="Name"
-                  variant="outlined"
-                  value={userData.userName || ''}
-                  onChange={updateName}
+              <IdentityForm userData={userData} onSave={saveHandler}/>
+              <Box width="25%" minWidth={150}>
+                <img
+                  src={savedUserData.profileImageUrl}
+                  width="90%"
+                  alt={savedUserData.userName}
                 />
-                <TextField
-                  id="outlined-basic"
-                  label="Description"
-                  variant="outlined"
-                  multiline
-                  value={userData.description || ''}
-                  onChange={updateDescription}
-
-                />
-                <TextField
-                  id="outlined-basic"
-                  label="Image URL"
-                  variant="outlined"
-                  value={userData.profileImageUrl || ''}
-                  onChange={updateUrl}
-
-                />
-                <Button variant="contained" component="label">
-                  <Typography padding={2}>Select Image From Disk</Typography>
-                  <FileUpload />
-                  <input type="file" hidden ref={fileInputRef} onChange={()=>{setSelectedFile(fileInputRef.current.files[0].name)}}/>
-                </Button>
-                <Typography>{selectedFile}</Typography>
-              </Stack>
-              <Box
-                width="25%"
-                minWidth={150}
-              >
-                <img src={savedUserData.profileImageUrl}  width="90%"  alt={savedUserData.userName}
-            />
               </Box>
             </Stack>
           </Grid>
         </CardContent>
-        <CardActions
-          sx={{
-            alignSelf: "stretch",
-            display: "flex",
-            justifyContent: "flex-end",
-            alignItems: "flex-start",
-            marginRight: 5,
-          }}
-        >
-          <Button variant="contained" size="large" color="success" onClick={saveData}>
-            {" "}
-            Save <Save />{" "}
-          </Button>
-        </CardActions>
       </Card>
     </>
   );
