@@ -24,6 +24,7 @@ function ProfileInfo() {
     profileImageUrl: ''
   });
   let [savedUserData, setSavedUserData] = useState({});
+  let [selectedFile, setSelectedFile] = useState('No files selected for upload');
   useEffect(() => {
     getUserDetails(authcontext.currentUser.uid).then((result) => {
       setUserData(result);
@@ -60,12 +61,26 @@ function ProfileInfo() {
 
   const saveData = async (event) => {
     try{
+      let selectedImageUrl = userData.profileImageUrl;
+      console.log(selectedImageUrl)
       if(fileInputRef.current.files.length > 0){
-        var uploadedImageUrl = await uploadProfileImage(authcontext.currentUser.uid, fileInputRef.current.files[0])
+        selectedImageUrl = await uploadProfileImage(authcontext.currentUser.uid, fileInputRef.current.files[0])
+        console.log(selectedImageUrl)
       }
-      await uploadUserDetails(authcontext.currentUser.uid, userData);
+      await uploadUserDetails(authcontext.currentUser.uid, {...userData, profileImageUrl: selectedImageUrl});
+      setUserData((prevState) => {
+        return {
+          ...prevState,
+          profileImageUrl: selectedImageUrl
+        }
+      })
+      setSavedUserData((prevState) => {
+        return {
+          ...prevState,
+          profileImageUrl: selectedImageUrl
+        }
+      });
       alert("Your data has been saved successfully");
-      setSavedUserData(userData);
     }
     catch(e){
       console.log(e)
@@ -120,11 +135,11 @@ function ProfileInfo() {
 
                 />
                 <Button variant="contained" component="label">
-                  <Typography padding={2}>Upload Image</Typography>
+                  <Typography padding={2}>Select Image From Disk</Typography>
                   <FileUpload />
-                  <input type="file" hidden ref={fileInputRef}/>
+                  <input type="file" hidden ref={fileInputRef} onChange={()=>{setSelectedFile(fileInputRef.current.files[0].name)}}/>
                 </Button>
-                {/* <Input type='file' id="outlined-basic" label="Image" variant="outlined" /> */}
+                <Typography>{selectedFile}</Typography>
               </Stack>
               <Box
                 width="25%"

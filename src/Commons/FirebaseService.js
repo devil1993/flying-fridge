@@ -39,11 +39,9 @@ export async function uploadUserDetails(userid, userData){
 
 export async function uploadProfileImage(userid, fileinfo){
   const imageRef = ref(storage, `profileImages/${userid}`);
-  uploadBytes(imageRef, fileinfo).then((snapshot) => {
-    getDownloadURL(snapshot.ref).then((url) => {
-      return url;
-    });
-  });
+  const snapshot = await uploadBytes(imageRef, fileinfo);
+  const url = await getDownloadURL(imageRef);
+  return url;
 }
 
 export async function registerToApp(email, password) {

@@ -1,4 +1,4 @@
-import { Box } from "@mui/material";
+import { Box, CircularProgress } from "@mui/material";
 import GratitudeItem from "./GratitudeItem";
 
 function GratitudeList({gratitudes, onEdit}) {
@@ -9,6 +9,7 @@ function GratitudeList({gratitudes, onEdit}) {
         margin: "auto",
       }}
     >
+      {gratitudes.length == 0 && <CircularProgress />}
       {gratitudes.map((item) => {
         return <GratitudeItem key={item.id} gratitudeItem={item} />;
       })}
