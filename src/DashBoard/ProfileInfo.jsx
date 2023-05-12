@@ -38,7 +38,7 @@ function ProfileInfo() {
     });
   }, [authcontext.currentUser]);
 
-  const saveData = async (emittedUserData, profileImageFile) => {
+  const saveHandler = async (emittedUserData, profileImageFile) => {
     try {
       let selectedImageUrl = emittedUserData.profileImageUrl;
       console.log(selectedImageUrl);
@@ -50,7 +50,7 @@ function ProfileInfo() {
         console.log(selectedImageUrl);  
       }
       await uploadUserDetails(authcontext.currentUser.uid, {
-        ...userData,
+        ...emittedUserData,
         profileImageUrl: selectedImageUrl,
       });
       setUserData((prevState) => {
@@ -93,7 +93,7 @@ function ProfileInfo() {
               </Box>
             </Grid>
             <Stack direction="row" spacing={2} width="100%">
-              <IdentityForm userData={userData} />
+              <IdentityForm userData={userData} onSave={saveHandler}/>
               <Box width="25%" minWidth={150}>
                 <img
                   src={savedUserData.profileImageUrl}

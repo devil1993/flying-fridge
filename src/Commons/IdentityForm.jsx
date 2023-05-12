@@ -14,9 +14,7 @@ import { FileUpload, Save } from "@mui/icons-material";
 
 const IdentityForm = ({ userData, onSave }) => {
   let fileInputRef = useRef();
-  let [selectedFile, setSelectedFile] = useState(
-    "No files selected for upload"
-  );
+  let [selectedFile, setSelectedFile] = useState("");
   let [userName, setUsername] = useState('');
   let [userDescription, setUserDescription] = useState('');
   let [userProfileImage, setUserProfileImage] = useState('');
@@ -24,11 +22,12 @@ const IdentityForm = ({ userData, onSave }) => {
     setUsername(userData.userName);
     setUserDescription(userData.description);
     setUserProfileImage(userData.profileImageUrl);
+    setSelectedFile("No files selected for upload");
   }, [userData])
   
   function saveHandler(event) {
     let userDataState = {
-      name: userName,
+      userName: userName,
       description: userDescription,
       profileImageUrl: userProfileImage
     }
