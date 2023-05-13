@@ -12,6 +12,8 @@ function Dashboard() {
   let authContext = useContext(AuthContext);
   let [isEditing, setIsEditing] = useState(false);
   let [gratitudes, setGratitude] = useState([]);
+  let [editingGratitude, setEditingGratitude] = useState({});
+  let [selectedGratitude, setSelectedGratitude] = useState(null);
 
   useEffect(() => {
     if (authContext.currentUser) {
@@ -19,6 +21,9 @@ function Dashboard() {
         (gratitudes_response) => {
           console.log("My Gratitides: ", gratitudes_response.gratitudes);
           setGratitude(gratitudes_response.gratitudes);
+          if(gratitudes_response.gratitudes.length > 0){
+            setSelectedGratitude(gratitudes_response.gratitudes[0]);
+          }
         }
       );
     }
@@ -32,6 +37,10 @@ function Dashboard() {
 
   const gratitudeEditHandler = (grat) => {
     setIsEditing(true);
+    setEditingGratitude(grat);
+  };
+  const gratitudeSaveHandler = (gratitude) => {
+    setIsEditing(false);
   };
   return (
     <Container maxWidth="xl">
@@ -39,15 +48,20 @@ function Dashboard() {
         <Grid item md={12} sm={12} xs={12} lg={12}>
           <ProfileInfo />
         </Grid>
-        <Grid item sm={12} md={12} xs={12} lg={8}>
+        <Grid item sm={12} md={12} xs={12} lg={8} alignContent='center' justifyContent="center">
           <GratitudeList
             gratitudes={gratitudes}
             onEdit={gratitudeEditHandler}
+            onItemClick={(gratitude) => {console.log(gratitude);setSelectedGratitude(gratitude);}}
           />
+          <Button
+            variant="contained"
+            component="label"
+          >Add a gratitude</Button>
         </Grid>
         <Grid item sm={12} md={12} xs={12} lg={4}>
-          {!isEditing && <GratitudeCard />}
-          {isEditing && <GratitudeForm />}
+          {!isEditing && <GratitudeCard gratitude={selectedGratitude} />}
+          {isEditing && editingGratitude && <GratitudeForm onSave={gratitudeSaveHandler} gratitude={editingGratitude}/>}
         </Grid>
       </Grid>
     </Container>
