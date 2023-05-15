@@ -1,11 +1,28 @@
-import { Card, CardContent, Box, Typography, Avatar, CircularProgress } from "@mui/material";
+import {
+  Card,
+  CardContent,
+  Box,
+  Typography,
+  Avatar,
+  CircularProgress,
+} from "@mui/material";
 function GratitudeCard({ scalingFactor, gratitude }) {
   scalingFactor = scalingFactor ?? 100;
   let height = (420 * scalingFactor) / 100.0 + "px";
   let width = (300 * scalingFactor) / 100.0 + "px";
-  if(!gratitude){
-    return <CircularProgress />
+  if (!gratitude) {
+    return <CircularProgress />;
   }
+  let initials = gratitude.name
+    .split(" ")
+    .map((s) => s.trim())
+    .reduce((acc, item) => {
+      if (item) {
+        acc += item[0];
+      }
+      return acc;
+    }, "");
+  console.log(initials);
   return (
     <Box
       sx={{
@@ -19,7 +36,7 @@ function GratitudeCard({ scalingFactor, gratitude }) {
       flex={1}
     >
       <Card height={100} width={100} elevation={5}>
-        {gratitude.imgsrc && (
+        {gratitude.imagesrc && (
           <img
             src={gratitude.imagesrc}
             width="90%"
@@ -28,15 +45,19 @@ function GratitudeCard({ scalingFactor, gratitude }) {
           />
         )}
 
-        <CardContent >
-          <Box sx={{alignItems:'center'}}>
-          {!gratitude.imagesrc && <Avatar>gratitude.name</Avatar>}
-          <Typography gutterBottom variant="h5" component="div">
-            {gratitude.name}
-          </Typography>
-          <Typography variant="body2" color="text.secondary">
-            {gratitude.description}
-          </Typography>
+        <CardContent>
+          <Box sx={{ alignItems: "center" }}>
+            {!gratitude.imagesrc && (
+              <Avatar sx={{ bgcolor: "warning.light" }}>
+                {initials.toUpperCase()}
+              </Avatar>
+            )}
+            <Typography gutterBottom variant="h5" component="div">
+              {gratitude.name}
+            </Typography>
+            <Typography variant="body2" color="text.secondary">
+              {gratitude.description}
+            </Typography>
           </Box>
         </CardContent>
       </Card>

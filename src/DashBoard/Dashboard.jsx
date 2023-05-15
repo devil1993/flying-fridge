@@ -11,7 +11,7 @@ import GratitudeForm from "./GratitudeForm";
 function Dashboard() {
   let authContext = useContext(AuthContext);
   let [isEditing, setIsEditing] = useState(false);
-  let [gratitudes, setGratitude] = useState([]);
+  let [gratitudes, setGratitudes] = useState([]);
   let [editingGratitude, setEditingGratitude] = useState({});
   let [selectedGratitude, setSelectedGratitude] = useState(null);
 
@@ -20,8 +20,8 @@ function Dashboard() {
       getUserGratitude(authContext.currentUser.uid).then(
         (gratitudes_response) => {
           console.log("My Gratitides: ", gratitudes_response.gratitudes);
-          setGratitude(gratitudes_response.gratitudes);
-          if(gratitudes_response.gratitudes.length > 0){
+          setGratitudes(gratitudes_response.gratitudes);
+          if (gratitudes_response.gratitudes.length > 0) {
             setSelectedGratitude(gratitudes_response.gratitudes[0]);
           }
         }
@@ -40,7 +40,22 @@ function Dashboard() {
     setEditingGratitude(grat);
   };
   const gratitudeSaveHandler = (gratitude) => {
+    console.log(gratitude);
     setIsEditing(false);
+    if (gratitudes.map((g) => +g.id).includes(gratitude.id)) {
+    } else {
+      setGratitudes((prevGratitudes) => [...prevGratitudes, gratitude]);
+    }
+  };
+  const gratitudeCreateHandler = () => {
+    let newGratitude = {
+      name: "",
+      description: "",
+      imagesrc: "",
+      id: new Date().getTime(),
+    };
+    setEditingGratitude(newGratitude);
+    setIsEditing(true);
   };
   return (
     <Container maxWidth="xl">
@@ -48,21 +63,39 @@ function Dashboard() {
         <Grid item md={12} sm={12} xs={12} lg={12}>
           <ProfileInfo />
         </Grid>
-        <Grid item sm={12} md={12} xs={12} lg={8} alignContent='center' justifyContent="center">
+        <Grid
+          item
+          sm={12}
+          md={12}
+          xs={12}
+          lg={8}
+          alignContent="center"
+          justifyContent="center"
+        >
           <GratitudeList
             gratitudes={gratitudes}
             onEdit={gratitudeEditHandler}
-            onItemClick={(gratitude) => {console.log(gratitude);setSelectedGratitude(gratitude);}}
+            onItemClick={(gratitude) => {
+              console.log(gratitude);
+              setSelectedGratitude(gratitude);
+            }}
           />
           <Button
             variant="contained"
             component="label"
-            
-          >Add a gratitude</Button>
+            onClick={gratitudeCreateHandler}
+          >
+            Add a gratitude
+          </Button>
         </Grid>
         <Grid item sm={12} md={12} xs={12} lg={4}>
           {!isEditing && <GratitudeCard gratitude={selectedGratitude} />}
-          {isEditing && editingGratitude && <GratitudeForm onSave={gratitudeSaveHandler} gratitude={editingGratitude}/>}
+          {isEditing && editingGratitude && (
+            <GratitudeForm
+              onSave={gratitudeSaveHandler}
+              gratitude={editingGratitude}
+            />
+          )}
         </Grid>
       </Grid>
     </Container>
