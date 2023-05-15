@@ -6,7 +6,7 @@ import {
   signInWithEmailAndPassword,
   signOut,
 } from "firebase/auth";
-import { getFirestore, collection, addDoc, doc, setDoc, getDoc } from "firebase/firestore";
+import { getFirestore, collection, addDoc, doc, setDoc, getDoc, collectionGroup, query, where, getDocs } from "firebase/firestore";
 import { ref, getStorage, uploadBytes, getDownloadURL } from 'firebase/storage'
 import firebaseConfig from "../FirebaseConfig";
 // Initialize Firebase
@@ -16,9 +16,14 @@ const db = getFirestore(app);
 const storage = getStorage(app);
 
 export async function getUserGratitude(userid) {
-  let docref = doc(db, "gratitudes", userid);
-  let userGratitudeRef = await getDoc(docref);
-  return userGratitudeRef.data();
+  const q = query(collection(db, "gratitudes"), where("userId", "==", userid));
+  const querySnapshot = await getDocs(q);
+  const gratitudes = []
+  querySnapshot.forEach((doc) => {
+    gratitudes.push({...doc.data(), id: doc.id})
+  })
+  console.log(gratitudes);
+  return {gratitudes: gratitudes};
 }
 
 export async function setUserGratitude(userid, usergGratitudes) {
