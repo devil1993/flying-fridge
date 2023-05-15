@@ -1,7 +1,8 @@
 import { Card, Typography, Stack, Button } from "@mui/material";
-function GratitudeItem({onEdit, gratitudeItem}) {
+function GratitudeItem({onEdit, gratitudeItem, onClick}) {
   return (
     <Card
+      onClick={onClick}
       sx={{
         width: "100%",
         margin: "5px",

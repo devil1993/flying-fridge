@@ -57,6 +57,7 @@ function Dashboard() {
           <Button
             variant="contained"
             component="label"
+            
           >Add a gratitude</Button>
         </Grid>
         <Grid item sm={12} md={12} xs={12} lg={4}>
