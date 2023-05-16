@@ -6,6 +6,7 @@ function GratitudeList({
   onEdit,
   onItemClick,
   onToggleEnableDisable,
+  onDeleteGratitude,
 }) {
   return (
     <Box
@@ -25,8 +26,10 @@ function GratitudeList({
               onItemClick(item);
             }}
             onToggleEnableDisable={() => {
-              if(onToggleEnableDisable)
-                onToggleEnableDisable(item);
+              if (onToggleEnableDisable) onToggleEnableDisable(item);
+            }}
+            onDelete={() => {
+              onDeleteGratitude(item);
             }}
           />
         );

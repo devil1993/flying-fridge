@@ -6,13 +6,15 @@ function GratitudeForm({ gratitude, onSave }) {
     description: gratitude.description,
     profileImageUrl: gratitude.imagesrc,
   };
-  const onIdentityFormSave = (identityItem) => {
+  const onIdentityFormSave = (identityItem, imageFile) => {
     const gratitudeItem = {
       id: gratitude.id,
       name: identityItem.userName,
       description: identityItem.description,
       imagesrc: identityItem.profileImageUrl,
+      isEnabled: gratitude.isEnabled,
     };
+    if (imageFile) onSave(gratitudeItem, imageFile);
     onSave(gratitudeItem);
   };
   return <IdentityForm onSave={onIdentityFormSave} userData={userdata} />;
