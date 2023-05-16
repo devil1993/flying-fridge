@@ -6,8 +6,20 @@ import {
   signInWithEmailAndPassword,
   signOut,
 } from "firebase/auth";
-import { getFirestore, collection, addDoc, doc, setDoc, getDoc } from "firebase/firestore";
-import { ref, getStorage, uploadBytes, getDownloadURL } from 'firebase/storage'
+import {
+  getFirestore,
+  collection,
+  addDoc,
+  doc,
+  setDoc,
+  getDoc,
+  collectionGroup,
+  query,
+  where,
+  getDocs,
+  deleteDoc,
+} from "firebase/firestore";
+import { ref, getStorage, uploadBytes, getDownloadURL } from "firebase/storage";
 import firebaseConfig from "../FirebaseConfig";
 // Initialize Firebase
 const app = initializeApp(firebaseConfig);
@@ -15,10 +27,27 @@ const auth = getAuth();
 const db = getFirestore(app);
 const storage = getStorage(app);
 
+export async function deleteUserGratitude(gratitudeItem) {
+  let gratitudeRef = doc(db, "gratitudes", gratitudeItem.id);
+  await deleteDoc(gratitudeRef);
+}
+
+export async function saveUserGratitude(gratitudeItem) {
+  gratitudeItem.userId = auth.currentUser.uid;
+  console.log(gratitudeItem);
+  let gratitudeRef = doc(db, "gratitudes", gratitudeItem.id);
+  await setDoc(gratitudeRef, gratitudeItem, { merge: true });
+}
+
 export async function getUserGratitude(userid) {
-  let docref = doc(db, "gratitudes", userid);
-  let userGratitudeRef = await getDoc(docref);
-  return userGratitudeRef.data();
+  const q = query(collection(db, "gratitudes"), where("userId", "==", userid));
+  const querySnapshot = await getDocs(q);
+  const gratitudes = [];
+  querySnapshot.forEach((doc) => {
+    gratitudes.push({ ...doc.data(), id: doc.id });
+  });
+  console.log(gratitudes);
+  return { gratitudes: gratitudes };
 }
 
 export async function setUserGratitude(userid, usergGratitudes) {
@@ -32,13 +61,20 @@ export async function getUserDetails(userid) {
   return userDataRef.data();
 }
 
-export async function uploadUserDetails(userid, userData){
-  let docref = doc(db, 'users', userid );
-  await setDoc(docref, userData, {merge: true})
+export async function uploadUserDetails(userid, userData) {
+  let docref = doc(db, "users", userid);
+  await setDoc(docref, userData, { merge: true });
 }
 
-export async function uploadProfileImage(userid, fileinfo){
+export async function uploadProfileImage(userid, fileinfo) {
   const imageRef = ref(storage, `profileImages/${userid}`);
+  const snapshot = await uploadBytes(imageRef, fileinfo);
+  const url = await getDownloadURL(imageRef);
+  return url;
+}
+
+export async function uploadGratitudeImage(gratitudeId, fileinfo) {
+  const imageRef = ref(storage, `gratitudeImages/${gratitudeId}`);
   const snapshot = await uploadBytes(imageRef, fileinfo);
   const url = await getDownloadURL(imageRef);
   return url;
@@ -48,14 +84,23 @@ export async function registerToApp(email, password) {
   try {
     let userinfo = await createUserWithEmailAndPassword(auth, email, password);
     let userData = {
-      userName: '',
-      description: '',
-      profileImageUrl: ''
-    }
-    let userRef = doc(db, 'users', userinfo.user.uid);
-    let gratitudeRef = doc(db, 'gratitudes', userinfo.user.uid)
-    await setDoc(userRef, userData, {merge: true});
-    await setDoc(gratitudeRef,{ gratitudes: [{id: Date.now(), name: "my gratitudes", description: "helped me a lot", imagesrc: null}]});
+      userName: "",
+      description: "",
+      profileImageUrl: "",
+    };
+    let userRef = doc(db, "users", userinfo.user.uid);
+    let gratitudeRef = doc(db, "gratitudes", userinfo.user.uid);
+    await setDoc(userRef, userData, { merge: true });
+    await setDoc(gratitudeRef, {
+      gratitudes: [
+        {
+          id: Date.now(),
+          name: "my gratitudes",
+          description: "helped me a lot",
+          imagesrc: null,
+        },
+      ],
+    });
     return [true, userinfo];
   } catch (e) {
     return [false, e];

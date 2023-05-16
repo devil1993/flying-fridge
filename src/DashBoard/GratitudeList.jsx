@@ -1,7 +1,13 @@
 import { Box, CircularProgress } from "@mui/material";
 import GratitudeItem from "./GratitudeItem";
 
-function GratitudeList({gratitudes, onEdit}) {
+function GratitudeList({
+  gratitudes,
+  onEdit,
+  onItemClick,
+  onToggleEnableDisable,
+  onDeleteGratitude,
+}) {
   return (
     <Box
       sx={{
@@ -11,7 +17,22 @@ function GratitudeList({gratitudes, onEdit}) {
     >
       {gratitudes.length == 0 && <CircularProgress />}
       {gratitudes.map((item) => {
-        return <GratitudeItem key={item.id} gratitudeItem={item} />;
+        return (
+          <GratitudeItem
+            key={item.id}
+            gratitudeItem={item}
+            onEdit={onEdit}
+            onClick={() => {
+              onItemClick(item);
+            }}
+            onToggleEnableDisable={() => {
+              if (onToggleEnableDisable) onToggleEnableDisable(item);
+            }}
+            onDelete={() => {
+              onDeleteGratitude(item);
+            }}
+          />
+        );
       })}
     </Box>
   );
