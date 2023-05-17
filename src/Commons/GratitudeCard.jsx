@@ -7,6 +7,7 @@ import {
   CircularProgress,
 } from "@mui/material";
 function GratitudeCard({ scalingFactor, gratitude }) {
+  console.log(gratitude)
   scalingFactor = scalingFactor ?? 100;
   let height = (420 * scalingFactor) / 100.0 + "px";
   let width = (300 * scalingFactor) / 100.0 + "px";

@@ -30,7 +30,7 @@ function GratitudeItem({
             variant="contained"
             color="secondary"
             onClick={(event) => {
-              onEdit(gratitudeItem);
+                onEdit(gratitudeItem);
             }}
           >
             Edit
