@@ -100,18 +100,7 @@ export async function registerToApp(email, password) {
       profileImageUrl: "",
     };
     let userRef = doc(db, "users", userinfo.user.uid);
-    let gratitudeRef = doc(db, "gratitudes", userinfo.user.uid);
     await setDoc(userRef, userData, { merge: true });
-    await setDoc(gratitudeRef, {
-      gratitudes: [
-        {
-          id: Date.now(),
-          name: "my gratitudes",
-          description: "helped me a lot",
-          imagesrc: null,
-        },
-      ],
-    });
     return [true, userinfo];
   } catch (e) {
     return [false, e];
