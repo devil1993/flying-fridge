@@ -27,6 +27,17 @@ const auth = getAuth();
 const db = getFirestore(app);
 const storage = getStorage(app);
 
+export async function getPublishedGratitudes(userId){
+  const q = query(collection(db, "gratitudes"), where("userId", "==", userId), where("isEnabled", "==", true));
+  const querySnapshot = await getDocs(q);
+  const gratitudes = [];
+  querySnapshot.forEach((doc) => {
+    gratitudes.push({ ...doc.data(), id: doc.id });
+  });
+  console.log(gratitudes);
+  return { gratitudes: gratitudes };
+}
+
 export async function deleteUserGratitude(gratitudeItem) {
   let gratitudeRef = doc(db, "gratitudes", gratitudeItem.id);
   await deleteDoc(gratitudeRef);

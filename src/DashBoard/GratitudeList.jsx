@@ -29,7 +29,11 @@ function GratitudeList({
               if (onToggleEnableDisable) onToggleEnableDisable(item);
             }}
             onDelete={() => {
-              onDeleteGratitude(item);
+              let cnf = window.confirm(`Are you sure you want to delete the gratitude ${item.name}`);
+              if(cnf){
+                onDeleteGratitude(item);
+                onItemClick(null)
+              }
             }}
           />
         );

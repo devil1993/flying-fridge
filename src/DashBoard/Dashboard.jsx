@@ -1,11 +1,12 @@
 import { useNavigate } from "react-router-dom";
+import ContentCopyIcon from '@mui/icons-material/ContentCopy';
 import {
   getUserGratitude,
   saveUserGratitude,
   deleteUserGratitude,
   uploadGratitudeImage,
 } from "../Commons/FirebaseService";
-import { Alert, Button, Container, Grid } from "@mui/material";
+import { Alert, Button, Card, Container, Grid, Link, Snackbar } from "@mui/material";
 import ProfileInfo from "./ProfileInfo";
 import GratitudeList from "./GratitudeList";
 import GratitudeCard from "../Commons/GratitudeCard";
@@ -16,6 +17,7 @@ import { v4 } from "uuid";
 
 function Dashboard() {
   let authContext = useContext(AuthContext);
+  let [snackOpen, setSnackOpen] = useState(false);
   let [isEditing, setIsEditing] = useState(false);
   let [gratitudes, setGratitudes] = useState([]);
   let [editingGratitude, setEditingGratitude] = useState({});
@@ -88,18 +90,40 @@ function Dashboard() {
       console.log(e);
     }
   };
+  let publishedRef = `${window.location.protocol}//${window.location.host}/published-gratitude/${authContext.currentUser.uid}`
   return (
     <Container maxWidth="xl">
+      <Snackbar
+        open={snackOpen}
+        autoHideDuration={6000}
+        onClose={() => {setSnackOpen(false)}}
+        message="URL copied to clipboard"
+      />
       <Grid container spacing={2}>
         <Grid item md={12} sm={12} xs={12} lg={12}>
           <ProfileInfo />
+          <Card sx={{ margin: "5px", p: 1 }}>
+            <Link
+              href={publishedRef}
+              target="_blank"
+              rel="noreferrer"
+            >
+              URL to published gratitudes
+            </Link>
+            <Button onClick={(event)=>{
+              navigator.clipboard.writeText(publishedRef);
+              setSnackOpen(true);
+            }}>
+            <ContentCopyIcon />
+            </Button>
+          </Card>
         </Grid>
         <Grid
           item
           sm={12}
           md={12}
           xs={12}
-          lg={8}
+          lg={6}
           alignContent="center"
           justifyContent="center"
         >
@@ -110,6 +134,7 @@ function Dashboard() {
               console.log(gratitude);
               setSelectedGratitude(gratitude);
               setIsEditing(false);
+              changeGratitudeList((gl) => gl + 1);
             }}
             onToggleEnableDisable={toggleEnableDisableHandler}
             onDeleteGratitude={deleteGratitudeHandler}
@@ -122,8 +147,12 @@ function Dashboard() {
             Add a gratitude
           </Button>
         </Grid>
-        <Grid item sm={12} md={12} xs={12} lg={4}>
-          {!isEditing && <GratitudeCard gratitude={selectedGratitude} />}
+        <Grid item sm={12} md={12} xs={12} lg={6}>
+          {!isEditing && selectedGratitude && (
+            <GratitudeCard gratitude={selectedGratitude} />
+          )}
+          {!isEditing && !selectedGratitude && <h1>Add few gratitudes....</h1>}
+
           {isEditing && editingGratitude && (
             <GratitudeForm
               onSave={gratitudeSaveHandler}
