@@ -11,6 +11,7 @@ function GratitudeCard({ scalingFactor, gratitude }) {
   scalingFactor = scalingFactor ?? 100;
   let height = (420 * scalingFactor) / 100.0 + "px";
   let width = (300 * scalingFactor) / 100.0 + "px";
+  let imageSize = (300 * scalingFactor * 0.9) / 100.0 + "px"
   if (!gratitude) {
     return <CircularProgress />;
   }
@@ -40,8 +41,9 @@ function GratitudeCard({ scalingFactor, gratitude }) {
         {gratitude.imagesrc && (
           <img
             src={gratitude.imagesrc}
-            width="90%"
-            style={{ borderRadius: "50%", margin: "16px" }}
+            width={imageSize}
+            height={imageSize}
+            style={{ borderRadius: "50%", margin: "16px", 'object-fit': "cover"}}
             alt={gratitude.name}
           />
         )}
