@@ -5,11 +5,7 @@ import {
   Box,
   Typography,
   Stack,
-  TextField,
-  Button,
-  CardActions,
 } from "@mui/material";
-import { FileUpload, Save } from "@mui/icons-material";
 import {
   uploadUserDetails,
   getUserDetails,
@@ -22,7 +18,6 @@ import IdentityForm from "../Commons/IdentityForm";
 
 function ProfileInfo() {
   let authcontext = useContext(AuthContext);
-  let fileInputRef = useRef();
 
   let [userData, setUserData] = useState({
     userName: "",

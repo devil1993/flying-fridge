@@ -26,7 +26,7 @@ const Published = (props) => {
         imagesrc: userDetail.profileImageUrl,
       });
     });
-  }, []);
+  }, [userId]);
   let text = "published by";
   console.log("PGL:", publishedGratitudeList);
   console.log("UD:", userDetailForCard);

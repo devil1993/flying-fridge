@@ -1,4 +1,3 @@
-import { useNavigate } from "react-router-dom";
 import ContentCopyIcon from '@mui/icons-material/ContentCopy';
 import {
   getUserGratitude,
