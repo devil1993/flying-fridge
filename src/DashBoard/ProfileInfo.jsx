@@ -11,7 +11,7 @@ import {
   getUserDetails,
   uploadProfileImage,
 } from "../Commons/FirebaseService";
-import { useContext, useRef, useState } from "react";
+import { useContext, useState } from "react";
 import { useEffect } from "react";
 import AuthContext from "../Store/auth-store";
 import IdentityForm from "../Commons/IdentityForm";

@@ -29,8 +29,8 @@ function Dashboard() {
         (gratitudes_response) => {
           console.log("My Gratitides: ", gratitudes_response.gratitudes);
           setGratitudes(gratitudes_response.gratitudes);
-          if (gratitudes_response.gratitudes.length > 0 && !selectedGratitude) {
-            setSelectedGratitude(gratitudes_response.gratitudes[0]);
+          if (gratitudes_response.gratitudes.length > 0) {
+            setSelectedGratitude(previousGratitude => previousGratitude ? previousGratitude : gratitudes_response.gratitudes[0]);
           }
         }
       );

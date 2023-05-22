@@ -12,7 +12,7 @@ function IndexPage(){
         }
         else
             navigate("/dashboard")
-    }, [])
+    })
 }
 
 export default IndexPage;

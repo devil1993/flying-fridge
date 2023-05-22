@@ -77,7 +77,7 @@ export async function uploadUserDetails(userid, userData) {
 
 export async function uploadProfileImage(userid, fileinfo) {
   const imageRef = ref(storage, `profileImages/${userid}`);
-  const snapshot = await uploadBytes(imageRef, fileinfo);
+  await uploadBytes(imageRef, fileinfo);
   const url = await getDownloadURL(imageRef);
   return url;
 }
