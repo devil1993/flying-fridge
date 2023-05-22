@@ -5,24 +5,19 @@ import {
   Box,
   Typography,
   Stack,
-  TextField,
-  Button,
-  CardActions,
 } from "@mui/material";
-import { FileUpload, Save } from "@mui/icons-material";
 import {
   uploadUserDetails,
   getUserDetails,
   uploadProfileImage,
 } from "../Commons/FirebaseService";
-import { useContext, useRef, useState } from "react";
+import { useContext, useState } from "react";
 import { useEffect } from "react";
 import AuthContext from "../Store/auth-store";
 import IdentityForm from "../Commons/IdentityForm";
 
 function ProfileInfo() {
   let authcontext = useContext(AuthContext);
-  let fileInputRef = useRef();
 
   let [userData, setUserData] = useState({
     userName: "",

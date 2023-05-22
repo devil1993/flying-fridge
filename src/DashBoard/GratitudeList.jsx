@@ -15,7 +15,7 @@ function GratitudeList({
         margin: "auto",
       }}
     >
-      {gratitudes.length == 0 && <CircularProgress />}
+      {gratitudes.length === 0 && <CircularProgress />}
       {gratitudes.map((item) => {
         return (
           <GratitudeItem

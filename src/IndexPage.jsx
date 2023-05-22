@@ -1,9 +1,6 @@
-import { useContext, useState } from "react";
-import { checkUserLoggedIn, getUserDetails } from "./Commons/FirebaseService";
-import SignIn from "./SignIn/SignIn";
-import Dashboard from "./DashBoard/Dashboard";
+import { useContext } from "react";
 import { useEffect } from "react";
-import { redirect, useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import AuthContext from "./Store/auth-store";
 
 function IndexPage(){
@@ -15,7 +12,7 @@ function IndexPage(){
         }
         else
             navigate("/dashboard")
-    }, [])
+    })
 }
 
 export default IndexPage;

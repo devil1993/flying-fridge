@@ -1,4 +1,3 @@
-import react from "react";
 import IdentityForm from "../Commons/IdentityForm";
 function GratitudeForm({ gratitude, onSave }) {
   let userdata = {
