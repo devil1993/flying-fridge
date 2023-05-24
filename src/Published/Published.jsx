@@ -2,10 +2,8 @@ import Marquee from "react-fast-marquee";
 import GratitudeCard from "../Commons/GratitudeCard";
 import { Stack, Typography } from "@mui/material";
 import { useParams } from "react-router-dom";
-import {
-  getPublishedGratitudes,
-  getUserDetails,
-} from "../Commons/FirebaseService";
+import { getUserDetails } from "../Commons/FirebaseAuthService";
+import { getPublishedGratitudes } from "../Commons/FirebaseGratitudeService";
 import { useState } from "react";
 import { useEffect } from "react";
 

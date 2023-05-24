@@ -60,9 +60,8 @@ export default function SignIn() {
       return;
     }
     try {
-      authContext.onLogin(email, password).then((result)=>{
-        navigate("/dashboard");
-      });
+      await authContext.onLogin(email, password);
+      navigate("/dashboard");
     } catch (e) {
       setErrorDisplay(<Alert severity="error">{e.message}</Alert>);
       return;

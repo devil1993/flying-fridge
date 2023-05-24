@@ -14,7 +14,7 @@ import { useNavigate } from 'react-router-dom';
 import { Alert } from '@mui/material';
 
 
-import { registerToApp } from '../Commons/FirebaseService';
+import { registerToApp } from '../Commons/FirebaseAuthService';
 
 function Copyright(props) {
   return (
