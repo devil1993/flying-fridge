@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
-import { signInToApp, signOutFromApp } from "../Commons/FirebaseService";
-import { checkUserLoggedIn } from "../Commons/FirebaseService";
+import { signInToApp, signOutFromApp } from "../Commons/FirebaseAuthService";
+import { checkUserLoggedIn } from "../Commons/FirebaseAuthService";
 
 const AuthContext = React.createContext({
   currentUser: null,

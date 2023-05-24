@@ -10,7 +10,7 @@ import {
   uploadUserDetails,
   getUserDetails,
   uploadProfileImage,
-} from "../Commons/FirebaseService";
+} from "../Commons/FirebaseAuthService";
 import { useContext, useState } from "react";
 import { useEffect } from "react";
 import AuthContext from "../Store/auth-store";

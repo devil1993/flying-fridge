@@ -4,7 +4,7 @@ import {
   saveUserGratitude,
   deleteUserGratitude,
   uploadGratitudeImage,
-} from "../Commons/FirebaseService";
+} from "../Commons/FirebaseGratitudeService";
 import { Alert, Button, Card, Container, Grid, Link, Snackbar } from "@mui/material";
 import ProfileInfo from "./ProfileInfo";
 import GratitudeList from "./GratitudeList";
