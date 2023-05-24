@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { signInToApp, signOutFromApp } from "../Commons/FirebaseAuthService";
+import { setAuthStateChanged, signInToApp, signOutFromApp } from "../Commons/FirebaseAuthService";
 import { checkUserLoggedIn } from "../Commons/FirebaseAuthService";
 
 const AuthContext = React.createContext({
@@ -16,6 +16,7 @@ export const AuthContextProvider = (props) => {
     if (user) {
       setCurrentUser(user);
     }
+    setAuthStateChanged(setCurrentUser)
   }, []);
 
   const logoutHandler = async () => {

@@ -1,24 +1,24 @@
 // Import the functions you need from the SDKs you need
-import { initializeApp } from "firebase/app";
 import {
+  browserLocalPersistence,
   createUserWithEmailAndPassword,
   getAuth,
+  onAuthStateChanged,
+  setPersistence,
   signInWithEmailAndPassword,
   signOut,
 } from "firebase/auth";
-import {
-  getFirestore,
-  doc,
-  setDoc,
-  getDoc,
-} from "firebase/firestore";
+import { getFirestore, doc, setDoc, getDoc } from "firebase/firestore";
 import { ref, getStorage, uploadBytes, getDownloadURL } from "firebase/storage";
-import firebaseConfig from "../FirebaseConfig";
+import app from './FirebaseBase'
 // Initialize Firebase
-const app = initializeApp(firebaseConfig);
 const auth = getAuth();
 const db = getFirestore(app);
 const storage = getStorage(app);
+
+export function setAuthStateChanged(authStateChangeHandler){
+  onAuthStateChanged(auth, authStateChangeHandler);
+}
 
 export async function getUserDetails(userid) {
   let docref = doc(db, "users", userid);
@@ -60,6 +60,7 @@ export function checkUserLoggedIn() {
 
 export async function signInToApp(email, password) {
   try {
+    await setPersistence(auth, browserLocalPersistence);
     let userinfo = await signInWithEmailAndPassword(auth, email, password);
     return userinfo;
   } catch (e) {
