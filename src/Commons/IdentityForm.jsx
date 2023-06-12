@@ -34,7 +34,7 @@ const IdentityForm = ({ userData, onSave }) => {
     }
   }
   return (
-    <Stack width="75%" spacing={2}>
+    <Stack width="75%" spacing={2} sx={{p:1}}>
       <TextField
         id="outlined-basic"
         label="Name"
