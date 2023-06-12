@@ -98,7 +98,7 @@ function Dashboard() {
         onClose={() => {setSnackOpen(false)}}
         message="URL copied to clipboard"
       />
-      <Grid container spacing={2}>
+      <Grid container spacing={5}>
         <Grid item md={12} sm={12} xs={12} lg={12}>
           <ProfileInfo />
           <Card sx={{ margin: "5px", p: 1 }}>

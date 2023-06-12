@@ -25,7 +25,7 @@ function GratitudeItem({
         <Typography variant="h4" sx={{ flex: 1 }} onClick={onClick}>
           {gratitudeItem.name}
         </Typography>
-        <Stack direction="row" spacing={1}>
+        <Stack direction="row" spacing={1} sx={{maxHeight: "42px"}}>
           <Button
             variant="contained"
             color="secondary"
