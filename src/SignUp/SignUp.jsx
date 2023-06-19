@@ -15,19 +15,7 @@ import { Alert } from '@mui/material';
 
 
 import { registerToApp } from '../Commons/FirebaseAuthService';
-
-function Copyright(props) {
-  return (
-    <Typography variant="body2" color="text.secondary" align="center" {...props}>
-      {'Copyright © '}
-      <Link color="inherit" href="https://mui.com/">
-        Your Website
-      </Link>{' '}
-      {new Date().getFullYear()}
-      {'.'}
-    </Typography>
-  );
-}
+import Copyright from "../Commons/Copyright"
 
 const theme = createTheme();
 
