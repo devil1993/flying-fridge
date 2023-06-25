@@ -1,6 +1,7 @@
 // Import the functions you need from the SDKs you need
 import {
   browserLocalPersistence,
+  browserSessionPersistence,
   createUserWithEmailAndPassword,
   getAuth,
   onAuthStateChanged,
@@ -58,9 +59,10 @@ export function checkUserLoggedIn() {
   return auth.currentUser;
 }
 
-export async function signInToApp(email, password) {
+export async function signInToApp(email, password, keepLoggedIn = false) {
+  let selectedPersistence = keepLoggedIn ? browserLocalPersistence : browserSessionPersistence;
   try {
-    await setPersistence(auth, browserLocalPersistence);
+    await setPersistence(auth, selectedPersistence);
     let userinfo = await signInWithEmailAndPassword(auth, email, password);
     return userinfo;
   } catch (e) {
