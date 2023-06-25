@@ -24,8 +24,8 @@ export const AuthContextProvider = (props) => {
     setCurrentUser(null);
   };
 
-  const loginHandler = async (email, password) => {
-    await signInToApp(email, password);
+  const loginHandler = async (email, password, shouldKeepLoggedIn = false) => {
+    await signInToApp(email, password, shouldKeepLoggedIn);
     let user = checkUserLoggedIn();
     setCurrentUser(user);
     return user;

@@ -1,4 +1,4 @@
-import React, { useContext } from "react";
+import React, { useContext, useRef } from "react";
 import Avatar from "@mui/material/Avatar";
 import Button from "@mui/material/Button";
 import CssBaseline from "@mui/material/CssBaseline";
@@ -21,6 +21,7 @@ const theme = createTheme();
 
 export default function SignIn() {
   const authContext = useContext(AuthContext);
+  const rememberMeRef = useRef(null)
   let navigate = useNavigate();
   let [errorDisplay, setErrorDisplay] = React.useState("");
   if (authContext.currentUser) {
@@ -32,6 +33,7 @@ export default function SignIn() {
     const data = new FormData(event.currentTarget);
     let email = data.get("email");
     let password = data.get("password");
+    let shouldRemember = rememberMeRef.current.checked;
     if (email.trim() === "") {
       setErrorDisplay(
         <Alert severity="error">Please enter valid email.</Alert>
@@ -43,7 +45,7 @@ export default function SignIn() {
       return;
     }
     try {
-      await authContext.onLogin(email, password);
+      await authContext.onLogin(email, password, shouldRemember);
       navigate("/dashboard");
     } catch (e) {
       setErrorDisplay(<Alert severity="error">{e.message}</Alert>);
@@ -95,7 +97,7 @@ export default function SignIn() {
               autoComplete="current-password"
             />
             <FormControlLabel
-              control={<Checkbox disabled value="remember" color="primary" />}
+              control={<Checkbox value="remember" inputRef={rememberMeRef} color="primary" />}
               label="Remember me"
             />
             <Button
