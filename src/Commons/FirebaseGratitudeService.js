@@ -12,7 +12,7 @@ import {
   getDocs,
   deleteDoc,
 } from "firebase/firestore";
-import { ref, getStorage, uploadBytes, getDownloadURL } from "firebase/storage";
+import { ref, getStorage, uploadBytes, getDownloadURL, deleteObject } from "firebase/storage";
 import app from './FirebaseBase'
 // Initialize Firebase
 const auth = getAuth();
@@ -36,6 +36,7 @@ export async function getPublishedGratitudes(userId) {
 
 export async function deleteUserGratitude(gratitudeItem) {
   let gratitudeRef = doc(db, "gratitudes", gratitudeItem.id);
+  deleteGratitudeImage(gratitudeItem.id)
   await deleteDoc(gratitudeRef);
 }
 
@@ -67,4 +68,14 @@ export async function uploadGratitudeImage(gratitudeId, fileinfo) {
   await uploadBytes(imageRef, fileinfo);
   const url = await getDownloadURL(imageRef);
   return url;
+}
+
+export async function deleteGratitudeImage(gratitudeId){
+  try{
+    const imageRef = ref(storage, `gratitudeImages/${gratitudeId}`);
+    await deleteObject(imageRef);
+  }
+  catch(e){
+    console.log(e);
+  }
 }
