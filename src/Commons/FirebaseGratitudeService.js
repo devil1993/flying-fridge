@@ -71,6 +71,11 @@ export async function uploadGratitudeImage(gratitudeId, fileinfo) {
 }
 
 export async function deleteGratitudeImage(gratitudeId){
-  const imageRef = ref(storage, `gratitudeImages/${gratitudeId}`);
-  await deleteObject(imageRef);
+  try{
+    const imageRef = ref(storage, `gratitudeImages/${gratitudeId}`);
+    await deleteObject(imageRef);
+  }
+  catch(e){
+    console.log(e);
+  }
 }
