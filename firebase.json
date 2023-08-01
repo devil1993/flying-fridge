@@ -1,5 +1,6 @@
 {
   "hosting": {
+    "site": "gratitude-devil1993",
     "public": "build",
     "ignore": [
       "firebase.json",
