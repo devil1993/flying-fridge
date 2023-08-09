@@ -1,7 +1,7 @@
-name: Build project
-on: [push, workflow_dispatch]
+name: Data cleanup
+on: [workflow_dispatch]
 jobs:
-    build:
+    clean-gratitudes:
         runs-on: ubuntu-latest
         steps:
             -   name: Get code
@@ -17,8 +17,8 @@ jobs:
                     key: deps-node-modules-${{ hashFiles('**/package-lock.json') }}
             -   name: Install dependencies
                 run: npm ci
-            -   name: Build project
-                run: npm run build
+            -   name: Cleanup gratitudes
+                run: npm run clean-gratitudes "${{ secrets.FIREBASE_USER_NAME }}" "${{ secrets.FIREBASE_SERVICE_PWD }}"
             -   name: Echo status
                 run: echo 'Build completed successfully.'
 
