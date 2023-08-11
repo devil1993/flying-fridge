@@ -1,5 +1,8 @@
 name: Data cleanup
-on: [workflow_dispatch]
+on:
+    schedule:
+        - cron: '30 5 * * 5'
+        # runs every friday 1100 IST 0530 UTC
 jobs:
     clean-gratitudes:
         runs-on: ubuntu-latest
