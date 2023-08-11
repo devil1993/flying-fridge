@@ -37,17 +37,17 @@ let work = async () => {
   snapshot = await getDocs(gratitudeQuery);
 
   let requests = [];
-  snapshot.forEach((gratitude) =>
-    // for(let gratitude of snapshot)
-    {
-      if (!users.find((u) => u === gratitude.data().userId)) {
-        console.log("Deleting", gratitude.id);
-        let gratitudeRef = doc(db, "gratitudes", gratitude.id);
-        let p = deleteDoc(gratitudeRef);
-        requests.push(p);
-      }
+  // snapshot.forEach((gratitude) =>
+  for(let gratitude of snapshot.docs)
+  {
+    if (!users.find((u) => u === gratitude.data().userId)) {
+      console.log("Deleting", gratitude.id);
+      let gratitudeRef = doc(db, "gratitudes", gratitude.id);
+      let p = deleteDoc(gratitudeRef);
+      requests.push(p);
     }
-  );
+  }
+  // );
   await Promise.all(requests);
   process.exit();
   return;

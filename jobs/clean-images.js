@@ -53,7 +53,8 @@ let work = async () => {
   let storageStuff = await listAll(gratitudeImageRef);
 
 
-  storageStuff.items.forEach(async item => {
+  // storageStuff.items.forEach(async item => {
+  for(let item of storageStuff.items){
     console.log(item)
     let p = getDownloadURL(item)
     requests.push(p)
@@ -68,7 +69,8 @@ let work = async () => {
     else{
       console.log("File:", downloadUrl, "present in gratitudes.")
     }
-  });
+  }
+  // );
   await Promise.all(requests);
   process.exit();
   return;
