@@ -8,6 +8,9 @@ import { RouterProvider, createBrowserRouter} from 'react-router-dom';
 import ErrorPage from './Commons/ErrorPage';
 import { AuthContextProvider } from './Store/auth-store';
 import IndexPage from './IndexPage';
+import { ThemeProvider } from '@mui/material/styles';
+import CssBaseline from '@mui/material/CssBaseline';
+import theme from './theme';
 
 const router = createBrowserRouter([
   {
@@ -26,9 +29,12 @@ const router = createBrowserRouter([
 
 function App() {
   return (
-    <AuthContextProvider>
-      <RouterProvider router={router} />
-    </AuthContextProvider>
+    <ThemeProvider theme={theme}>
+      <CssBaseline />
+      <AuthContextProvider>
+        <RouterProvider router={router} />
+      </AuthContextProvider>
+    </ThemeProvider>
   );
 }
 

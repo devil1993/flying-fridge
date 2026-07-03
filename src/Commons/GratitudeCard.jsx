@@ -43,15 +43,15 @@ function GratitudeCard({ scalingFactor, gratitude }) {
             src={gratitude.imagesrc}
             width={imageSize}
             height={imageSize}
-            style={{ borderRadius: "50%", margin: "16px", 'object-fit': "cover"}}
+            style={{ borderRadius: "50%", margin: "16px auto", display: "block", objectFit: "cover" }}
             alt={gratitude.name}
           />
         )}
 
         <CardContent>
-          <Box sx={{ alignItems: "center" }}>
+          <Box sx={{ display: "flex", flexDirection: "column", alignItems: "center", textAlign: "center" }}>
             {!gratitude.imagesrc && (
-              <Avatar sx={{ bgcolor: "warning.light" }}>
+              <Avatar sx={{ bgcolor: "warning.light", mb: 1 }}>
                 {initials.toUpperCase()}
               </Avatar>
             )}

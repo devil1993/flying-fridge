@@ -9,15 +9,12 @@ import Box from '@mui/material/Box';
 import LockOutlinedIcon from '@mui/icons-material/LockOutlined';
 import Typography from '@mui/material/Typography';
 import Container from '@mui/material/Container';
-import { createTheme, ThemeProvider } from '@mui/material/styles';
 import { useNavigate } from 'react-router-dom';
 import { Alert } from '@mui/material';
 
 
 import { registerToApp } from '../Commons/FirebaseAuthService';
 import Copyright from "../Commons/Copyright"
-
-const theme = createTheme();
 
 export default function SignUp() {
   let [error, setError] = React.useState('');
@@ -50,7 +47,6 @@ export default function SignUp() {
   }
   
   return (
-    <ThemeProvider theme={theme}>
       <Container component="main" maxWidth="xs">
         <CssBaseline />
         <Box
@@ -126,6 +122,5 @@ export default function SignUp() {
         </Box>
         <Copyright sx={{ mt: 8, mb: 4 }} />
       </Container>
-    </ThemeProvider>
   );
 }
