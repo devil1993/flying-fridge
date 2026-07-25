@@ -33,6 +33,9 @@
     "tasksOverdue": "{{count}} overdue",
     "noticesOnBoard": "on the board",
     "noticesImportant": "{{count}} important",
+    "lostSearching": "still searching",
+    "pantryInStock": "in stock",
+    "questionsOpen": "open",
     "open": "Open"
   },
   "theme": {
@@ -115,6 +118,54 @@
     "takeDown": "Take down",
     "by": "by {{name}}",
     "expiresIn": "{{count}}d left"
+  },
+  "lostFound": {
+    "title": "Lost & Found",
+    "add": {
+      "descriptionLabel": "What are you looking for?",
+      "placeholder": "e.g. My blue water bottle",
+      "submit": "Post"
+    },
+    "empty": "Nothing lost right now.",
+    "postedToday": "posted today",
+    "postedAgo": "posted {{count}}d ago",
+    "by": "by {{name}}",
+    "markFound": "Found it",
+    "takeDown": "Take down"
+  },
+  "pantry": {
+    "title": "Pantry",
+    "add": {
+      "nameLabel": "Food item",
+      "namePlaceholder": "e.g. Leftover curry",
+      "madeOn": "Made on",
+      "keepsDays": "Keeps (days)",
+      "quantity": "Qty",
+      "submit": "Add"
+    },
+    "empty": "The pantry list is empty.",
+    "freshUnknown": "freshness unknown",
+    "expired": "past its best",
+    "freshDays": "{{count}}d good",
+    "madeOnLabel": "made {{date}}",
+    "quantityLabel": "Quantity for {{name}}",
+    "decrease": "Decrease quantity",
+    "increase": "Increase quantity",
+    "consume": "Consumed"
+  },
+  "questions": {
+    "title": "Questions",
+    "add": {
+      "label": "Question",
+      "placeholder": "Ask the family something…",
+      "submit": "Ask"
+    },
+    "empty": "No open questions.",
+    "answerLabel": "Your answer",
+    "answerPlaceholder": "Add an answer…",
+    "answerSubmit": "Answer",
+    "answerBy": "— {{name}}",
+    "close": "Close"
   },
   "guide": {
     "meta": { "title": "Guide — Flying Fridge" },

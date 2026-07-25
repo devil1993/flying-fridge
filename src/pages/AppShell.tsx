@@ -4,12 +4,18 @@ import { useModuleShortcuts } from '../features/app/useModuleShortcuts'
 import DashboardView from './DashboardView'
 import TasksDashboard from '../features/tasks/TasksDashboard'
 import NoticesBoard from '../features/notices/NoticesBoard'
+import LostFoundBoard from '../features/lostfound/LostFoundBoard'
+import PantryBoard from '../features/pantry/PantryBoard'
+import QuestionsBoard from '../features/questions/QuestionsBoard'
 import './app-shell.css'
 
 const VIEWS: Record<string, ComponentType> = {
   dashboard: DashboardView,
   tasks: TasksDashboard,
   notices: NoticesBoard,
+  lostFound: LostFoundBoard,
+  pantry: PantryBoard,
+  questions: QuestionsBoard,
 }
 
 /**

@@ -256,6 +256,31 @@ Board visibility (pure logic in `noticeLogic.ts`): a notice is on the board when
 `NOTICE_TTL_DAYS` (30) after `createdAt`; permanent ones never expire. Expired
 and taken-down notices are hidden but retained (timelined).
 
+## 6c. Implemented — Lost & Found, Pantry, Questions (requirement-4)
+
+Same repository pattern, family-scoped, timelined.
+
+```
+lostAndFound/{id}
+  familyId, description
+  status: 'searching'|'found'|'down'   // on board while 'searching'; posting date = createdAt
+  createdBy, createdByName, createdAt, updatedAt
+
+pantry/{id}
+  familyId, name
+  madeOn: string|null      // ISO yyyy-mm-dd
+  keepsDays: number|null   // shelf life; freshness = madeOn + keepsDays
+  quantity: number         // +/- adjustable (clamped at 0)
+  status: 'instock'|'consumed'
+  createdBy, createdByName, createdAt, updatedAt
+
+questions/{id}
+  familyId, text
+  answers: [{ text, byId, byName, at }]   // array; answer time is client clock
+  status: 'open'|'closed'
+  createdBy, createdByName, createdAt, updatedAt
+```
+
 ## 7. Open questions (tracked, not resolved)
 
 - Subcollections vs. top-level collections with a `familyId` filter.

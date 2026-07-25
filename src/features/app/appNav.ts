@@ -12,6 +12,9 @@ export const APP_MODULES: AppModule[] = [
   { id: 'dashboard', labelKey: 'nav.dashboard', shortcut: 'd' },
   { id: 'tasks', labelKey: 'tasks.title', shortcut: 't' },
   { id: 'notices', labelKey: 'notices.title', shortcut: 'n' },
+  { id: 'lostFound', labelKey: 'lostFound.title', shortcut: 'l' },
+  { id: 'pantry', labelKey: 'pantry.title', shortcut: 'p' },
+  { id: 'questions', labelKey: 'questions.title', shortcut: 'q' },
 ]
 
 export interface AppNavValue {

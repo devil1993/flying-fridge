@@ -60,6 +60,15 @@ model {
       notices = component 'features/notices' {
         description 'Notices board: 1-month/permanent/important notices; domain, repository, UI.'
       }
+      lostfound = component 'features/lostfound' {
+        description 'Lost & Found: post a search until found or taken down; posting date.'
+      }
+      pantry = component 'features/pantry' {
+        description 'Pantry: made-date, shelf life, quantity +/-, mark consumed.'
+      }
+      questions = component 'features/questions' {
+        description 'Questions: ask, answer (array), close; general Q&A for the family.'
+      }
       family = component 'features/family' {
         description 'Current-family context (minimal shared code for now; Firestore-backed membership later).'
       }
@@ -71,6 +80,9 @@ model {
       tasks -> family 'scoped to'
       notices -> family 'scoped to'
       notices -> firestore 'reads/writes, subscribes (family-scoped)'
+      lostfound -> firestore 'reads/writes, subscribes (family-scoped)'
+      pantry -> firestore 'reads/writes, subscribes (family-scoped)'
+      questions -> firestore 'reads/writes, subscribes (family-scoped)'
       features -> components 'uses'
       features -> i18n 'uses'
       features -> firebaseLib 'reads/writes via'

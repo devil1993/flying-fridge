@@ -156,8 +156,14 @@ drag-and-drop, **Firebase Analytics** (via `measurementId`) for telemetry.
   **shortcuts** (d/t/n, shown on hover) alongside the existing h/g/a.
 - ✅ Fixed Firestore items not appearing immediately (estimated server
   timestamps).
-- ⬜ **Next:** **Lost & Found**, **Pantry**, **Questions** (same pattern); plus
-  **drag-and-drop** (dnd-kit) where useful.
+- ✅ **Lost & Found, Pantry, Questions modules** — all five board modules are now
+  built (domain + repository + UI + telemetry + tests), each on the tab nav with
+  its own keyboard shortcut (l/p/q) and summarised on the Dashboard.
+  `firestore.rules` already covers their collections.
+  - **Lost & Found:** post a search; posting date shown; mark found / take down.
+  - **Pantry:** made-date, shelf life → freshness, quantity +/- , mark consumed.
+  - **Questions:** ask, answer (array), close.
+- ⬜ **Optional remaining:** **drag-and-drop** (dnd-kit) where useful.
 - ⏸️ **Deferred (owner will configure on the Firebase console):** real
   Firestore-backed **family membership** + per-family **security rules** +
   add-member modal. Family is a client-side code until then.
