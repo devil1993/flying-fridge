@@ -204,6 +204,30 @@ rules on every operation, cross-family access is rejected even if the client
 constructs the query itself. Composite indexes will be added as concrete
 list/calendar queries (by `status`, `dueDate`/`eventDate`) are finalized.
 
+## 6a. Implemented so far — Tasks (requirement-4, vertical slice)
+
+The first concrete collection, behind a `TaskRepository` interface
+(`src/features/tasks/repository.ts`) with a Firestore implementation and an
+in-memory one for tests. Top-level `tasks` collection filtered by `familyId`
+(the current chosen shape; see the subcollection open question below).
+
+```
+tasks/{taskId}
+  familyId:     string        // scope
+  description:  string
+  targetDate:   string|null   // ISO yyyy-mm-dd; drives dashboard colour coding
+  assigneeId:   string|null   // self-assign; null = unclaimed
+  assigneeName: string|null
+  status:       'open'|'done' // kept (timelined) even when done
+  createdBy:    string        // uid
+  createdAt:    timestamp
+  updatedAt:    timestamp
+```
+
+Urgency buckets for colour coding (pure logic in `taskLogic.ts`): `overdue`,
+`today`, `soon` (≤3 days), `later`, `none` (done or no date). Still to wire:
+auth/family context and the Tasks UI (dashboard + self-assign section).
+
 ## 7. Open questions (tracked, not resolved)
 
 - Subcollections vs. top-level collections with a `familyId` filter.

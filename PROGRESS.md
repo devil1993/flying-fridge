@@ -122,14 +122,23 @@ Source: `requirements/requirement-3.md`
 
 ---
 
-## Requirement 4 — Feature modules ⬜ (next; large, build one by one)
+## Requirement 4 — Feature modules 🚧 (Tasks vertical slice, in progress)
 
-Source: `requirements/requirement-4.md`. Needs a foundation before the boards:
-**auth (sign-in) + family context + a Firestore data/repository layer**, then
-each module (Tasks first), then telemetry (Analytics/`measurementId`), optional
-drag-and-drop, and timelined/persistent history. Keep C4 + Guide updated per the
-policy above. Detailed sequence to be confirmed with the maintainer before the
-build.
+Source: `requirements/requirement-4.md`. Approach: **Tasks vertical slice first**
+(minimal auth + one family), then generalize. Defaults: **dnd-kit** for
+drag-and-drop, **Firebase Analytics** (via `measurementId`) for telemetry.
+
+- ✅ **Tasks domain + data layer** — `src/features/tasks/`: `Task` type; pure
+  `taskLogic` (target-date urgency buckets for colour coding, self-assign
+  helpers, my-tasks/board partition); a `TaskRepository` interface with an
+  **in-memory** implementation (tests/offline) and a **Firestore** one
+  (real-time, family-scoped, timelined). 11 unit tests (TDD).
+- ⬜ **Next:** auth (Email/Password + Google) + current-family context; Tasks UI
+  (auth-gated dashboard, add task, self-assign section, target-date colour
+  coding, mark done); telemetry events; drag-and-drop; then the other modules.
+
+Data model for Tasks recorded in `docs/design/data-model.md` §6a; keep C4 +
+Guide updated as the UI lands.
 
 ---
 
