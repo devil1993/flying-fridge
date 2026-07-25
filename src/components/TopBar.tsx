@@ -1,21 +1,28 @@
 import { useEffect, useState } from 'react'
-import { Link } from 'react-router-dom'
+import { Link, useLocation } from 'react-router-dom'
 import { useTranslation } from 'react-i18next'
 import ThemeControls from './ThemeControls'
 import { useAuth } from '../features/auth/authContext'
+import { useFamily } from '../features/family/familyContext'
+import { useAppNav, APP_MODULES } from '../features/app/appNav'
 import { shortcutFor } from '../lib/shortcuts'
 import './topbar.css'
 
 /**
- * App-wide top navigation, shown on every route except the landing page (which
- * has its own header). Keeps Guide + sign in/out reachable everywhere, surfaces
- * each link's keyboard shortcut on hover, and collapses to a hamburger menu on
- * small screens.
+ * App-wide top navigation, shown on every route except the landing page. In the
+ * signed-in app (with a family) it carries the module tabs + switch-family;
+ * otherwise it shows the App/Guide links. Collapses to a hamburger on mobile.
  */
 export default function TopBar() {
   const { t } = useTranslation()
   const { status, signOut } = useAuth()
+  const { familyId, familyName, leave } = useFamily()
+  const { active, setActive } = useAppNav()
+  const { pathname } = useLocation()
   const [open, setOpen] = useState(false)
+
+  const inApp =
+    pathname.startsWith('/app') && status === 'authenticated' && !!familyId
 
   useEffect(() => {
     if (!open) return
@@ -76,15 +83,48 @@ export default function TopBar() {
 
         <div id="topbar-menu" className={open ? 'topbar-menu is-open' : 'topbar-menu'}>
           <nav className="topbar-nav" aria-label={t('nav.appLabel')}>
-            <Link to="/app" title={titleFor(t('nav.app'), '/app')} onClick={close}>
-              {t('nav.app')}
-            </Link>
+            {inApp ? (
+              APP_MODULES.map((m) => (
+                <button
+                  key={m.id}
+                  type="button"
+                  className={m.id === active ? 'topbar-tab is-active' : 'topbar-tab'}
+                  aria-current={m.id === active ? 'page' : undefined}
+                  title={`${t(m.labelKey)} · ${t('nav.shortcut', { key: m.shortcut.toUpperCase() })}`}
+                  onClick={() => {
+                    setActive(m.id)
+                    close()
+                  }}
+                >
+                  {t(m.labelKey)}
+                </button>
+              ))
+            ) : (
+              <Link to="/app" title={titleFor(t('nav.app'), '/app')} onClick={close}>
+                {t('nav.app')}
+              </Link>
+            )}
             <Link to="/guide" title={titleFor(t('nav.guide'), '/guide')} onClick={close}>
               {t('nav.guide')}
             </Link>
           </nav>
 
           <div className="topbar-actions">
+            {inApp && (
+              <span className="topbar-family">
+                <span className="topbar-familyname">{familyName ?? familyId}</span>
+                <button
+                  type="button"
+                  className="topbar-switch"
+                  onClick={() => {
+                    leave()
+                    close()
+                  }}
+                >
+                  {t('tasks.family.leave')}
+                </button>
+              </span>
+            )}
             <ThemeControls />
             {status === 'authenticated' ? (
               <button

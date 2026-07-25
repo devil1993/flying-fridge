@@ -241,6 +241,7 @@ Second module, same repository pattern (`src/features/notices/`). Top-level
 notices/{noticeId}
   familyId:      string
   text:          string
+  date:          string|null   // optional ISO yyyy-mm-dd the notice refers to
   important:     boolean       // colour highlight
   permanent:     boolean       // stays until pulled down
   status:        'up'|'down'   // 'down' = taken off the board (kept/timelined)

@@ -5,6 +5,8 @@ export interface Notice {
   id: string
   familyId: string
   text: string
+  /** Optional date this notice refers to (ISO yyyy-mm-dd), or null. */
+  date: string | null
   /** Adds a colour highlight. */
   important: boolean
   /** Stays up until pulled down (otherwise expires after ~1 month). */
@@ -19,6 +21,7 @@ export interface Notice {
 
 export interface NewNoticeInput {
   text: string
+  date?: string | null
   important?: boolean
   permanent?: boolean
 }

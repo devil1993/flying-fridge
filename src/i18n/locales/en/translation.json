@@ -20,10 +20,20 @@
     "home": "Home",
     "guide": "Guide",
     "app": "App",
+    "dashboard": "Dashboard",
     "appLabel": "Primary",
     "signIn": "Sign in",
     "menu": "Menu",
     "shortcut": "shortcut: {{key}}"
+  },
+  "dashboard": {
+    "title": "Dashboard",
+    "tasksMine": "assigned to you",
+    "tasksOpen": "{{count}} open",
+    "tasksOverdue": "{{count}} overdue",
+    "noticesOnBoard": "on the board",
+    "noticesImportant": "{{count}} important",
+    "open": "Open"
   },
   "theme": {
     "palette": "Colour theme",
@@ -91,9 +101,11 @@
     "add": {
       "textLabel": "Notice",
       "textPlaceholder": "Share something the family should know…",
+      "dateLabel": "Date (optional)",
       "submit": "Post notice"
     },
     "empty": "No notices on the board.",
+    "on": "for {{date}}",
     "important": "Important",
     "permanent": "Permanent",
     "markImportant": "Mark important",
@@ -132,6 +144,7 @@
         "summary": "Simple announcements that stay on the board for a month, or longer if you make them permanent.",
         "steps": [
           "Post a notice with the info the family should see.",
+          "Add an optional date if the notice is about a specific day.",
           "It stays on the noticeboard for one month, or until someone takes it down.",
           "Mark it permanent to keep it up until it's pulled down.",
           "Mark it important to give it a colour highlight so it stands out."

@@ -59,9 +59,9 @@ export default function TasksDashboard({
 
   return (
     <section className="module" aria-labelledby="tasks-heading">
-      <h2 id="tasks-heading" className="module-title">
+      <h1 id="tasks-heading" className="module-title">
         {t('tasks.title')}
-      </h2>
+      </h1>
 
       <form className="task-add" onSubmit={onAdd}>
         <label className="sr-only" htmlFor="task-desc">
@@ -88,12 +88,12 @@ export default function TasksDashboard({
       </form>
 
       <section aria-labelledby="tasks-mine" className="task-section">
-        <h3 id="tasks-mine">{t('tasks.mine')}</h3>
+        <h2 id="tasks-mine">{t('tasks.mine')}</h2>
         {renderList(mine)}
       </section>
 
       <section aria-labelledby="tasks-board" className="task-section">
-        <h3 id="tasks-board">{t('tasks.board')}</h3>
+        <h2 id="tasks-board">{t('tasks.board')}</h2>
         {renderList(board)}
       </section>
     </section>

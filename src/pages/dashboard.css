@@ -1,0 +1,53 @@
+.dash-cards {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: var(--sp-2);
+}
+@media (min-width: 560px) {
+  .dash-cards {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+.dash-card {
+  background: var(--col-surface);
+  border: 1px solid var(--col-border);
+  border-radius: var(--r-md);
+  padding: var(--sp-3);
+  box-shadow: var(--shadow-sm);
+}
+.dash-card h2 {
+  font-size: 1.05rem;
+  color: var(--col-text);
+  margin-bottom: var(--sp-1);
+}
+.dash-stat {
+  font-size: 0.95rem;
+  color: var(--col-text-2);
+}
+.dash-stat strong {
+  font-size: 1.6rem;
+  color: var(--col-primary);
+  margin-right: 4px;
+}
+.dash-sub {
+  font-size: 0.82rem;
+  color: var(--col-text-muted);
+  margin: 4px 0 var(--sp-2);
+}
+.dash-open {
+  font: 600 0.82rem var(--font-sans);
+  background: var(--col-surface-2);
+  color: var(--col-text);
+  border: 1px solid var(--col-border);
+  border-radius: 999px;
+  padding: 7px 14px;
+  cursor: pointer;
+}
+.dash-open:hover {
+  border-color: var(--col-primary);
+}
+.dash-open:focus-visible {
+  outline: 3px solid var(--col-primary);
+  outline-offset: 2px;
+}

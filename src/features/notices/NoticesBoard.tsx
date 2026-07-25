@@ -22,6 +22,7 @@ export default function NoticesBoard({
   const { notices, addNotice, setImportant, setPermanent, takeDown } =
     useNotices(repository, familyId, actor)
   const [text, setText] = useState('')
+  const [date, setDate] = useState('')
   const [important, setImp] = useState(false)
   const [permanent, setPerm] = useState(false)
 
@@ -31,17 +32,18 @@ export default function NoticesBoard({
   function onAdd(e: FormEvent) {
     e.preventDefault()
     if (!text.trim()) return
-    addNotice({ text: text.trim(), important, permanent })
+    addNotice({ text: text.trim(), date: date || null, important, permanent })
     setText('')
+    setDate('')
     setImp(false)
     setPerm(false)
   }
 
   return (
     <section className="module" aria-labelledby="notices-heading">
-      <h2 id="notices-heading" className="module-title">
+      <h1 id="notices-heading" className="module-title">
         {t('notices.title')}
-      </h2>
+      </h1>
 
       <form className="notice-add" onSubmit={onAdd}>
         <label className="sr-only" htmlFor="notice-text">
@@ -56,6 +58,14 @@ export default function NoticesBoard({
           onChange={(e) => setText(e.target.value)}
         />
         <div className="notice-add-row">
+          <input
+            id="notice-date"
+            className="notice-add-date"
+            type="date"
+            aria-label={t('notices.add.dateLabel')}
+            value={date}
+            onChange={(e) => setDate(e.target.value)}
+          />
           <label className="notice-check">
             <input
               type="checkbox"

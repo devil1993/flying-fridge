@@ -144,11 +144,18 @@ drag-and-drop, **Firebase Analytics** (via `measurementId`) for telemetry.
   `useTasks` hook, with **Firebase Analytics** telemetry events (`task_add`,
   `task_assign`, `task_complete`). Accessible + i18n. Integration tests for the
   add→assign→done flow and the family gate.
-- ✅ **App shell + Notices module** — `/app` now has a **tab sub-nav** across
-  modules (family header shared). **Notices** (`src/features/notices/`): post a
-  notice, mark **important** (colour highlight) and **permanent**, 1-month
-  expiry for non-permanent (`noticeLogic`), take down (kept/timelined). Domain +
-  repository (Firestore + in-memory) + UI + telemetry + tests.
+- ✅ **App shell + Notices module** — **Notices** (`src/features/notices/`): post
+  a notice, optional **date**, mark **important** (colour highlight) and
+  **permanent**, 1-month expiry for non-permanent (`noticeLogic`), take down
+  (kept/timelined). Domain + repository (Firestore + in-memory) + UI + telemetry
+  + tests.
+- ✅ **Unified navbar + Dashboard** — merged the double header: the module tabs
+  (**Dashboard · Tasks · Notices**) + **switch family** now live in the single
+  top **TopBar** (context-aware); the app body just renders the active module.
+  Added a **Dashboard** overview (counts across modules) and per-module keyboard
+  **shortcuts** (d/t/n, shown on hover) alongside the existing h/g/a.
+- ✅ Fixed Firestore items not appearing immediately (estimated server
+  timestamps).
 - ⬜ **Next:** **Lost & Found**, **Pantry**, **Questions** (same pattern); plus
   **drag-and-drop** (dnd-kit) where useful.
 - ⏸️ **Deferred (owner will configure on the Firebase console):** real

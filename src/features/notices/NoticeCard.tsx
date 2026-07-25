@@ -1,5 +1,6 @@
 import { useTranslation } from 'react-i18next'
 import { daysLeft } from './noticeLogic'
+import { formatIsoDate } from '../../lib/date'
 import type { Notice } from './types'
 
 interface Props {
@@ -29,6 +30,11 @@ export default function NoticeCard({
       <div className="notice-main">
         <p className="notice-text">{notice.text}</p>
         <div className="notice-meta">
+          {notice.date && (
+            <span className="notice-badge">
+              {t('notices.on', { date: formatIsoDate(notice.date) })}
+            </span>
+          )}
           <span>{t('notices.by', { name: notice.createdByName })}</span>
           {notice.permanent ? (
             <span className="notice-badge">{t('notices.permanent')}</span>

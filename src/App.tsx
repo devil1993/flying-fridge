@@ -12,6 +12,7 @@ import { AuthProvider } from './features/auth/AuthProvider'
 import { useAuth } from './features/auth/authContext'
 import SignInPage from './features/auth/SignInPage'
 import { FamilyProvider } from './features/family/FamilyProvider'
+import { AppNavProvider } from './features/app/AppNavProvider'
 import { useNavShortcuts } from './lib/shortcuts'
 
 /** Gates a route behind authentication; shows sign-in when signed out. */
@@ -48,9 +49,10 @@ export default function App() {
   return (
     <AuthProvider>
       <FamilyProvider>
-        <SkipLink />
-        {showTopBar && <TopBar />}
-        <Routes>
+        <AppNavProvider>
+          <SkipLink />
+          {showTopBar && <TopBar />}
+          <Routes>
           <Route path="/" element={<LandingPage />} />
           <Route path="/guide" element={<GuidePage />} />
           <Route
@@ -61,8 +63,9 @@ export default function App() {
               </RequireAuth>
             }
           />
-          <Route path="*" element={<NotFound />} />
-        </Routes>
+            <Route path="*" element={<NotFound />} />
+          </Routes>
+        </AppNavProvider>
       </FamilyProvider>
     </AuthProvider>
   )

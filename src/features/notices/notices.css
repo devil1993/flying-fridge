@@ -24,6 +24,19 @@
   align-items: center;
   gap: var(--sp-2);
 }
+.notice-add-date {
+  font: inherit;
+  color: var(--col-text);
+  background: var(--col-surface);
+  border: 1px solid var(--col-border);
+  border-radius: var(--r-sm);
+  padding: 8px 10px;
+}
+.notice-add-date:focus-visible {
+  outline: 3px solid var(--col-primary);
+  outline-offset: 2px;
+  border-color: var(--col-primary);
+}
 .notice-check {
   display: inline-flex;
   align-items: center;

@@ -17,7 +17,7 @@ export function shortcutFor(path: string): string | null {
   return NAV_SHORTCUTS.find((s) => s.path === path)?.key.toUpperCase() ?? null
 }
 
-function isEditable(el: EventTarget | null): boolean {
+export function isEditable(el: EventTarget | null): boolean {
   if (!(el instanceof HTMLElement)) return false
   const tag = el.tagName
   return (

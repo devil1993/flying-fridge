@@ -6,77 +6,17 @@
   max-width: 720px;
   margin: 0 auto;
 }
-.app-shell-head {
-  display: flex;
-  flex-wrap: wrap;
-  gap: var(--sp-1) var(--sp-2);
-  align-items: baseline;
-  justify-content: space-between;
-  margin-bottom: var(--sp-3);
-}
-.app-shell-title {
-  font-family: var(--font-display);
-  font-size: 1.7rem;
-  color: var(--col-text);
-}
-.app-shell-family {
-  display: flex;
-  align-items: center;
-  gap: var(--sp-1);
-  font-size: 0.85rem;
-  color: var(--col-text-2);
-}
-.dash-link {
-  background: none;
-  border: none;
-  color: var(--col-primary);
-  font: 600 0.85rem var(--font-sans);
-  cursor: pointer;
-}
-.dash-link:focus-visible {
-  outline: 3px solid var(--col-primary);
-  outline-offset: 2px;
-}
 
-/* Module sub-navigation */
-.app-tabs {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 6px;
-  border-bottom: 1px solid var(--col-border);
-  margin-bottom: var(--sp-4);
-}
-.app-tab {
-  background: none;
-  border: none;
-  border-bottom: 2px solid transparent;
-  padding: 8px 12px;
-  margin-bottom: -1px;
-  color: var(--col-text-2);
-  font: 600 0.92rem var(--font-sans);
-  cursor: pointer;
-}
-.app-tab:hover {
-  color: var(--col-text);
-}
-.app-tab.is-active {
-  color: var(--col-primary);
-  border-bottom-color: var(--col-primary);
-}
-.app-tab:focus-visible {
-  outline: 3px solid var(--col-primary);
-  outline-offset: 2px;
-}
-
-/* Shared module heading */
+/* Shared module heading (each module view's h1). */
 .module-title {
-  font-size: 1.25rem;
+  font-family: var(--font-display);
+  font-size: 1.5rem;
   color: var(--col-text);
   margin-bottom: var(--sp-3);
 }
 
 @media (min-width: 768px) {
   .app-shell {
-    padding: var(--sp-8) var(--sp-4);
+    padding: var(--sp-6) var(--sp-4);
   }
 }

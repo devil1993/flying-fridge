@@ -2,6 +2,7 @@ import { render, screen, fireEvent } from '@testing-library/react'
 import { AuthContext, type AuthContextValue } from '../auth/authContext'
 import { FamilyContext, type FamilyContextValue } from '../family/familyContext'
 import { FamilyProvider } from '../family/FamilyProvider'
+import { AppNavProvider } from '../app/AppNavProvider'
 import { InMemoryTaskRepository } from './repository'
 import TasksDashboard from './TasksDashboard'
 import AppHome from '../../pages/AppHome'
@@ -58,7 +59,9 @@ describe('AppHome family gate', () => {
     render(
       <AuthContext.Provider value={authValue()}>
         <FamilyProvider>
-          <AppHome />
+          <AppNavProvider>
+            <AppHome />
+          </AppNavProvider>
         </FamilyProvider>
       </AuthContext.Provider>,
     )
@@ -72,6 +75,15 @@ describe('AppHome family gate', () => {
     })
     fireEvent.click(screen.getByRole('button', { name: /continue/i }))
 
-    expect(screen.getByRole('heading', { name: 'Tasks' })).toBeInTheDocument()
+    // Lands on the Dashboard (the default module).
+    expect(
+      screen.getByRole('heading', { name: 'Dashboard' }),
+    ).toBeInTheDocument()
+
+    // Module shortcut (n) switches to Notices.
+    fireEvent.keyDown(document.body, { key: 'n' })
+    expect(
+      screen.getByRole('heading', { name: 'Notices' }),
+    ).toBeInTheDocument()
   })
 })

@@ -27,6 +27,7 @@ function toNotice(snap: QueryDocumentSnapshot<DocumentData>): Notice {
     id: snap.id,
     familyId: d.familyId ?? '',
     text: d.text ?? '',
+    date: d.date ?? null,
     important: d.important ?? false,
     permanent: d.permanent ?? false,
     status: (d.status as NoticeStatus) ?? 'up',
@@ -53,6 +54,7 @@ export const firestoreNoticeRepository: NoticeRepository = {
     await addDoc(collection(getDb(), COLLECTION), {
       familyId,
       text: input.text,
+      date: input.date ?? null,
       important: input.important ?? false,
       permanent: input.permanent ?? false,
       status: 'up' satisfies NoticeStatus,

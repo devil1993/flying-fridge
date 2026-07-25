@@ -47,6 +47,7 @@ export class InMemoryNoticeRepository implements NoticeRepository {
       id,
       familyId,
       text: input.text,
+      date: input.date ?? null,
       important: input.important ?? false,
       permanent: input.permanent ?? false,
       status: 'up',
