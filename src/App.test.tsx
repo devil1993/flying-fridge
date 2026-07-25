@@ -1,4 +1,4 @@
-import { render, screen } from '@testing-library/react'
+import { render, screen, within, fireEvent } from '@testing-library/react'
 import { MemoryRouter } from 'react-router-dom'
 import App from './App'
 
@@ -30,6 +30,45 @@ describe('App routing', () => {
     )
     expect(
       screen.getByRole('heading', { name: /sign in to flying fridge/i }),
+    ).toBeInTheDocument()
+  })
+
+  it('shows the top navigation with a Guide link on non-landing routes', () => {
+    render(
+      <MemoryRouter initialEntries={['/guide']}>
+        <App />
+      </MemoryRouter>,
+    )
+    const banner = screen.getByRole('banner')
+    expect(
+      within(banner).getByRole('link', { name: /guide/i }),
+    ).toBeInTheDocument()
+  })
+
+  it('toggles the mobile hamburger menu', () => {
+    render(
+      <MemoryRouter initialEntries={['/guide']}>
+        <App />
+      </MemoryRouter>,
+    )
+    const burger = screen.getByRole('button', { name: /menu/i })
+    expect(burger).toHaveAttribute('aria-expanded', 'false')
+    fireEvent.click(burger)
+    expect(burger).toHaveAttribute('aria-expanded', 'true')
+  })
+
+  it('navigates via the single-key shortcut (g → guide)', () => {
+    render(
+      <MemoryRouter initialEntries={['/']}>
+        <App />
+      </MemoryRouter>,
+    )
+    fireEvent.keyDown(document.body, { key: 'g' })
+    expect(
+      screen.getByRole('heading', {
+        level: 1,
+        name: /how flying fridge works/i,
+      }),
     ).toBeInTheDocument()
   })
 })

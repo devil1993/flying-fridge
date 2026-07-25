@@ -4,6 +4,32 @@
   padding: var(--sp-8) var(--sp-3);
 }
 
+/* Floating close/back so you don't have to scroll to the bottom to leave. */
+.guide-close {
+  position: fixed;
+  top: 72px;
+  right: 16px;
+  z-index: 40;
+  width: 44px;
+  height: 44px;
+  display: grid;
+  place-items: center;
+  border-radius: 999px;
+  background: var(--col-surface);
+  border: 1px solid var(--col-border);
+  color: var(--col-text);
+  box-shadow: var(--shadow-md);
+  cursor: pointer;
+}
+.guide-close:hover {
+  border-color: var(--col-primary);
+  color: var(--col-primary);
+}
+.guide-close:focus-visible {
+  outline: 3px solid var(--col-primary);
+  outline-offset: 2px;
+}
+
 .guide-wrap {
   max-width: 760px;
   margin: 0 auto;

@@ -149,10 +149,29 @@ html[data-theme="dark"][data-palette="contrast"] {
   --mag-tasks:#8FB4FF; --mag-notices:#4FE3A6; --mag-lostfound:#D89CF5; --mag-pantry:#F2B366; --mag-questions:#7CD4FF;
 }
 
+/* Tell native controls (date picker, scrollbars, etc.) which scheme we're in,
+   since theme is driven by [data-theme], not the OS preference. Without this the
+   date input renders light-mode chrome on dark/high-contrast backgrounds and is
+   effectively invisible. */
+html[data-theme="light"] {
+  color-scheme: light;
+}
+html[data-theme="dark"] {
+  color-scheme: dark;
+}
+
 /* Base document colours so every route (not just the landing page) is themed. */
 body {
   font-family: var(--font-sans);
   background-color: var(--col-bg);
   color: var(--col-text);
   transition: background-color var(--dur-mid) ease, color var(--dur-mid) ease;
+}
+
+/* Form controls pick up the brand accent (checkbox ticks, date spinner, etc.). */
+input,
+select,
+textarea,
+button {
+  accent-color: var(--col-primary);
 }

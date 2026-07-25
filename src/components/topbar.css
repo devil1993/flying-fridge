@@ -1,0 +1,143 @@
+.topbar {
+  position: sticky;
+  top: 0;
+  z-index: 50;
+  background: color-mix(in srgb, var(--col-bg) 90%, transparent);
+  backdrop-filter: saturate(180%) blur(8px);
+  border-bottom: 1px solid var(--col-border);
+}
+.topbar-inner {
+  max-width: 1080px;
+  margin: 0 auto;
+  padding: 10px var(--sp-3);
+  display: flex;
+  align-items: center;
+  gap: var(--sp-2);
+}
+
+.topbar-brand {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  font-family: var(--font-display);
+  font-weight: 700;
+  font-size: 1.05rem;
+  color: var(--col-text);
+  text-decoration: none;
+}
+.topbar-brand:focus-visible {
+  outline: 3px solid var(--col-primary);
+  outline-offset: 2px;
+  border-radius: 6px;
+}
+
+/* Hamburger (mobile-first: visible by default, hidden on wide screens). */
+.topbar-burger {
+  display: inline-grid;
+  place-items: center;
+  width: 40px;
+  height: 40px;
+  margin-left: auto;
+  border: 1px solid var(--col-border);
+  background: var(--col-surface-2);
+  color: var(--col-text);
+  border-radius: 10px;
+  cursor: pointer;
+}
+.topbar-burger:focus-visible {
+  outline: 3px solid var(--col-primary);
+  outline-offset: 2px;
+}
+
+/* Collapsible menu (dropdown on mobile). */
+.topbar-menu {
+  display: none;
+  position: absolute;
+  top: 100%;
+  left: 0;
+  right: 0;
+  flex-direction: column;
+  gap: var(--sp-2);
+  background: var(--col-surface);
+  border-bottom: 1px solid var(--col-border);
+  padding: var(--sp-3);
+  box-shadow: var(--shadow-md);
+}
+.topbar-menu.is-open {
+  display: flex;
+}
+
+.topbar-nav {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+.topbar-nav a {
+  padding: 8px 12px;
+  border-radius: 10px;
+  color: var(--col-text-2);
+  font-weight: 600;
+  font-size: 0.9rem;
+  text-decoration: none;
+}
+.topbar-nav a:hover {
+  color: var(--col-text);
+  background: var(--col-surface-2);
+}
+.topbar-nav a:focus-visible {
+  outline: 3px solid var(--col-primary);
+  outline-offset: 2px;
+}
+
+.topbar-actions {
+  display: flex;
+  align-items: center;
+  gap: var(--sp-1);
+  flex-wrap: wrap;
+}
+.topbar-auth {
+  font: 600 0.85rem var(--font-sans);
+  color: #fff;
+  background: var(--col-primary);
+  border: 1px solid var(--col-primary);
+  border-radius: 999px;
+  padding: 8px 16px;
+  cursor: pointer;
+  text-decoration: none;
+  white-space: nowrap;
+}
+.topbar-auth:hover {
+  background: var(--col-primary-dk);
+  border-color: var(--col-primary-dk);
+}
+.topbar-auth:focus-visible {
+  outline: 3px solid var(--col-primary);
+  outline-offset: 2px;
+}
+
+/* Wide screens: inline nav, no hamburger. */
+@media (min-width: 720px) {
+  .topbar-burger {
+    display: none;
+  }
+  .topbar-menu {
+    display: flex;
+    position: static;
+    flex-direction: row;
+    flex: 1;
+    align-items: center;
+    gap: var(--sp-2);
+    background: none;
+    border: none;
+    padding: 0;
+    box-shadow: none;
+  }
+  .topbar-nav {
+    flex-direction: row;
+    margin-left: var(--sp-2);
+  }
+  .topbar-actions {
+    margin-left: auto;
+    flex-wrap: nowrap;
+  }
+}

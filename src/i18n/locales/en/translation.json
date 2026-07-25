@@ -16,7 +16,16 @@
   },
   "nav": {
     "home": "Home",
-    "guide": "Guide"
+    "guide": "Guide",
+    "app": "App",
+    "appLabel": "Primary",
+    "signIn": "Sign in",
+    "menu": "Menu",
+    "shortcut": "shortcut: {{key}}"
+  },
+  "theme": {
+    "palette": "Colour theme",
+    "toggleMode": "Toggle light or dark"
   },
   "auth": {
     "signIn": {
@@ -79,6 +88,7 @@
     "meta": { "title": "Guide — Flying Fridge" },
     "eyebrow": "Guide",
     "title": "How Flying Fridge works",
+    "close": "Close guide",
     "tocLabel": "On this page",
     "tipLabel": "Tip",
     "backHome": "← Back to home",

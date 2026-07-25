@@ -16,7 +16,7 @@ export default function TasksDashboard({
   repository?: TaskRepository
 }) {
   const { t } = useTranslation()
-  const { user, signOut } = useAuth()
+  const { user } = useAuth()
   const { familyId, familyName, leave } = useFamily()
   const actor = { id: user?.id ?? '', name: user?.name ?? '' }
 
@@ -68,13 +68,6 @@ export default function TasksDashboard({
             </span>
             <button type="button" className="dash-link" onClick={leave}>
               {t('tasks.family.leave')}
-            </button>
-            <button
-              type="button"
-              className="dash-link"
-              onClick={() => void signOut()}
-            >
-              {t('auth.signOut')}
             </button>
           </div>
         </header>

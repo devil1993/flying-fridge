@@ -1,0 +1,48 @@
+.theme-controls {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+}
+
+/* Palette picker (shared app-wide; the landing page has its own copy). */
+.theme-controls .palette-select {
+  appearance: none;
+  -webkit-appearance: none;
+  font: 600 0.8rem/1 var(--font-sans);
+  color: var(--col-text);
+  background-color: var(--col-surface-2);
+  border: 1px solid var(--col-border);
+  border-radius: 999px;
+  padding: 8px 28px 8px 12px;
+  cursor: pointer;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 24 24' fill='none' stroke='%23888888' stroke-width='3' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpolyline points='6 9 12 15 18 9'/%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: right 9px center;
+}
+.theme-controls .palette-select:hover {
+  border-color: var(--col-primary);
+}
+.theme-controls .palette-select:focus-visible {
+  outline: 3px solid var(--col-primary);
+  outline-offset: 2px;
+}
+
+.mode-toggle {
+  display: inline-grid;
+  place-items: center;
+  width: 36px;
+  height: 36px;
+  border-radius: 999px;
+  border: 1px solid var(--col-border);
+  background: var(--col-surface-2);
+  color: var(--col-text);
+  font-size: 1rem;
+  cursor: pointer;
+}
+.mode-toggle:hover {
+  border-color: var(--col-primary);
+}
+.mode-toggle:focus-visible {
+  outline: 3px solid var(--col-primary);
+  outline-offset: 2px;
+}

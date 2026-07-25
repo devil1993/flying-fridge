@@ -1,8 +1,9 @@
 import { useEffect, type ReactNode } from 'react'
-import { Routes, Route } from 'react-router-dom'
+import { Routes, Route, useLocation } from 'react-router-dom'
 import { useTranslation } from 'react-i18next'
 
 import SkipLink from './components/a11y/SkipLink'
+import TopBar from './components/TopBar'
 import LandingPage from './pages/landing/LandingPage'
 import GuidePage from './features/guide/GuidePage'
 import NotFound from './pages/NotFound'
@@ -11,6 +12,7 @@ import { AuthProvider } from './features/auth/AuthProvider'
 import { useAuth } from './features/auth/authContext'
 import SignInPage from './features/auth/SignInPage'
 import { FamilyProvider } from './features/family/FamilyProvider'
+import { useNavShortcuts } from './lib/shortcuts'
 
 /** Gates a route behind authentication; shows sign-in when signed out. */
 function RequireAuth({ children }: { children: ReactNode }) {
@@ -32,16 +34,22 @@ function RequireAuth({ children }: { children: ReactNode }) {
 
 export default function App() {
   const { t, i18n } = useTranslation()
+  const { pathname } = useLocation()
+  useNavShortcuts()
 
   useEffect(() => {
     document.title = t('meta.title')
     document.documentElement.lang = i18n.language
   }, [t, i18n.language])
 
+  // The landing page has its own header; every other route gets the shared TopBar.
+  const showTopBar = pathname !== '/'
+
   return (
     <AuthProvider>
       <FamilyProvider>
         <SkipLink />
+        {showTopBar && <TopBar />}
         <Routes>
           <Route path="/" element={<LandingPage />} />
           <Route path="/guide" element={<GuidePage />} />

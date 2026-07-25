@@ -1,5 +1,5 @@
 import { useEffect, type CSSProperties } from 'react'
-import { Link } from 'react-router-dom'
+import { Link, useNavigate } from 'react-router-dom'
 import { useTranslation } from 'react-i18next'
 
 import { GUIDE_MODULES } from './modules'
@@ -8,13 +8,32 @@ import './guide.css'
 
 export default function GuidePage() {
   const { t } = useTranslation()
+  const navigate = useNavigate()
 
   useEffect(() => {
     document.title = t('guide.meta.title')
   }, [t])
 
+  const goBack = () => {
+    if (window.history.length > 1) navigate(-1)
+    else navigate('/app')
+  }
+
   return (
     <main id="main-content" className="guide">
+      <button
+        type="button"
+        className="guide-close"
+        aria-label={t('guide.close')}
+        title={t('guide.close')}
+        onClick={goBack}
+      >
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.4" strokeLinecap="round" aria-hidden="true">
+          <line x1="6" y1="6" x2="18" y2="18" />
+          <line x1="18" y1="6" x2="6" y2="18" />
+        </svg>
+      </button>
+
       <div className="guide-wrap">
         <p className="guide-eyebrow">{t('guide.eyebrow')}</p>
         <h1 className="guide-title">{t('guide.title')}</h1>
