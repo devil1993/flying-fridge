@@ -1,5 +1,6 @@
 import { useCallback, useEffect, useState } from 'react'
 import { track } from '../../lib/firebase'
+import { notifyItemAdded } from '../notifications/notify'
 import type { PantryItem, NewPantryInput, Actor } from './types'
 import type { PantryRepository } from './repository'
 
@@ -23,6 +24,7 @@ export function usePantry(
       if (!familyId) return
       void repo.add(familyId, input, actor)
       void track('pantry_add')
+      notifyItemAdded(familyId, 'pantry', input.name, actor)
     },
     [repo, familyId, actor],
   )

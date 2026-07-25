@@ -18,6 +18,8 @@ service cloud.firestore {
     }
 
     // Board items: read/write only for members of the item's family.
+    // Data is never destroyed — the app soft-deletes (sets a `deleted` marker
+    // via update), so hard delete is denied outright (ADR-0013).
     function itemAllowed() {
       return isMemberOf(resource.data.familyId);
     }
@@ -26,24 +28,39 @@ service cloud.firestore {
     }
 
     match /tasks/{id} {
-      allow read, update, delete: if itemAllowed();
+      allow read, update: if itemAllowed();
       allow create: if newItemAllowed();
+      allow delete: if false;
     }
     match /notices/{id} {
-      allow read, update, delete: if itemAllowed();
+      allow read, update: if itemAllowed();
       allow create: if newItemAllowed();
+      allow delete: if false;
     }
     match /lostAndFound/{id} {
-      allow read, update, delete: if itemAllowed();
+      allow read, update: if itemAllowed();
       allow create: if newItemAllowed();
+      allow delete: if false;
     }
     match /pantry/{id} {
-      allow read, update, delete: if itemAllowed();
+      allow read, update: if itemAllowed();
       allow create: if newItemAllowed();
+      allow delete: if false;
     }
     match /questions/{id} {
-      allow read, update, delete: if itemAllowed();
+      allow read, update: if itemAllowed();
       allow create: if newItemAllowed();
+      allow delete: if false;
+    }
+
+    // Notifications: an append-only, family-scoped feed. Members read it and
+    // append their own entries (actorId must be the caller). Immutable once
+    // written — no update, no delete.
+    match /notifications/{id} {
+      allow read: if itemAllowed();
+      allow create: if newItemAllowed()
+                    && request.resource.data.actorId == request.auth.uid;
+      allow update, delete: if false;
     }
 
     // Families: members can read their family. Creating/editing membership is

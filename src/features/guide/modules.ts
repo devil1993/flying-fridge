@@ -23,6 +23,7 @@ export const GUIDE_MODULES: GuideModule[] = [
   { id: 'lostFound', slug: 'lost-found', accentVar: '--mag-lostfound' },
   { id: 'pantry', slug: 'pantry', accentVar: '--mag-pantry' },
   { id: 'questions', slug: 'questions', accentVar: '--mag-questions' },
+  { id: 'notifications', slug: 'notifications', accentVar: '--mag-notices' },
   { id: 'appearance', slug: 'appearance', accentVar: '--col-primary' },
 ]
 

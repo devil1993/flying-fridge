@@ -47,6 +47,13 @@ const ICONS: Record<string, ReactElement> = {
       <circle cx="18" cy="12.5" r="1.2" fill="currentColor" />
     </svg>
   ),
+  notifications: (
+    <svg width="24" height="24" viewBox="0 0 28 28" fill="none" aria-hidden="true">
+      <path d="M21 11 A7 7 0 0 0 7 11 c0 8-3.5 10-3.5 10 h21 s-3.5-2-3.5-10" stroke="currentColor" strokeWidth="2" strokeLinejoin="round" />
+      <path d="M16 24 a2.4 2.4 0 0 1-4 0" stroke="currentColor" strokeWidth="2" strokeLinecap="round" />
+      <circle cx="21" cy="7" r="3.2" fill="currentColor" />
+    </svg>
+  ),
 }
 
 export function moduleIcon(id: string): ReactElement | null {

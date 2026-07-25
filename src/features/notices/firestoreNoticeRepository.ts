@@ -1,7 +1,6 @@
 import {
   addDoc,
   collection,
-  deleteDoc,
   doc,
   onSnapshot,
   query,
@@ -31,6 +30,7 @@ function toNotice(snap: QueryDocumentSnapshot<DocumentData>): Notice {
     important: d.important ?? false,
     permanent: d.permanent ?? false,
     status: (d.status as NoticeStatus) ?? 'up',
+    deleted: d.deleted ?? false,
     createdBy: d.createdBy ?? '',
     createdByName: d.createdByName ?? '',
     createdAt: created,
@@ -46,7 +46,12 @@ export const firestoreNoticeRepository: NoticeRepository = {
       where('familyId', '==', familyId),
     )
     return onSnapshot(q, (qs) =>
-      onChange(qs.docs.map(toNotice).sort((a, b) => b.createdAt - a.createdAt)),
+      onChange(
+        qs.docs
+          .map(toNotice)
+          .filter((notice) => !notice.deleted)
+          .sort((a, b) => b.createdAt - a.createdAt),
+      ),
     )
   },
 
@@ -86,7 +91,11 @@ export const firestoreNoticeRepository: NoticeRepository = {
     })
   },
 
+  // Soft delete: data is never destroyed, only taken off the board (ADR-0013).
   async remove(noticeId) {
-    await deleteDoc(doc(getDb(), COLLECTION, noticeId))
+    await updateDoc(doc(getDb(), COLLECTION, noticeId), {
+      deleted: true,
+      updatedAt: serverTimestamp(),
+    })
   },
 }

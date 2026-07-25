@@ -185,6 +185,21 @@
     "answerBy": "— {{name}}",
     "close": "Close"
   },
+  "notifications": {
+    "title": "Notifications",
+    "bell": "Notifications",
+    "bellUnread": "Notifications, {{count}} unread",
+    "empty": "Nothing new yet.",
+    "line": "{{name}} posted in {{module}}",
+    "enable": "Enable device alerts",
+    "osTitle": "Flying Fridge",
+    "time": {
+      "justNow": "just now",
+      "minutes": "{{count}}m ago",
+      "hours": "{{count}}h ago",
+      "days": "{{count}}d ago"
+    }
+  },
   "guide": {
     "meta": { "title": "Guide — Flying Fridge" },
     "eyebrow": "Guide",
@@ -263,6 +278,17 @@
           "Everything is keyboard-navigable: press Tab to move, and use the skip link to jump to the content."
         ],
         "tip": "Prefer less motion? Flying Fridge respects your system's reduced-motion setting automatically."
+      },
+      "notifications": {
+        "title": "Notifications",
+        "summary": "A live feed of what the family adds to the board, with an unread badge on the bell and optional device alerts.",
+        "steps": [
+          "When anyone adds a task, notice, lost & found post, pantry item, or question, everyone else is notified.",
+          "The bell in the top bar shows how many are unread — open it to see the feed.",
+          "Select a notification to jump straight to that section of the board.",
+          "Turn on device alerts to get a system notification when the app is open but in the background."
+        ],
+        "tip": "Alerts while the app is fully closed need push (FCM), which is on the roadmap — the in-app feed and badge work today."
       }
     }
   }

@@ -11,6 +11,8 @@ export interface Task {
   assigneeId: string | null
   assigneeName: string | null
   status: TaskStatus
+  /** Soft-delete marker: removed from the board but never destroyed. */
+  deleted?: boolean
   createdBy: string
   createdAt: number
   updatedAt: number

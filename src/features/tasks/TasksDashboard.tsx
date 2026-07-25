@@ -58,7 +58,7 @@ export default function TasksDashboard({
     )
 
   return (
-    <section className="module" aria-labelledby="tasks-heading">
+    <section className="module tasks" aria-labelledby="tasks-heading">
       <h1 id="tasks-heading" className="module-title">
         {t('tasks.title')}
       </h1>
@@ -87,10 +87,14 @@ export default function TasksDashboard({
         </button>
       </form>
 
-      <section aria-labelledby="tasks-mine" className="task-section">
-        <h2 id="tasks-mine">{t('tasks.mine')}</h2>
-        {renderList(mine)}
-      </section>
+      {/* Only show "My tasks" once you actually have some — an empty section
+          here just left dead space above the board. */}
+      {mine.length > 0 && (
+        <section aria-labelledby="tasks-mine" className="task-section">
+          <h2 id="tasks-mine">{t('tasks.mine')}</h2>
+          {renderList(mine)}
+        </section>
+      )}
 
       <section aria-labelledby="tasks-board" className="task-section">
         <h2 id="tasks-board">{t('tasks.board')}</h2>

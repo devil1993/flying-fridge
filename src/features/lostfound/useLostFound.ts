@@ -1,5 +1,6 @@
 import { useCallback, useEffect, useState } from 'react'
 import { track } from '../../lib/firebase'
+import { notifyItemAdded } from '../notifications/notify'
 import type { LostItem, NewLostInput, Actor } from './types'
 import type { LostRepository } from './repository'
 
@@ -23,6 +24,7 @@ export function useLostFound(
       if (!familyId) return
       void repo.add(familyId, input, actor)
       void track('lost_add')
+      notifyItemAdded(familyId, 'lostFound', input.description, actor)
     },
     [repo, familyId, actor],
   )

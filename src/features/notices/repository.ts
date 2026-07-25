@@ -22,7 +22,9 @@ export class InMemoryNoticeRepository implements NoticeRepository {
   }
 
   private snapshot(): Notice[] {
-    return [...this.notices.values()].sort((a, b) => b.createdAt - a.createdAt)
+    return [...this.notices.values()]
+      .filter((n) => !n.deleted)
+      .sort((a, b) => b.createdAt - a.createdAt)
   }
 
   private emit(): void {
@@ -84,7 +86,13 @@ export class InMemoryNoticeRepository implements NoticeRepository {
   }
 
   remove(noticeId: string): Promise<void> {
-    if (this.notices.delete(noticeId)) this.emit()
+    // Soft delete: keep the record, just take it off the board (ADR-0013).
+    const notice = this.notices.get(noticeId)
+    if (notice && !notice.deleted) {
+      notice.deleted = true
+      notice.updatedAt = this.now()
+      this.emit()
+    }
     return Promise.resolve()
   }
 }

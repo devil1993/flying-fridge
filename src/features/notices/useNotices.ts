@@ -1,5 +1,6 @@
 import { useCallback, useEffect, useState } from 'react'
 import { track } from '../../lib/firebase'
+import { notifyItemAdded } from '../notifications/notify'
 import type { Notice, NewNoticeInput, Actor } from './types'
 import type { NoticeRepository } from './repository'
 
@@ -23,6 +24,7 @@ export function useNotices(
       if (!familyId) return
       void repo.add(familyId, input, actor)
       void track('notice_add')
+      notifyItemAdded(familyId, 'notices', input.text, actor)
     },
     [repo, familyId, actor],
   )

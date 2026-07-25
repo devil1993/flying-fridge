@@ -1,5 +1,6 @@
 import { useCallback, useEffect, useState } from 'react'
 import { track } from '../../lib/firebase'
+import { notifyItemAdded } from '../notifications/notify'
 import type { Task, NewTaskInput, Actor } from './types'
 import type { TaskRepository } from './repository'
 
@@ -27,6 +28,7 @@ export function useTasks(
       if (!familyId) return
       void repo.add(familyId, input, actor)
       void track('task_add')
+      notifyItemAdded(familyId, 'tasks', input.description, actor)
     },
     [repo, familyId, actor],
   )
@@ -48,10 +50,13 @@ export function useTasks(
 
   const setDone = useCallback(
     (taskId: string, done: boolean) => {
+      // Completing a task claims it: whoever finishes it becomes the assignee,
+      // so "who did this?" always has an answer. Reopening leaves it be.
+      if (done) void repo.assign(taskId, actor)
       void repo.setStatus(taskId, done ? 'done' : 'open')
       if (done) void track('task_complete')
     },
-    [repo],
+    [repo, actor],
   )
 
   const remove = useCallback(

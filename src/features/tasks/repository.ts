@@ -31,7 +31,9 @@ export class InMemoryTaskRepository implements TaskRepository {
   }
 
   private snapshot(): Task[] {
-    return [...this.tasks.values()].sort((a, b) => b.createdAt - a.createdAt)
+    return [...this.tasks.values()]
+      .filter((t) => !t.deleted)
+      .sort((a, b) => b.createdAt - a.createdAt)
   }
 
   private emit(): void {
@@ -90,7 +92,13 @@ export class InMemoryTaskRepository implements TaskRepository {
   }
 
   remove(taskId: string): Promise<void> {
-    if (this.tasks.delete(taskId)) this.emit()
+    // Soft delete: keep the record, just take it off the board (ADR-0013).
+    const task = this.tasks.get(taskId)
+    if (task && !task.deleted) {
+      task.deleted = true
+      task.updatedAt = this.now()
+      this.emit()
+    }
     return Promise.resolve()
   }
 }

@@ -5,6 +5,7 @@ import ThemeControls from './ThemeControls'
 import { useAuth } from '../features/auth/authContext'
 import { useFamily } from '../features/family/familyContext'
 import { useAppNav, APP_MODULES } from '../features/app/appNav'
+import NotificationBell from '../features/notifications/NotificationBell'
 import { shortcutFor } from '../lib/shortcuts'
 import './topbar.css'
 
@@ -16,7 +17,7 @@ import './topbar.css'
 export default function TopBar() {
   const { t } = useTranslation()
   const { status, signOut } = useAuth()
-  const { familyId, familyName } = useFamily()
+  const { familyId } = useFamily()
   const { active, setActive } = useAppNav()
   const { pathname } = useLocation()
   const [open, setOpen] = useState(false)
@@ -57,29 +58,34 @@ export default function TopBar() {
           <span>{t('app.name')}</span>
         </Link>
 
-        <button
-          type="button"
-          className="topbar-burger"
-          aria-label={t('nav.menu')}
-          aria-expanded={open}
-          aria-controls="topbar-menu"
-          onClick={() => setOpen((v) => !v)}
-        >
-          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.4" strokeLinecap="round" aria-hidden="true">
-            {open ? (
-              <>
-                <line x1="6" y1="6" x2="18" y2="18" />
-                <line x1="18" y1="6" x2="6" y2="18" />
-              </>
-            ) : (
-              <>
-                <line x1="3" y1="7" x2="21" y2="7" />
-                <line x1="3" y1="12" x2="21" y2="12" />
-                <line x1="3" y1="17" x2="21" y2="17" />
-              </>
-            )}
-          </svg>
-        </button>
+        {/* Always-visible right cluster: the bell stays on the bar even on
+            mobile (it never collapses into the hamburger menu). */}
+        <div className="topbar-right">
+          {inApp && <NotificationBell />}
+          <button
+            type="button"
+            className="topbar-burger"
+            aria-label={t('nav.menu')}
+            aria-expanded={open}
+            aria-controls="topbar-menu"
+            onClick={() => setOpen((v) => !v)}
+          >
+            <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.4" strokeLinecap="round" aria-hidden="true">
+              {open ? (
+                <>
+                  <line x1="6" y1="6" x2="18" y2="18" />
+                  <line x1="18" y1="6" x2="6" y2="18" />
+                </>
+              ) : (
+                <>
+                  <line x1="3" y1="7" x2="21" y2="7" />
+                  <line x1="3" y1="12" x2="21" y2="12" />
+                  <line x1="3" y1="17" x2="21" y2="17" />
+                </>
+              )}
+            </svg>
+          </button>
+        </div>
 
         <div id="topbar-menu" className={open ? 'topbar-menu is-open' : 'topbar-menu'}>
           <nav className="topbar-nav" aria-label={t('nav.appLabel')}>
@@ -109,29 +115,29 @@ export default function TopBar() {
             </Link>
           </nav>
 
+          {/* In-app, appearance / language / family / sign-out all live on the
+              Settings tab — so they're not repeated here. Off-app (landing,
+              guide, signed-out) Settings isn't reachable, so keep theme + auth. */}
           <div className="topbar-actions">
-            {inApp && (familyName ?? familyId) && (
-              <span className="topbar-family">
-                <span className="topbar-familyname">{familyName ?? familyId}</span>
-              </span>
-            )}
-            <ThemeControls />
-            {status === 'authenticated' ? (
-              <button
-                type="button"
-                className="topbar-auth"
-                onClick={() => {
-                  close()
-                  void signOut()
-                }}
-              >
-                {t('auth.signOut')}
-              </button>
-            ) : (
-              <Link to="/app" className="topbar-auth" onClick={close}>
-                {t('nav.signIn')}
-              </Link>
-            )}
+            {!inApp && <ThemeControls />}
+            {status === 'authenticated'
+              ? !inApp && (
+                  <button
+                    type="button"
+                    className="topbar-auth"
+                    onClick={() => {
+                      close()
+                      void signOut()
+                    }}
+                  >
+                    {t('auth.signOut')}
+                  </button>
+                )
+              : (
+                  <Link to="/app" className="topbar-auth" onClick={close}>
+                    {t('nav.signIn')}
+                  </Link>
+                )}
           </div>
         </div>
       </div>

@@ -1,7 +1,6 @@
 import {
   addDoc,
   collection,
-  deleteDoc,
   doc,
   onSnapshot,
   query,
@@ -31,6 +30,7 @@ function toTask(snap: QueryDocumentSnapshot<DocumentData>): Task {
     assigneeId: d.assigneeId ?? null,
     assigneeName: d.assigneeName ?? null,
     status: (d.status as TaskStatus) ?? 'open',
+    deleted: d.deleted ?? false,
     createdBy: d.createdBy ?? '',
     createdAt: created,
     updatedAt: updated,
@@ -52,7 +52,12 @@ export const firestoreTaskRepository: TaskRepository = {
       where('familyId', '==', familyId),
     )
     return onSnapshot(q, (qs) =>
-      onChange(qs.docs.map(toTask).sort((a, b) => b.createdAt - a.createdAt)),
+      onChange(
+        qs.docs
+          .map(toTask)
+          .filter((task) => !task.deleted)
+          .sort((a, b) => b.createdAt - a.createdAt),
+      ),
     )
   },
 
@@ -85,7 +90,12 @@ export const firestoreTaskRepository: TaskRepository = {
     })
   },
 
+  // Soft delete: data is never destroyed, only taken off the board (see
+  // ADR-0013). Reads filter out `deleted` items.
   async remove(taskId) {
-    await deleteDoc(doc(getDb(), COLLECTION, taskId))
+    await updateDoc(doc(getDb(), COLLECTION, taskId), {
+      deleted: true,
+      updatedAt: serverTimestamp(),
+    })
   },
 }

@@ -13,6 +13,8 @@ export interface Notice {
   permanent: boolean
   /** 'down' = taken off the board by someone (still persisted). */
   status: NoticeStatus
+  /** Soft-delete marker: removed from the board but never destroyed. */
+  deleted?: boolean
   createdBy: string
   createdByName: string
   createdAt: number

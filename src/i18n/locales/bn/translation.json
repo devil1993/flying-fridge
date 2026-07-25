@@ -180,5 +180,20 @@
     "answerSubmit": "উত্তর",
     "answerBy": "— {{name}}",
     "close": "বন্ধ করুন"
+  },
+  "notifications": {
+    "title": "বিজ্ঞপ্তি",
+    "bell": "বিজ্ঞপ্তি",
+    "bellUnread": "বিজ্ঞপ্তি, {{count}}টি না-দেখা",
+    "empty": "নতুন কিছু নেই।",
+    "line": "{{name}} {{module}}-এ কিছু যোগ করেছেন",
+    "enable": "ডিভাইসে সতর্কতা চালু করুন",
+    "osTitle": "Flying Fridge",
+    "time": {
+      "justNow": "এইমাত্র",
+      "minutes": "{{count}} মিনিট আগে",
+      "hours": "{{count}} ঘণ্টা আগে",
+      "days": "{{count}} দিন আগে"
+    }
   }
 }
