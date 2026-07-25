@@ -93,6 +93,16 @@ CI (`.github/workflows/ci.yml`) runs **install → lint → typecheck → test �
 build** on every push to `main` and every PR. Run those five locally before
 pushing and you'll match CI.
 
+### Deploy (GitHub Pages)
+
+`.github/workflows/deploy-pages.yml` builds and publishes the app to **GitHub
+Pages** on every push to `main` (served at
+`https://<username>.github.io/<repo>/`). The base path, router `basename`, SPA
+`404.html` fallback, and PWA manifest are all handled automatically. One-time
+setup (enable Pages, push to `main`, optional Firebase secrets) is in
+[`human-instructions/04-github-pages.md`](./human-instructions/04-github-pages.md);
+rationale in [ADR-0014](./docs/adr/0014-deploy-to-github-pages.md).
+
 ---
 
 ## Project structure

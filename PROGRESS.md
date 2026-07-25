@@ -236,6 +236,20 @@ Source: `requirements/requirement-5.md`. Four parts, built as increments.
 
 ---
 
+## Deployment — GitHub Pages ✅
+
+- ✅ **`deploy-pages.yml`** builds and publishes to **GitHub Pages** on push to
+  `main` (official `configure-pages`/`upload-pages-artifact`/`deploy-pages`).
+  Base path derived from the repo name (`VITE_BASE`), router `basename` from
+  `BASE_URL`, `404.html` SPA fallback, base-relative PWA manifest, and landing
+  `/app`·`/guide` links base-prefixed at render. Firebase web config passed from
+  repo Secrets (absent → signed-out/demo). **ADR-0014.**
+- 🔧 **Manual one-time steps** (owner): push to `main`, enable Pages (Source:
+  GitHub Actions), optionally add `VITE_FIREBASE_*` secrets + authorize the
+  `*.github.io` domain — see `human-instructions/04-github-pages.md`.
+
+---
+
 ## Backlog / candidate features (from requirement-1 "Polishing")
 
 Not scheduled — raised for consideration when writing future requirement files:
