@@ -232,6 +232,29 @@ family** (a shared code held in `localStorage` — `familyId`; Firestore-backed
 membership and security rules come later), the Tasks dashboard UI, and Firebase
 Analytics telemetry. Still to add for Tasks: drag-and-drop.
 
+## 6b. Implemented — Notices (requirement-4)
+
+Second module, same repository pattern (`src/features/notices/`). Top-level
+`notices` collection filtered by `familyId`.
+
+```
+notices/{noticeId}
+  familyId:      string
+  text:          string
+  important:     boolean       // colour highlight
+  permanent:     boolean       // stays until pulled down
+  status:        'up'|'down'   // 'down' = taken off the board (kept/timelined)
+  createdBy:     string
+  createdByName: string
+  createdAt:     timestamp
+  updatedAt:     timestamp
+```
+
+Board visibility (pure logic in `noticeLogic.ts`): a notice is on the board when
+`status === 'up'` and it hasn't expired. Non-permanent notices expire
+`NOTICE_TTL_DAYS` (30) after `createdAt`; permanent ones never expire. Expired
+and taken-down notices are hidden but retained (timelined).
+
 ## 7. Open questions (tracked, not resolved)
 
 - Subcollections vs. top-level collections with a `familyId` filter.

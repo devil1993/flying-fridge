@@ -144,16 +144,22 @@ drag-and-drop, **Firebase Analytics** (via `measurementId`) for telemetry.
   `useTasks` hook, with **Firebase Analytics** telemetry events (`task_add`,
   `task_assign`, `task_complete`). Accessible + i18n. Integration tests for the
   add→assign→done flow and the family gate.
-- ⬜ **Next:** simple **drag-and-drop** (dnd-kit) for claim/reorder; then the
-  other modules — Notices, Lost & Found, Pantry, Questions — repeating the
-  domain → repository → UI pattern.
+- ✅ **App shell + Notices module** — `/app` now has a **tab sub-nav** across
+  modules (family header shared). **Notices** (`src/features/notices/`): post a
+  notice, mark **important** (colour highlight) and **permanent**, 1-month
+  expiry for non-permanent (`noticeLogic`), take down (kept/timelined). Domain +
+  repository (Firestore + in-memory) + UI + telemetry + tests.
+- ⬜ **Next:** **Lost & Found**, **Pantry**, **Questions** (same pattern); plus
+  **drag-and-drop** (dnd-kit) where useful.
+- ⏸️ **Deferred (owner will configure on the Firebase console):** real
+  Firestore-backed **family membership** + per-family **security rules** +
+  add-member modal. Family is a client-side code until then.
 
-> ⚠️ **Manual step required now:** Firestore was created in production mode, so
-> writes fail with "Missing or insufficient permissions" until rules are
-> published. Rules live in `firestore.rules`; publish via
-> `human-instructions/02-firestore-security-rules.md`. Current rules allow any
-> signed-in user to read/write `tasks` (not yet family-scoped — see the note
-> above).
+> ⚠️ **Manual step (re-publish rules):** `firestore.rules` now covers all five
+> board collections (`tasks`, `notices`, `lostAndFound`, `pantry`, `questions`)
+> — signed-in users may read/write them (not yet family-scoped). Re-publish via
+> `human-instructions/02-firestore-security-rules.md` so Notices (and the coming
+> modules) work.
 
 Boundary note: `lib/firebase` owns SDK init + Auth/Messaging/Analytics wrappers;
 feature repositories may call Firestore data APIs directly behind the repository

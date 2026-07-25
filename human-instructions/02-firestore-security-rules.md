@@ -33,6 +33,11 @@ firebase deploy --only firestore:rules --project group-noticeboard
 
 ---
 
+> **Re-publish when the rules change.** `firestore.rules` now covers all five
+> board collections (`tasks`, `notices`, `lostAndFound`, `pantry`, `questions`).
+> Whenever this file changes (e.g. a new module or, later, family-scoped rules),
+> repeat Option A or B to re-publish.
+
 ## What these rules do (read this)
 
 - **Any signed-in user can read/write `tasks`.** They are **not yet scoped to a

@@ -17,7 +17,7 @@ export default function TasksDashboard({
 }) {
   const { t } = useTranslation()
   const { user } = useAuth()
-  const { familyId, familyName, leave } = useFamily()
+  const { familyId } = useFamily()
   const actor = { id: user?.id ?? '', name: user?.name ?? '' }
 
   const { tasks, addTask, assignToSelf, release, setDone, remove } = useTasks(
@@ -58,54 +58,44 @@ export default function TasksDashboard({
     )
 
   return (
-    <main id="main-content" className="dash">
-      <div className="dash-wrap">
-        <header className="dash-head">
-          <h1>{t('tasks.title')}</h1>
-          <div className="dash-actions">
-            <span className="dash-family">
-              {t('tasks.family.current', { name: familyName ?? familyId })}
-            </span>
-            <button type="button" className="dash-link" onClick={leave}>
-              {t('tasks.family.leave')}
-            </button>
-          </div>
-        </header>
+    <section className="module" aria-labelledby="tasks-heading">
+      <h2 id="tasks-heading" className="module-title">
+        {t('tasks.title')}
+      </h2>
 
-        <form className="task-add" onSubmit={onAdd}>
-          <label className="sr-only" htmlFor="task-desc">
-            {t('tasks.add.descriptionLabel')}
-          </label>
-          <input
-            id="task-desc"
-            className="task-add-desc"
-            placeholder={t('tasks.add.descriptionPlaceholder')}
-            value={desc}
-            onChange={(e) => setDesc(e.target.value)}
-          />
-          <input
-            id="task-date"
-            className="task-add-date"
-            type="date"
-            aria-label={t('tasks.add.dateLabel')}
-            value={date}
-            onChange={(e) => setDate(e.target.value)}
-          />
-          <button type="submit" className="task-add-submit">
-            {t('tasks.add.submit')}
-          </button>
-        </form>
+      <form className="task-add" onSubmit={onAdd}>
+        <label className="sr-only" htmlFor="task-desc">
+          {t('tasks.add.descriptionLabel')}
+        </label>
+        <input
+          id="task-desc"
+          className="task-add-desc"
+          placeholder={t('tasks.add.descriptionPlaceholder')}
+          value={desc}
+          onChange={(e) => setDesc(e.target.value)}
+        />
+        <input
+          id="task-date"
+          className="task-add-date"
+          type="date"
+          aria-label={t('tasks.add.dateLabel')}
+          value={date}
+          onChange={(e) => setDate(e.target.value)}
+        />
+        <button type="submit" className="task-add-submit">
+          {t('tasks.add.submit')}
+        </button>
+      </form>
 
-        <section aria-labelledby="tasks-mine" className="task-section">
-          <h2 id="tasks-mine">{t('tasks.mine')}</h2>
-          {renderList(mine)}
-        </section>
+      <section aria-labelledby="tasks-mine" className="task-section">
+        <h3 id="tasks-mine">{t('tasks.mine')}</h3>
+        {renderList(mine)}
+      </section>
 
-        <section aria-labelledby="tasks-board" className="task-section">
-          <h2 id="tasks-board">{t('tasks.board')}</h2>
-          {renderList(board)}
-        </section>
-      </div>
-    </main>
+      <section aria-labelledby="tasks-board" className="task-section">
+        <h3 id="tasks-board">{t('tasks.board')}</h3>
+        {renderList(board)}
+      </section>
+    </section>
   )
 }

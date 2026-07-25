@@ -76,8 +76,8 @@ export default function TopBar() {
 
         <div id="topbar-menu" className={open ? 'topbar-menu is-open' : 'topbar-menu'}>
           <nav className="topbar-nav" aria-label={t('nav.appLabel')}>
-            <Link to="/app" title={titleFor(t('tasks.title'), '/app')} onClick={close}>
-              {t('tasks.title')}
+            <Link to="/app" title={titleFor(t('nav.app'), '/app')} onClick={close}>
+              {t('nav.app')}
             </Link>
             <Link to="/guide" title={titleFor(t('nav.guide'), '/guide')} onClick={close}>
               {t('nav.guide')}

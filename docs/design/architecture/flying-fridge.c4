@@ -57,6 +57,9 @@ model {
       tasks = component 'features/tasks' {
         description 'Tasks board: domain, repository (Firestore + in-memory), dashboard UI, telemetry.'
       }
+      notices = component 'features/notices' {
+        description 'Notices board: 1-month/permanent/important notices; domain, repository, UI.'
+      }
       family = component 'features/family' {
         description 'Current-family context (minimal shared code for now; Firestore-backed membership later).'
       }
@@ -66,6 +69,8 @@ model {
       pages -> authFeature 'gated by'
       pages -> family 'scoped by'
       tasks -> family 'scoped to'
+      notices -> family 'scoped to'
+      notices -> firestore 'reads/writes, subscribes (family-scoped)'
       features -> components 'uses'
       features -> i18n 'uses'
       features -> firebaseLib 'reads/writes via'

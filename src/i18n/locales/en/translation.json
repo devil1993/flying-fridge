@@ -1,7 +1,9 @@
 {
   "app": {
     "name": "Flying Fridge",
-    "tagline": "Your family's digital noticeboard"
+    "tagline": "Your family's digital noticeboard",
+    "title": "Your family board",
+    "sections": "Board sections"
   },
   "meta": {
     "title": "Flying Fridge — Your Family's Digital Noticeboard"
@@ -83,6 +85,24 @@
       "current": "Family: {{name}}",
       "leave": "Switch family"
     }
+  },
+  "notices": {
+    "title": "Notices",
+    "add": {
+      "textLabel": "Notice",
+      "textPlaceholder": "Share something the family should know…",
+      "submit": "Post notice"
+    },
+    "empty": "No notices on the board.",
+    "important": "Important",
+    "permanent": "Permanent",
+    "markImportant": "Mark important",
+    "unmarkImportant": "Unmark important",
+    "makePermanent": "Make permanent",
+    "unmarkPermanent": "Make temporary",
+    "takeDown": "Take down",
+    "by": "by {{name}}",
+    "expiresIn": "{{count}}d left"
   },
   "guide": {
     "meta": { "title": "Guide — Flying Fridge" },
