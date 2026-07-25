@@ -8,6 +8,7 @@ import NoticesBoard from '../features/notices/NoticesBoard'
 import LostFoundBoard from '../features/lostfound/LostFoundBoard'
 import PantryBoard from '../features/pantry/PantryBoard'
 import QuestionsBoard from '../features/questions/QuestionsBoard'
+import SettingsView from './SettingsView'
 import './app-shell.css'
 
 const VIEWS: Record<string, ComponentType> = {
@@ -17,6 +18,7 @@ const VIEWS: Record<string, ComponentType> = {
   lostFound: LostFoundBoard,
   pantry: PantryBoard,
   questions: QuestionsBoard,
+  settings: SettingsView,
 }
 
 /**

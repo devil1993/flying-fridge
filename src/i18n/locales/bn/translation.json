@@ -1,0 +1,184 @@
+{
+  "app": {
+    "name": "Flying Fridge",
+    "tagline": "আপনার পরিবারের ডিজিটাল নোটিশবোর্ড",
+    "title": "আপনার পরিবারের বোর্ড",
+    "sections": "বোর্ডের বিভাগ"
+  },
+  "settings": {
+    "title": "সেটিংস",
+    "appearance": "চেহারা",
+    "language": "ভাষা",
+    "account": "অ্যাকাউন্ট",
+    "family": "পরিবার",
+    "signOut": "সাইন আউট",
+    "languageEn": "English",
+    "languageBn": "বাংলা"
+  },
+  "meta": {
+    "title": "Flying Fridge — আপনার পরিবারের ডিজিটাল নোটিশবোর্ড"
+  },
+  "skip": {
+    "toContent": "মূল বিষয়বস্তুতে যান"
+  },
+  "notFound": {
+    "title": "পৃষ্ঠা পাওয়া যায়নি",
+    "body": "সেই নোটটি যেন ফ্রিজের দরজা থেকে উড়ে গেছে।",
+    "home": "হোমে ফিরুন"
+  },
+  "nav": {
+    "home": "হোম",
+    "guide": "গাইড",
+    "app": "অ্যাপ",
+    "dashboard": "ড্যাশবোর্ড",
+    "appLabel": "প্রধান",
+    "signIn": "সাইন ইন",
+    "menu": "মেনু",
+    "shortcut": "শর্টকাট: {{key}}"
+  },
+  "dashboard": {
+    "title": "ড্যাশবোর্ড",
+    "tasksMine": "আপনাকে বরাদ্দ",
+    "tasksOpen": "{{count}}টি খোলা",
+    "tasksOverdue": "{{count}}টি সময় পার",
+    "noticesOnBoard": "বোর্ডে",
+    "noticesImportant": "{{count}}টি গুরুত্বপূর্ণ",
+    "lostSearching": "খোঁজা হচ্ছে",
+    "pantryInStock": "মজুত আছে",
+    "questionsOpen": "খোলা",
+    "open": "খুলুন"
+  },
+  "theme": {
+    "palette": "রঙের থিম",
+    "toggleMode": "আলো/অন্ধকার পরিবর্তন"
+  },
+  "auth": {
+    "signIn": {
+      "title": "Flying Fridge-এ সাইন ইন করুন",
+      "subtitle": "আপনার পরিবারের বোর্ডে যোগ দিন।",
+      "email": "ইমেল",
+      "password": "পাসওয়ার্ড",
+      "submit": "সাইন ইন",
+      "register": "অ্যাকাউন্ট তৈরি করুন",
+      "needAccount": "নতুন? একটি অ্যাকাউন্ট তৈরি করুন",
+      "haveAccount": "অ্যাকাউন্ট আছে? সাইন ইন করুন",
+      "google": "Google দিয়ে চালিয়ে যান",
+      "or": "অথবা",
+      "needFields": "আপনার ইমেল ও পাসওয়ার্ড দিন।",
+      "failed": "কাজ করেনি — বিবরণ যাচাই করে আবার চেষ্টা করুন।",
+      "loading": "লোড হচ্ছে…"
+    },
+    "appTitle": "আপনার বোর্ড",
+    "signedInAs": "সাইন ইন করেছেন {{name}}",
+    "signOut": "সাইন আউট",
+    "dashboardComing": "আপনার কাজের ড্যাশবোর্ড শীঘ্রই এখানে আসছে।"
+  },
+  "family": {
+    "loading": "আপনার পরিবার লোড হচ্ছে…",
+    "none": {
+      "title": "আপনি এখনও কোনো পরিবারে নেই",
+      "body": "একজন পরিবারের সদস্য (বা অ্যাডমিন)-কে আপনাকে যোগ করতে বলুন — অথবা Firebase কনসোলে প্রথম পরিবারটি তৈরি করুন। নিচের ইউজার আইডি শেয়ার করুন।",
+      "yourId": "আপনার ইউজার আইডি"
+    }
+  },
+  "tasks": {
+    "title": "কাজ",
+    "add": {
+      "descriptionLabel": "কী করতে হবে?",
+      "descriptionPlaceholder": "যেমন দুধ কিনুন",
+      "dateLabel": "লক্ষ্য তারিখ (ঐচ্ছিক)",
+      "submit": "কাজ যোগ করুন"
+    },
+    "mine": "আমার কাজ",
+    "board": "বোর্ড",
+    "empty": "এখানে এখনও কিছু নেই।",
+    "assignToMe": "আমাকে দিন",
+    "release": "ছেড়ে দিন",
+    "markDone": "সম্পন্ন",
+    "markOpen": "আবার খুলুন",
+    "remove": "কাজ মুছুন",
+    "assignedTo": "{{name}} নিয়েছেন",
+    "unassigned": "কেউ নেয়নি",
+    "noDate": "তারিখ নেই",
+    "targetDate": "শেষ {{date}}",
+    "urgency": {
+      "overdue": "সময় পার",
+      "today": "আজ শেষ",
+      "soon": "শীঘ্রই",
+      "later": "আসন্ন",
+      "none": ""
+    },
+    "family": {
+      "current": "পরিবার: {{name}}",
+      "leave": "পরিবার পরিবর্তন"
+    }
+  },
+  "notices": {
+    "title": "নোটিশ",
+    "add": {
+      "textLabel": "নোটিশ",
+      "textPlaceholder": "পরিবারকে জানানোর মতো কিছু…",
+      "dateLabel": "তারিখ (ঐচ্ছিক)",
+      "submit": "নোটিশ দিন"
+    },
+    "empty": "বোর্ডে কোনো নোটিশ নেই।",
+    "on": "তারিখ {{date}}",
+    "important": "গুরুত্বপূর্ণ",
+    "permanent": "স্থায়ী",
+    "markImportant": "গুরুত্বপূর্ণ করুন",
+    "unmarkImportant": "গুরুত্ব সরান",
+    "makePermanent": "স্থায়ী করুন",
+    "unmarkPermanent": "অস্থায়ী করুন",
+    "takeDown": "নামিয়ে দিন",
+    "by": "{{name}} থেকে",
+    "expiresIn": "{{count}} দিন বাকি"
+  },
+  "lostFound": {
+    "title": "হারানো ও প্রাপ্তি",
+    "add": {
+      "descriptionLabel": "আপনি কী খুঁজছেন?",
+      "placeholder": "যেমন আমার নীল পানির বোতল",
+      "submit": "পোস্ট"
+    },
+    "empty": "এখন কিছু হারায়নি।",
+    "postedToday": "আজ পোস্ট করা হয়েছে",
+    "postedAgo": "{{count}} দিন আগে পোস্ট",
+    "by": "{{name}} থেকে",
+    "markFound": "পাওয়া গেছে",
+    "takeDown": "নামিয়ে দিন"
+  },
+  "pantry": {
+    "title": "প্যান্ট্রি",
+    "add": {
+      "nameLabel": "খাবার",
+      "namePlaceholder": "যেমন অবশিষ্ট তরকারি",
+      "madeOn": "তৈরির তারিখ",
+      "keepsDays": "টিকবে (দিন)",
+      "quantity": "পরিমাণ",
+      "submit": "যোগ"
+    },
+    "empty": "প্যান্ট্রি তালিকা খালি।",
+    "freshUnknown": "সতেজতা অজানা",
+    "expired": "মেয়াদ পার",
+    "freshDays": "{{count}} দিন ভালো",
+    "madeOnLabel": "তৈরি {{date}}",
+    "quantityLabel": "{{name}}-এর পরিমাণ",
+    "decrease": "পরিমাণ কমান",
+    "increase": "পরিমাণ বাড়ান",
+    "consume": "শেষ হয়েছে"
+  },
+  "questions": {
+    "title": "প্রশ্ন",
+    "add": {
+      "label": "প্রশ্ন",
+      "placeholder": "পরিবারকে কিছু জিজ্ঞাসা করুন…",
+      "submit": "জিজ্ঞাসা"
+    },
+    "empty": "কোনো খোলা প্রশ্ন নেই।",
+    "answerLabel": "আপনার উত্তর",
+    "answerPlaceholder": "একটি উত্তর যোগ করুন…",
+    "answerSubmit": "উত্তর",
+    "answerBy": "— {{name}}",
+    "close": "বন্ধ করুন"
+  }
+}

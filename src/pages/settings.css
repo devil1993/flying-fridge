@@ -1,0 +1,62 @@
+.settings-group {
+  padding: var(--sp-3) 0;
+  border-bottom: 1px solid var(--col-border);
+}
+.settings-group:last-child {
+  border-bottom: none;
+}
+.settings-group h2 {
+  font-size: 1rem;
+  color: var(--col-text);
+  margin-bottom: var(--sp-2);
+}
+.settings-value {
+  color: var(--col-text-2);
+  margin-bottom: var(--sp-1);
+}
+.settings-members {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+}
+.settings-members li {
+  font-size: 0.85rem;
+  color: var(--col-text-2);
+  background: var(--col-surface-2);
+  border: 1px solid var(--col-border);
+  border-radius: 999px;
+  padding: 4px 12px;
+}
+.settings-select {
+  font: inherit;
+  color: var(--col-text);
+  background: var(--col-surface);
+  border: 1px solid var(--col-border);
+  border-radius: var(--r-sm);
+  padding: 9px 12px;
+  min-width: 12rem;
+}
+.settings-select:focus-visible {
+  outline: 3px solid var(--col-primary);
+  outline-offset: 2px;
+  border-color: var(--col-primary);
+}
+.settings-signout {
+  font: 600 0.9rem var(--font-sans);
+  color: #fff;
+  background: var(--col-primary);
+  border: none;
+  border-radius: 999px;
+  padding: 9px 18px;
+  cursor: pointer;
+}
+.settings-signout:hover {
+  background: var(--col-primary-dk);
+}
+.settings-signout:focus-visible {
+  outline: 3px solid var(--col-primary);
+  outline-offset: 2px;
+}

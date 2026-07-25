@@ -198,8 +198,12 @@ Source: `requirements/requirement-5.md`. Four parts, built as increments.
   per-action events (e.g. `task_add`), plus `feature_view` (usage count per
   module) and `feature_engagement` (seconds + click count per feature, flushed
   on module switch / unmount) via `useFeatureTelemetry` in the app shell.
-- ⬜ **Settings page + i18n switch** — logout, theme, day/night, change family,
-  and language; add **Bengali** (`bn`).
+- ✅ **Settings page + i18n switch** — a **Settings** module (tab, shortcut `s`):
+  appearance (palette + light/dark), **language** switch, family + members,
+  account + sign out. **Bengali (`bn`)** added and wired into i18n
+  (`supportedLngs`), core UI translated; the long-form Guide falls back to `en`
+  for now. Language choice persists (LanguageDetector) and logs a
+  `language_change` event.
 - ⬜ **Notifications** — FCM: notify family members when anything is added to the
   board (needs a server trigger / Cloud Function).
 

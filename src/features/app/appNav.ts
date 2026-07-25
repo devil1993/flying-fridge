@@ -15,6 +15,7 @@ export const APP_MODULES: AppModule[] = [
   { id: 'lostFound', labelKey: 'lostFound.title', shortcut: 'l' },
   { id: 'pantry', labelKey: 'pantry.title', shortcut: 'p' },
   { id: 'questions', labelKey: 'questions.title', shortcut: 'q' },
+  { id: 'settings', labelKey: 'settings.title', shortcut: 's' },
 ]
 
 export interface AppNavValue {

@@ -5,6 +5,16 @@
     "title": "Your family board",
     "sections": "Board sections"
   },
+  "settings": {
+    "title": "Settings",
+    "appearance": "Appearance",
+    "language": "Language",
+    "account": "Account",
+    "family": "Family",
+    "signOut": "Sign out",
+    "languageEn": "English",
+    "languageBn": "বাংলা"
+  },
   "meta": {
     "title": "Flying Fridge — Your Family's Digital Noticeboard"
   },
