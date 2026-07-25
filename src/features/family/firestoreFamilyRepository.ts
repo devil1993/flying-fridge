@@ -40,6 +40,20 @@ export const firestoreFamilyRepository: FamilyRepository = {
       collection(getDb(), COLLECTION),
       where('memberUids', 'array-contains', uid),
     )
-    return onSnapshot(q, (qs) => onChange(qs.docs.map(toFamily)))
+    return onSnapshot(
+      q,
+      (qs) => onChange(qs.docs.map(toFamily)),
+      (err) => {
+        // Don't hang on "Loading…": surface the error and fall back to "no
+        // family". Most common cause: Security Rules not published, or the
+        // family doc's array field isn't named `memberUids`.
+        console.error(
+          '[family] could not read families — check that firestore.rules is ' +
+            'published and the family doc has a `memberUids` array:',
+          err,
+        )
+        onChange([])
+      },
+    )
   },
 }
