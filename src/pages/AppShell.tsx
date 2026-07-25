@@ -1,6 +1,7 @@
 import type { ComponentType } from 'react'
 import { useAppNav } from '../features/app/appNav'
 import { useModuleShortcuts } from '../features/app/useModuleShortcuts'
+import { useFeatureTelemetry } from '../features/app/useFeatureTelemetry'
 import DashboardView from './DashboardView'
 import TasksDashboard from '../features/tasks/TasksDashboard'
 import NoticesBoard from '../features/notices/NoticesBoard'
@@ -25,9 +26,10 @@ const VIEWS: Record<string, ComponentType> = {
 export default function AppShell() {
   const { active } = useAppNav()
   useModuleShortcuts()
+  const { onClickCapture } = useFeatureTelemetry(active)
   const Active = VIEWS[active] ?? DashboardView
   return (
-    <main id="main-content" className="app-shell">
+    <main id="main-content" className="app-shell" onClickCapture={onClickCapture}>
       <div className="app-shell-wrap">
         <Active />
       </div>

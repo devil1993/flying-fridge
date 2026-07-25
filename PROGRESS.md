@@ -194,8 +194,10 @@ Source: `requirements/requirement-5.md`. Four parts, built as increments.
   a family yet" screen shows the user's UID to share. Families are
   **bootstrapped in the console** — `human-instructions/03-bootstrap-family.md`.
   (Offline/tests fall back to a demo family.)
-- ⬜ **Telemetry across all features** — clicks, per-feature usage counts, time
-  on feature (extend Firebase Analytics).
+- ✅ **Telemetry across all features** — Firebase Analytics events: existing
+  per-action events (e.g. `task_add`), plus `feature_view` (usage count per
+  module) and `feature_engagement` (seconds + click count per feature, flushed
+  on module switch / unmount) via `useFeatureTelemetry` in the app shell.
 - ⬜ **Settings page + i18n switch** — logout, theme, day/night, change family,
   and language; add **Bengali** (`bn`).
 - ⬜ **Notifications** — FCM: notify family members when anything is added to the
