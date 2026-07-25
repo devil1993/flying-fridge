@@ -1,2 +1,28 @@
 # Claude Code local, per-user settings (personal permission overrides)
 .claude/settings.local.json
+
+# Dependencies
+node_modules/
+
+# Build output
+dist/
+dev-dist/
+docs/design/architecture/dist/
+
+# Test / coverage output
+coverage/
+
+# Local env files (Firebase config lives here — never commit)
+.env
+.env.local
+.env.*.local
+
+# TS incremental build info
+*.tsbuildinfo
+
+# Editor / OS cruft
+.DS_Store
+Thumbs.db
+.vscode/*
+!.vscode/extensions.json
+.idea/

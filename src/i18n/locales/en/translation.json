@@ -1,0 +1,17 @@
+{
+  "app": {
+    "name": "Flying Fridge",
+    "tagline": "Your family's digital noticeboard"
+  },
+  "meta": {
+    "title": "Flying Fridge — Your Family's Digital Noticeboard"
+  },
+  "skip": {
+    "toContent": "Skip to main content"
+  },
+  "notFound": {
+    "title": "Page not found",
+    "body": "That note seems to have floated off the fridge door.",
+    "home": "Back to home"
+  }
+}

@@ -1,0 +1,707 @@
+
+  <!-- ============================================================
+       HEADER / NAV
+  ============================================================ -->
+  <header class="site-header" role="banner">
+    <div class="container">
+      <nav class="nav" role="navigation" aria-label="Main navigation">
+
+        <!-- Logo -->
+        <a href="#" class="nav-logo" aria-label="Flying Fridge — home">
+          <!-- Inline SVG: fridge with magnet dot -->
+          <svg width="36" height="36" viewBox="0 0 36 36" fill="none" aria-hidden="true">
+            <rect x="6" y="3" width="24" height="30" rx="4" fill="var(--col-primary)" opacity="0.15"/>
+            <rect x="6" y="3" width="24" height="30" rx="4" stroke="var(--col-primary)" stroke-width="2"/>
+            <line x1="6" y1="13" x2="30" y2="13" stroke="var(--col-primary)" stroke-width="2"/>
+            <!-- handle top -->
+            <rect x="22" y="7" width="4" height="3" rx="1.5" fill="var(--col-primary)" opacity="0.6"/>
+            <!-- handle bottom -->
+            <rect x="22" y="17" width="4" height="4" rx="1.5" fill="var(--col-primary)" opacity="0.6"/>
+            <!-- magnet circle - top left fridge face -->
+            <circle cx="12" cy="8.5" r="2.5" fill="var(--col-primary)"/>
+            <!-- sticky note on fridge body -->
+            <rect x="10" y="17" width="8" height="7" rx="1" fill="#D4A017" opacity="0.85"/>
+            <line x1="11.5" y1="19.5" x2="16.5" y2="19.5" stroke="#fff" stroke-width="1" opacity="0.7"/>
+            <line x1="11.5" y1="21.5" x2="15" y2="21.5" stroke="#fff" stroke-width="1" opacity="0.7"/>
+            <!-- wing lines (the "flying" element) -->
+            <path d="M30 10 Q34 8 34 13 Q34 17 30 16" stroke="var(--col-primary)" stroke-width="1.5" fill="none" opacity="0.5" stroke-linecap="round"/>
+            <path d="M6 10 Q2 8 2 13 Q2 17 6 16" stroke="var(--col-primary)" stroke-width="1.5" fill="none" opacity="0.5" stroke-linecap="round"/>
+          </svg>
+          Flying Fridge
+        </a>
+
+        <!-- Nav links -->
+        <ul class="nav-links" role="list">
+          <li><a href="#features">Features</a></li>
+          <li><a href="#views">Views</a></li>
+          <li><a href="#how-it-works">How it works</a></li>
+        </ul>
+
+        <div class="nav-actions">
+          <!-- Theme toggle -->
+          <button
+            class="theme-toggle"
+            id="themeToggle"
+            aria-label="Toggle light/dark theme"
+            title="Toggle theme"
+          >
+            <!-- Sun icon (shown in dark mode) -->
+            <svg class="icon-sun" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+              <circle cx="12" cy="12" r="5"/>
+              <line x1="12" y1="1" x2="12" y2="3"/>
+              <line x1="12" y1="21" x2="12" y2="23"/>
+              <line x1="4.22" y1="4.22" x2="5.64" y2="5.64"/>
+              <line x1="18.36" y1="18.36" x2="19.78" y2="19.78"/>
+              <line x1="1" y1="12" x2="3" y2="12"/>
+              <line x1="21" y1="12" x2="23" y2="12"/>
+              <line x1="4.22" y1="19.78" x2="5.64" y2="18.36"/>
+              <line x1="18.36" y1="5.64" x2="19.78" y2="4.22"/>
+            </svg>
+            <!-- Moon icon (shown in light mode) -->
+            <svg class="icon-moon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+              <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/>
+            </svg>
+          </button>
+
+          <a href="#" class="btn btn-primary nav-cta" style="padding:10px 20px;font-size:0.9rem;">Get started</a>
+        </div>
+
+      </nav>
+    </div>
+  </header>
+
+  <main id="main" role="main">
+
+    <!-- ============================================================
+         HERO
+    ============================================================ -->
+    <section class="hero" aria-labelledby="hero-heading">
+      <!-- Background decoration -->
+      <div class="hero-bg-decoration" aria-hidden="true">
+        <div class="floating-chip" style="top:15%;left:5%;background:var(--col-primary-lt);color:var(--col-primary);--rot:-8deg;animation-delay:0s;">Shopping list</div>
+        <div class="floating-chip" style="top:65%;left:3%;background:var(--col-accent-lt);color:var(--col-accent);--rot:5deg;animation-delay:1.2s;">Dinner at 7pm</div>
+        <div class="floating-chip" style="top:80%;right:5%;background:#F3EEFF;color:#7B5EA7;--rot:-4deg;animation-delay:0.6s;">Lost: My Keys!</div>
+        <div class="floating-chip" style="top:10%;right:8%;background:#FFF8E1;color:#D4A017;--rot:6deg;animation-delay:1.8s;">Milk running low</div>
+      </div>
+
+      <div class="container">
+        <div class="hero-inner">
+          <!-- Left: copy -->
+          <div class="hero-content">
+            <div class="hero-eyebrow" aria-hidden="true">
+              <svg width="14" height="14" viewBox="0 0 14 14" fill="currentColor"><circle cx="7" cy="7" r="3"/></svg>
+              For modern families
+            </div>
+            <h1 class="display-xl hero-headline" id="hero-heading">
+              Your fridge door,<br>
+              <span class="text-accent">everywhere you go</span>
+            </h1>
+            <p class="hero-sub">
+              Flying Fridge is the digital noticeboard that keeps your whole family on the same page — tasks, notices, pantry, lost &amp; found, and open questions, all in one shared space.
+            </p>
+            <div class="hero-ctas">
+              <a href="#" class="btn btn-primary">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M22 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
+                Join your family
+              </a>
+              <a href="#how-it-works" class="btn btn-secondary">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="10"/><polygon points="10 8 16 12 10 16 10 8"/></svg>
+                See how it works
+              </a>
+            </div>
+          </div>
+
+          <!-- Right: fridge SVG illustration -->
+          <div class="hero-visual" aria-hidden="true">
+            <svg class="fridge-svg" width="380" height="480" viewBox="0 0 380 480" fill="none" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Illustrated fridge covered in sticky notes and magnets">
+
+              <!-- Fridge body shadow -->
+              <ellipse cx="190" cy="468" rx="130" ry="12" fill="var(--col-text)" opacity="0.08"/>
+
+              <!-- Fridge body -->
+              <rect x="50" y="20" width="280" height="440" rx="20" fill="var(--col-surface)"/>
+              <rect x="50" y="20" width="280" height="440" rx="20" stroke="var(--col-border)" stroke-width="2"/>
+
+              <!-- Fridge gradient overlay -->
+              <rect x="50" y="20" width="280" height="440" rx="20" fill="url(#fridgeGrad)" opacity="0.4"/>
+
+              <!-- Fridge separator line (freezer / fridge) -->
+              <rect x="50" y="160" width="280" height="3" fill="var(--col-border)"/>
+
+              <!-- Fridge handle (top - freezer) -->
+              <rect x="290" y="60" width="8" height="60" rx="4" fill="var(--col-border)"/>
+              <rect x="288" y="58" width="12" height="4" rx="2" fill="var(--col-text-muted)" opacity="0.5"/>
+              <rect x="288" y="116" width="12" height="4" rx="2" fill="var(--col-text-muted)" opacity="0.5"/>
+
+              <!-- Fridge handle (bottom - main) -->
+              <rect x="290" y="210" width="8" height="80" rx="4" fill="var(--col-border)"/>
+              <rect x="288" y="208" width="12" height="4" rx="2" fill="var(--col-text-muted)" opacity="0.5"/>
+              <rect x="288" y="288" width="12" height="4" rx="2" fill="var(--col-text-muted)" opacity="0.5"/>
+
+              <!-- Wing left -->
+              <path d="M50 80 Q20 80 18 120 Q16 160 50 155" stroke="var(--col-border)" stroke-width="2" fill="var(--col-surface-2)" opacity="0.6"/>
+              <path d="M50 80 Q30 80 28 120 Q26 155 50 155" fill="var(--col-surface-2)" stroke="var(--col-border)" stroke-width="1.5" opacity="0.5"/>
+
+              <!-- Wing right -->
+              <path d="M330 80 Q360 80 362 120 Q364 160 330 155" fill="var(--col-surface-2)" stroke="var(--col-border)" stroke-width="1.5" opacity="0.5"/>
+
+              <!-- =====================
+                   STICKY NOTES / MAGNETS ON FRIDGE
+              ===================== -->
+
+              <!-- Note 1: Tasks (tangerine) - top left area -->
+              <g class="magnet-note" transform="translate(70,35)">
+                <rect width="90" height="75" rx="3" fill="#E8622A" filter="url(#noteShadow)"/>
+                <rect width="90" height="75" rx="3" fill="url(#noteGrad1)" opacity="0.3"/>
+                <!-- Magnet -->
+                <circle cx="45" cy="6" r="7" fill="#C44E1E"/>
+                <circle cx="45" cy="6" r="4" fill="#FF9970"/>
+                <rect x="8" y="18" width="74" height="44" rx="2" fill="rgba(255,255,255,0.15)"/>
+                <!-- Lines of text -->
+                <rect x="12" y="24" width="50" height="3" rx="1.5" fill="rgba(255,255,255,0.8)"/>
+                <rect x="12" y="32" width="60" height="3" rx="1.5" fill="rgba(255,255,255,0.6)"/>
+                <rect x="12" y="40" width="44" height="3" rx="1.5" fill="rgba(255,255,255,0.6)"/>
+                <rect x="12" y="48" width="55" height="3" rx="1.5" fill="rgba(255,255,255,0.4)"/>
+                <text x="12" y="16" font-size="6" font-weight="700" fill="rgba(255,255,255,0.9)" font-family="system-ui">TASKS</text>
+              </g>
+
+              <!-- Note 2: Notices (green) - top right area -->
+              <g class="magnet-note" transform="translate(210,25)">
+                <rect width="86" height="70" rx="3" fill="#3D9E6E" filter="url(#noteShadow)"/>
+                <rect width="86" height="70" rx="3" fill="url(#noteGrad2)" opacity="0.3"/>
+                <circle cx="43" cy="6" r="7" fill="#2E7A55"/>
+                <circle cx="43" cy="6" r="4" fill="#7DD4AA"/>
+                <rect x="8" y="17" width="70" height="42" rx="2" fill="rgba(255,255,255,0.15)"/>
+                <rect x="12" y="23" width="54" height="3" rx="1.5" fill="rgba(255,255,255,0.8)"/>
+                <rect x="12" y="31" width="46" height="3" rx="1.5" fill="rgba(255,255,255,0.6)"/>
+                <rect x="12" y="39" width="58" height="3" rx="1.5" fill="rgba(255,255,255,0.5)"/>
+                <text x="12" y="15" font-size="6" font-weight="700" fill="rgba(255,255,255,0.9)" font-family="system-ui">NOTICES</text>
+              </g>
+
+              <!-- Note 3: Lost & Found (lavender) - middle left -->
+              <g class="magnet-note" transform="translate(65,175)">
+                <rect width="100" height="80" rx="3" fill="#7B5EA7" filter="url(#noteShadow)"/>
+                <rect width="100" height="80" rx="3" fill="url(#noteGrad3)" opacity="0.25"/>
+                <circle cx="50" cy="6" r="7" fill="#5D4280"/>
+                <circle cx="50" cy="6" r="4" fill="#B090D8"/>
+                <rect x="8" y="18" width="84" height="50" rx="2" fill="rgba(255,255,255,0.12)"/>
+                <rect x="12" y="24" width="50" height="3" rx="1.5" fill="rgba(255,255,255,0.8)"/>
+                <rect x="12" y="32" width="70" height="3" rx="1.5" fill="rgba(255,255,255,0.6)"/>
+                <rect x="12" y="40" width="56" height="3" rx="1.5" fill="rgba(255,255,255,0.55)"/>
+                <rect x="12" y="48" width="64" height="3" rx="1.5" fill="rgba(255,255,255,0.4)"/>
+                <text x="12" y="16" font-size="5.5" font-weight="700" fill="rgba(255,255,255,0.9)" font-family="system-ui">LOST &amp; FOUND</text>
+              </g>
+
+              <!-- Note 4: Pantry (amber) - middle right -->
+              <g class="magnet-note" transform="translate(205,175)">
+                <rect width="95" height="85" rx="3" fill="#D4A017" filter="url(#noteShadow)"/>
+                <rect width="95" height="85" rx="3" fill="url(#noteGrad4)" opacity="0.3"/>
+                <circle cx="47" cy="6" r="7" fill="#A87A10"/>
+                <circle cx="47" cy="6" r="4" fill="#F8D060"/>
+                <rect x="8" y="18" width="79" height="54" rx="2" fill="rgba(255,255,255,0.15)"/>
+                <rect x="12" y="24" width="58" height="3" rx="1.5" fill="rgba(255,255,255,0.85)"/>
+                <rect x="12" y="32" width="50" height="3" rx="1.5" fill="rgba(255,255,255,0.65)"/>
+                <rect x="12" y="40" width="66" height="3" rx="1.5" fill="rgba(255,255,255,0.55)"/>
+                <rect x="12" y="48" width="44" height="3" rx="1.5" fill="rgba(255,255,255,0.45)"/>
+                <rect x="12" y="56" width="60" height="3" rx="1.5" fill="rgba(255,255,255,0.35)"/>
+                <text x="12" y="16" font-size="6" font-weight="700" fill="rgba(255,255,255,0.9)" font-family="system-ui">PANTRY</text>
+              </g>
+
+              <!-- Note 5: Questions (sky blue) - bottom area -->
+              <g class="magnet-note" transform="translate(130,310)">
+                <rect width="105" height="80" rx="3" fill="#2A8FC4" filter="url(#noteShadow)"/>
+                <rect width="105" height="80" rx="3" fill="url(#noteGrad5)" opacity="0.25"/>
+                <circle cx="52" cy="6" r="7" fill="#1E6E9A"/>
+                <circle cx="52" cy="6" r="4" fill="#70C4EC"/>
+                <rect x="8" y="18" width="89" height="50" rx="2" fill="rgba(255,255,255,0.12)"/>
+                <rect x="12" y="24" width="68" height="3" rx="1.5" fill="rgba(255,255,255,0.8)"/>
+                <rect x="12" y="32" width="56" height="3" rx="1.5" fill="rgba(255,255,255,0.6)"/>
+                <rect x="12" y="40" width="72" height="3" rx="1.5" fill="rgba(255,255,255,0.5)"/>
+                <rect x="12" y="48" width="48" height="3" rx="1.5" fill="rgba(255,255,255,0.4)"/>
+                <text x="12" y="16" font-size="6" font-weight="700" fill="rgba(255,255,255,0.9)" font-family="system-ui">QUESTIONS</text>
+              </g>
+
+              <!-- Extra magnet dots scattered -->
+              <circle cx="90" cy="165" r="8" fill="#E8622A" opacity="0.7"/>
+              <circle cx="90" cy="165" r="4.5" fill="#FF9970"/>
+              <circle cx="200" cy="160" r="7" fill="#3D9E6E" opacity="0.7"/>
+              <circle cx="200" cy="160" r="4" fill="#7DD4AA"/>
+              <circle cx="265" cy="170" r="9" fill="#D4A017" opacity="0.7"/>
+              <circle cx="265" cy="170" r="5" fill="#F8D060"/>
+
+              <!-- Extra small magnets -->
+              <circle cx="105" cy="290" r="5.5" fill="#7B5EA7" opacity="0.6"/>
+              <circle cx="105" cy="290" r="3" fill="#B090D8"/>
+              <circle cx="250" cy="295" r="5.5" fill="#2A8FC4" opacity="0.6"/>
+              <circle cx="250" cy="295" r="3" fill="#70C4EC"/>
+
+              <!-- Bottom row small notes (decorative) -->
+              <rect x="65" y="405" width="60" height="40" rx="3" fill="#E8622A" opacity="0.25"/>
+              <rect x="140" y="415" width="80" height="32" rx="3" fill="#3D9E6E" opacity="0.2"/>
+              <rect x="235" y="408" width="70" height="38" rx="3" fill="#7B5EA7" opacity="0.22"/>
+
+              <!-- Defs -->
+              <defs>
+                <linearGradient id="fridgeGrad" x1="0" y1="0" x2="1" y2="1">
+                  <stop offset="0%" stop-color="#FFFFFF"/>
+                  <stop offset="100%" stop-color="var(--col-surface-2)"/>
+                </linearGradient>
+                <linearGradient id="noteGrad1" x1="0" y1="0" x2="1" y2="1">
+                  <stop offset="0%" stop-color="#FFFFFF"/>
+                  <stop offset="100%" stop-color="#E8622A"/>
+                </linearGradient>
+                <linearGradient id="noteGrad2" x1="0" y1="0" x2="1" y2="1">
+                  <stop offset="0%" stop-color="#FFFFFF"/>
+                  <stop offset="100%" stop-color="#3D9E6E"/>
+                </linearGradient>
+                <linearGradient id="noteGrad3" x1="0" y1="0" x2="1" y2="1">
+                  <stop offset="0%" stop-color="#FFFFFF"/>
+                  <stop offset="100%" stop-color="#7B5EA7"/>
+                </linearGradient>
+                <linearGradient id="noteGrad4" x1="0" y1="0" x2="1" y2="1">
+                  <stop offset="0%" stop-color="#FFFFFF"/>
+                  <stop offset="100%" stop-color="#D4A017"/>
+                </linearGradient>
+                <linearGradient id="noteGrad5" x1="0" y1="0" x2="1" y2="1">
+                  <stop offset="0%" stop-color="#FFFFFF"/>
+                  <stop offset="100%" stop-color="#2A8FC4"/>
+                </linearGradient>
+                <filter id="noteShadow" x="-20%" y="-20%" width="140%" height="140%">
+                  <feDropShadow dx="2" dy="3" stdDeviation="3" flood-color="rgba(44,36,22,0.2)"/>
+                </filter>
+              </defs>
+            </svg>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ============================================================
+         FEATURES
+    ============================================================ -->
+    <section class="features-bg" id="features" aria-labelledby="features-heading">
+      <div class="container">
+        <div class="section-header reveal">
+          <p class="label">Everything your family shares</p>
+          <h2 class="display-lg" id="features-heading">Five magnets, one board</h2>
+          <p class="body-lg">Each topic gets its own colour-coded space — just like the physical magnets on your real fridge door, but digital, searchable, and always with you.</p>
+        </div>
+
+        <div class="features-grid">
+
+          <!-- Tasks -->
+          <article class="feature-card reveal reveal-delay-1" style="--card-accent:var(--mag-tasks);--card-accent-lt:var(--col-primary-lt);">
+            <div class="feature-icon-wrap">
+              <svg width="28" height="28" viewBox="0 0 28 28" fill="none" aria-hidden="true">
+                <rect x="3" y="5" width="22" height="18" rx="3" stroke="var(--mag-tasks)" stroke-width="2"/>
+                <path d="M8 10 L10.5 12.5 L14.5 8" stroke="var(--mag-tasks)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                <rect x="17" y="9" width="5" height="2" rx="1" fill="var(--mag-tasks)" opacity="0.5"/>
+                <path d="M8 16 L10.5 18.5 L14.5 14" stroke="var(--mag-tasks)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                <rect x="17" y="15" width="4" height="2" rx="1" fill="var(--mag-tasks)" opacity="0.5"/>
+              </svg>
+            </div>
+            <h3 class="feature-title">Tasks</h3>
+            <p class="body-md">From shopping runs to paying bills — post chores and to-dos so nothing slips through the cracks. Anyone in the family can pick it up and mark it done.</p>
+          </article>
+
+          <!-- Notices -->
+          <article class="feature-card reveal reveal-delay-2" style="--card-accent:var(--mag-notices);--card-accent-lt:var(--col-accent-lt);">
+            <div class="feature-icon-wrap" style="background:var(--col-accent-lt);">
+              <svg width="28" height="28" viewBox="0 0 28 28" fill="none" aria-hidden="true">
+                <path d="M14 3 L25 8 L25 20 Q25 25 14 27 Q3 25 3 20 L3 8 Z" stroke="var(--mag-notices)" stroke-width="2" fill="none" stroke-linejoin="round"/>
+                <circle cx="14" cy="12" r="2.5" fill="var(--mag-notices)"/>
+                <line x1="14" y1="15" x2="14" y2="20" stroke="var(--mag-notices)" stroke-width="2" stroke-linecap="round"/>
+              </svg>
+            </div>
+            <h3 class="feature-title">Notices &amp; Info</h3>
+            <p class="body-md">Heading out early? Working late? Drop an announcement so the whole family knows what's happening, without the "why didn't you tell me?" moment.</p>
+          </article>
+
+          <!-- Lost & Found -->
+          <article class="feature-card reveal reveal-delay-3" style="--card-accent:var(--mag-lostfound);--card-accent-lt:#F3EEFF;">
+            <div class="feature-icon-wrap" style="background:#F3EEFF;">
+              <svg width="28" height="28" viewBox="0 0 28 28" fill="none" aria-hidden="true">
+                <circle cx="12" cy="12" r="7" stroke="var(--mag-lostfound)" stroke-width="2"/>
+                <line x1="17.2" y1="17.2" x2="24" y2="24" stroke="var(--mag-lostfound)" stroke-width="2.5" stroke-linecap="round"/>
+                <circle cx="12" cy="12" r="2" fill="var(--mag-lostfound)" opacity="0.5"/>
+                <!-- question mark in lens -->
+                <text x="9.5" y="15" font-size="8" font-weight="700" fill="var(--mag-lostfound)" font-family="system-ui">?</text>
+              </svg>
+            </div>
+            <h3 class="feature-title">Lost &amp; Found</h3>
+            <p class="body-md">Missing your keys again? Post it and let the family track it down. Others can mark items as found so you stop looking in all the wrong places.</p>
+          </article>
+
+          <!-- Pantry -->
+          <article class="feature-card reveal reveal-delay-4" style="--card-accent:var(--mag-pantry);--card-accent-lt:#FFF8E1;">
+            <div class="feature-icon-wrap" style="background:#FFF8E1;">
+              <svg width="28" height="28" viewBox="0 0 28 28" fill="none" aria-hidden="true">
+                <!-- jar -->
+                <rect x="8" y="8" width="12" height="14" rx="2" stroke="var(--mag-pantry)" stroke-width="2"/>
+                <rect x="10" y="5" width="8" height="4" rx="1" stroke="var(--mag-pantry)" stroke-width="1.5"/>
+                <!-- fill level -->
+                <rect x="9" y="15" width="10" height="6" rx="1" fill="var(--mag-pantry)" opacity="0.35"/>
+                <!-- label line -->
+                <line x1="10" y1="12" x2="18" y2="12" stroke="var(--mag-pantry)" stroke-width="1.5" stroke-linecap="round"/>
+              </svg>
+            </div>
+            <h3 class="feature-title">Pantry</h3>
+            <p class="body-md">Track what's in the fridge and what's running low. Note expiry warnings, leftovers, and quantities so nobody buys milk you already have three cartons of.</p>
+          </article>
+
+          <!-- Questions -->
+          <article class="feature-card reveal reveal-delay-5" style="--card-accent:var(--mag-questions);--card-accent-lt:#E8F5FB;">
+            <div class="feature-icon-wrap" style="background:#E8F5FB;">
+              <svg width="28" height="28" viewBox="0 0 28 28" fill="none" aria-hidden="true">
+                <!-- speech bubbles -->
+                <path d="M4 5 Q4 3 6 3 L20 3 Q22 3 22 5 L22 14 Q22 16 20 16 L14 16 L10 20 L10 16 L6 16 Q4 16 4 14 Z" stroke="var(--mag-questions)" stroke-width="2" fill="none" stroke-linejoin="round"/>
+                <text x="10.5" y="13" font-size="9" font-weight="700" fill="var(--mag-questions)" font-family="system-ui">?</text>
+              </svg>
+            </div>
+            <h3 class="feature-title">Questions</h3>
+            <p class="body-md">Movies this Sunday — is anyone in? Post open questions to the family and collect replies. It's the digital version of a note left on the kitchen table.</p>
+          </article>
+
+        </div>
+      </div>
+    </section>
+
+    <!-- ============================================================
+         VIEWS SECTION
+    ============================================================ -->
+    <section id="views" aria-labelledby="views-heading">
+      <div class="container">
+        <div class="section-header reveal">
+          <p class="label">Two ways to see it all</p>
+          <h2 class="display-lg" id="views-heading">Your board, your way</h2>
+          <p class="body-lg">Switch between a clean list for getting things done and a calendar for spotting what's coming up — same data, different lens.</p>
+        </div>
+
+        <div class="views-inner">
+
+          <!-- List view card -->
+          <div class="view-card reveal reveal-delay-1">
+            <div class="view-card-header">
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="var(--col-primary)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                <line x1="8" y1="6" x2="21" y2="6"/>
+                <line x1="8" y1="12" x2="21" y2="12"/>
+                <line x1="8" y1="18" x2="21" y2="18"/>
+                <line x1="3" y1="6" x2="3.01" y2="6"/>
+                <line x1="3" y1="12" x2="3.01" y2="12"/>
+                <line x1="3" y1="18" x2="3.01" y2="18"/>
+              </svg>
+              <span class="view-card-title">List view</span>
+            </div>
+            <div class="view-card-body">
+              <p>All your family's posts in a clean, scannable list. Filter by category, assign to a person, and tick things off as they get done.</p>
+              <!-- Mock list UI -->
+              <div class="mock-list" aria-hidden="true">
+                <div class="mock-row">
+                  <div class="mock-dot" style="background:var(--mag-tasks);"></div>
+                  <span class="mock-label">Buy milk &amp; bread</span>
+                  <span class="mock-chip">Task</span>
+                </div>
+                <div class="mock-row">
+                  <div class="mock-dot" style="background:var(--mag-notices);"></div>
+                  <span class="mock-label">Early office day Monday</span>
+                  <span class="mock-chip">Notice</span>
+                </div>
+                <div class="mock-row">
+                  <div class="mock-dot" style="background:var(--mag-lostfound);"></div>
+                  <span class="mock-label">Seen my black gloves?</span>
+                  <span class="mock-chip">Lost</span>
+                </div>
+                <div class="mock-row">
+                  <div class="mock-dot" style="background:var(--mag-pantry);"></div>
+                  <span class="mock-label">Rice — expires Sunday</span>
+                  <span class="mock-chip">Pantry</span>
+                </div>
+                <div class="mock-row">
+                  <div class="mock-dot" style="background:var(--mag-questions);"></div>
+                  <span class="mock-label">Movies Sunday — who's in?</span>
+                  <span class="mock-chip">Question</span>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Calendar view card -->
+          <div class="view-card reveal reveal-delay-2">
+            <div class="view-card-header">
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="var(--col-primary)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                <rect x="3" y="4" width="18" height="18" rx="2" ry="2"/>
+                <line x1="16" y1="2" x2="16" y2="6"/>
+                <line x1="8" y1="2" x2="8" y2="6"/>
+                <line x1="3" y1="10" x2="21" y2="10"/>
+              </svg>
+              <span class="view-card-title">Calendar view</span>
+            </div>
+            <div class="view-card-body">
+              <p>See upcoming tasks, events, and expiry dates laid out on a monthly calendar. Spot busy days at a glance and plan ahead as a family.</p>
+              <!-- Mock calendar UI -->
+              <div class="mock-cal" aria-hidden="true">
+                <div class="mock-cal-header">Mo</div>
+                <div class="mock-cal-header">Tu</div>
+                <div class="mock-cal-header">We</div>
+                <div class="mock-cal-header">Th</div>
+                <div class="mock-cal-header">Fr</div>
+                <div class="mock-cal-header">Sa</div>
+                <div class="mock-cal-header">Su</div>
+
+                <!-- Week 1 -->
+                <div class="mock-cal-day">1</div>
+                <div class="mock-cal-day">2<div class="mock-cal-dot" style="background:var(--mag-tasks);"></div></div>
+                <div class="mock-cal-day">3</div>
+                <div class="mock-cal-day">4<div class="mock-cal-dot" style="background:var(--mag-notices);"></div></div>
+                <div class="mock-cal-day">5</div>
+                <div class="mock-cal-day">6<div class="mock-cal-dot" style="background:var(--mag-pantry);"></div></div>
+                <div class="mock-cal-day">7</div>
+
+                <!-- Week 2 -->
+                <div class="mock-cal-day today">8</div>
+                <div class="mock-cal-day">9</div>
+                <div class="mock-cal-day">10<div class="mock-cal-dot" style="background:var(--mag-tasks);"></div></div>
+                <div class="mock-cal-day">11</div>
+                <div class="mock-cal-day">12<div class="mock-cal-dot" style="background:var(--mag-lostfound);"></div></div>
+                <div class="mock-cal-day">13</div>
+                <div class="mock-cal-day">14<div class="mock-cal-dot" style="background:var(--mag-questions);"></div></div>
+
+                <!-- Week 3 -->
+                <div class="mock-cal-day">15</div>
+                <div class="mock-cal-day">16<div class="mock-cal-dot" style="background:var(--mag-notices);"></div></div>
+                <div class="mock-cal-day">17</div>
+                <div class="mock-cal-day">18<div class="mock-cal-dot" style="background:var(--mag-tasks);"></div></div>
+                <div class="mock-cal-day">19</div>
+                <div class="mock-cal-day">20</div>
+                <div class="mock-cal-day">21<div class="mock-cal-dot" style="background:var(--mag-pantry);"></div></div>
+              </div>
+            </div>
+          </div>
+
+        </div>
+      </div>
+    </section>
+
+    <!-- ============================================================
+         HOW IT WORKS
+    ============================================================ -->
+    <section class="how-bg" id="how-it-works" aria-labelledby="how-heading">
+      <div class="container">
+        <div class="section-header reveal">
+          <p class="label">Up and running in minutes</p>
+          <h2 class="display-lg" id="how-heading">Three steps to a shared board</h2>
+          <p class="body-lg">No complicated setup, no manual to read. If your family can put a magnet on a fridge, they can use Flying Fridge.</p>
+        </div>
+
+        <div class="steps-grid">
+
+          <div class="step reveal reveal-delay-1">
+            <div class="step-number" aria-hidden="true">1</div>
+            <h3 class="step-title">Create your account</h3>
+            <p>Sign up in seconds. No app store needed — Flying Fridge lives in your browser, so every device in the house can reach it instantly.</p>
+          </div>
+
+          <div class="step reveal reveal-delay-2">
+            <div class="step-number" aria-hidden="true">2</div>
+            <h3 class="step-title">Invite your family</h3>
+            <p>Share a simple invite link or code. Each person joins your shared family space — everyone sees the same board, in real time.</p>
+          </div>
+
+          <div class="step reveal reveal-delay-3">
+            <div class="step-number" aria-hidden="true">3</div>
+            <h3 class="step-title">Start sharing</h3>
+            <p>Post tasks, drop a notice, flag a lost item, update the pantry. Your fridge door just got a lot smarter — and it travels in your pocket.</p>
+          </div>
+
+        </div>
+
+      </div>
+    </section>
+
+    <!-- ============================================================
+         TESTIMONIALS — comedic relief
+    ============================================================ -->
+    <section class="quips-bg" aria-labelledby="quips-heading">
+      <div class="container">
+        <div class="section-header reveal">
+          <p class="label">Don't take our word for it</p>
+          <h2 class="display-lg" id="quips-heading">Rave reviews from the fridge door</h2>
+          <p class="body-lg">Real families. Real relief. Quotes lightly exaggerated for comedic effect, mildly true in spirit.</p>
+        </div>
+
+        <div class="quips-grid">
+
+          <div class="reveal reveal-delay-1">
+            <figure class="quip-note" style="--quip-accent:var(--mag-tasks);--tilt:-2.5deg;">
+              <span class="quip-pin" aria-hidden="true"></span>
+              <div class="quip-stars" aria-label="Five out of five stars">★★★★★</div>
+              <blockquote class="quip-quote">"I used to discover we were out of milk <em>while</em> pouring it into my coffee. Now the board tells me first. I have wept."</blockquote>
+              <figcaption class="quip-author">
+                <span class="quip-avatar" aria-hidden="true">DR</span>
+                <span>
+                  <span class="quip-name">Dave R.</span><br>
+                  <span class="quip-role">Reluctant Grocery Runner</span>
+                </span>
+              </figcaption>
+            </figure>
+          </div>
+
+          <div class="reveal reveal-delay-2">
+            <figure class="quip-note" style="--quip-accent:var(--mag-lostfound);--tilt:1.8deg;">
+              <span class="quip-pin" aria-hidden="true"></span>
+              <div class="quip-stars" aria-label="Five out of five stars">★★★★★</div>
+              <blockquote class="quip-quote">"My keys have gone 'missing' 47 times this month. Lost &amp; Found found them 47 times. My marriage: also found."</blockquote>
+              <figcaption class="quip-author">
+                <span class="quip-avatar" aria-hidden="true">PM</span>
+                <span>
+                  <span class="quip-name">Priya M.</span><br>
+                  <span class="quip-role">Serial Key Misplacer</span>
+                </span>
+              </figcaption>
+            </figure>
+          </div>
+
+          <div class="reveal reveal-delay-3">
+            <figure class="quip-note" style="--quip-accent:var(--mag-notices);--tilt:-1.5deg;">
+              <span class="quip-pin" aria-hidden="true"></span>
+              <div class="quip-stars" aria-label="Five out of five stars">★★★★★</div>
+              <blockquote class="quip-quote">"I posted 'back late, dinner's in the fridge' and — for the first time in recorded family history — someone actually read it."</blockquote>
+              <figcaption class="quip-author">
+                <span class="quip-avatar" aria-hidden="true">MT</span>
+                <span>
+                  <span class="quip-name">Marcus T.</span><br>
+                  <span class="quip-role">Amazed Father of Three</span>
+                </span>
+              </figcaption>
+            </figure>
+          </div>
+
+          <div class="reveal reveal-delay-1">
+            <figure class="quip-note" style="--quip-accent:var(--mag-pantry);--tilt:2.2deg;">
+              <span class="quip-pin" aria-hidden="true"></span>
+              <div class="quip-stars" aria-label="Five out of five stars">★★★★★</div>
+              <blockquote class="quip-quote">"My teenager swears he 'never saw' the chore. The board says he opened it at 2:14pm. I am now Chief Evidence Officer."</blockquote>
+              <figcaption class="quip-author">
+                <span class="quip-avatar" aria-hidden="true">LO</span>
+                <span>
+                  <span class="quip-name">Linda O.</span><br>
+                  <span class="quip-role">Reformed Nagger</span>
+                </span>
+              </figcaption>
+            </figure>
+          </div>
+
+          <div class="reveal reveal-delay-2">
+            <figure class="quip-note" style="--quip-accent:var(--mag-questions);--tilt:-2deg;">
+              <span class="quip-pin" aria-hidden="true"></span>
+              <div class="quip-stars" aria-label="Five out of five stars">★★★★★</div>
+              <blockquote class="quip-quote">"We resolved 'whose turn is it to walk the dog' with zero slammed doors. The dog is confused but deeply grateful."</blockquote>
+              <figcaption class="quip-author">
+                <span class="quip-avatar" aria-hidden="true">TO</span>
+                <span>
+                  <span class="quip-name">The Okonkwos</span><br>
+                  <span class="quip-role">A Newly Peaceful Household</span>
+                </span>
+              </figcaption>
+            </figure>
+          </div>
+
+          <div class="reveal reveal-delay-3">
+            <figure class="quip-note" style="--quip-accent:var(--mag-tasks);--tilt:1.4deg;">
+              <span class="quip-pin" aria-hidden="true"></span>
+              <div class="quip-stars" aria-label="Four and a half out of five stars">★★★★½</div>
+              <blockquote class="quip-quote">"Our real fridge held 200 magnets and 0 useful facts. Flying Fridge holds oat milk reminders and I am thriving. Half a star off — it can't fetch the oat milk. Yet."</blockquote>
+              <figcaption class="quip-author">
+                <span class="quip-avatar" aria-hidden="true">SA</span>
+                <span>
+                  <span class="quip-name">Sam &amp; Alex</span><br>
+                  <span class="quip-role">Formerly Overwhelmed</span>
+                </span>
+              </figcaption>
+            </figure>
+          </div>
+
+        </div>
+      </div>
+    </section>
+
+    <!-- ============================================================
+         CTA BAND
+    ============================================================ -->
+    <section class="cta-band" aria-labelledby="cta-heading">
+      <div class="container">
+        <div class="cta-band-inner reveal">
+          <!-- Inline SVG: small fridge icon cluster for decoration -->
+          <div aria-hidden="true" style="display:flex;justify-content:center;margin-bottom:24px;gap:12px;align-items:center;">
+            <svg width="22" height="22" viewBox="0 0 22 22" fill="none"><circle cx="11" cy="11" r="10" fill="rgba(255,255,255,0.2)"/><circle cx="11" cy="11" r="5" fill="rgba(255,255,255,0.5)"/></svg>
+            <svg width="32" height="32" viewBox="0 0 32 32" fill="none"><circle cx="16" cy="16" r="14" fill="rgba(255,255,255,0.25)"/><circle cx="16" cy="16" r="7" fill="rgba(255,255,255,0.6)"/></svg>
+            <svg width="22" height="22" viewBox="0 0 22 22" fill="none"><circle cx="11" cy="11" r="10" fill="rgba(255,255,255,0.2)"/><circle cx="11" cy="11" r="5" fill="rgba(255,255,255,0.5)"/></svg>
+          </div>
+          <h2 id="cta-heading">Ready to stick it to forgetting?</h2>
+          <p>Your family's shared board is one click away. Free to start, easy to grow with.</p>
+          <div class="cta-band-actions">
+            <a href="#" class="btn" style="background:#FFFFFF;color:var(--col-primary);font-weight:700;box-shadow:0 4px 16px rgba(0,0,0,0.15);">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="var(--col-primary)" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M22 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
+              Get started — it's free
+            </a>
+            <a href="#features" class="btn btn-ghost">See all features</a>
+          </div>
+        </div>
+      </div>
+    </section>
+
+  </main>
+
+  <!-- ============================================================
+       FOOTER
+  ============================================================ -->
+  <footer class="site-footer" role="contentinfo">
+    <div class="container">
+      <div class="footer-grid">
+
+        <div class="footer-brand">
+          <div class="footer-logo">
+            <svg width="28" height="28" viewBox="0 0 36 36" fill="none" aria-hidden="true">
+              <rect x="6" y="3" width="24" height="30" rx="4" fill="var(--col-primary)" opacity="0.15"/>
+              <rect x="6" y="3" width="24" height="30" rx="4" stroke="var(--col-primary)" stroke-width="2"/>
+              <line x1="6" y1="13" x2="30" y2="13" stroke="var(--col-primary)" stroke-width="2"/>
+              <rect x="22" y="7" width="4" height="3" rx="1.5" fill="var(--col-primary)" opacity="0.6"/>
+              <rect x="22" y="17" width="4" height="4" rx="1.5" fill="var(--col-primary)" opacity="0.6"/>
+              <circle cx="12" cy="8.5" r="2.5" fill="var(--col-primary)"/>
+              <rect x="10" y="17" width="8" height="7" rx="1" fill="#D4A017" opacity="0.85"/>
+              <path d="M30 10 Q34 8 34 13 Q34 17 30 16" stroke="var(--col-primary)" stroke-width="1.5" fill="none" opacity="0.5" stroke-linecap="round"/>
+              <path d="M6 10 Q2 8 2 13 Q2 17 6 16" stroke="var(--col-primary)" stroke-width="1.5" fill="none" opacity="0.5" stroke-linecap="round"/>
+            </svg>
+            Flying Fridge
+          </div>
+          <p class="footer-tagline">The digital fridge door that keeps your whole family on the same page — wherever you are.</p>
+        </div>
+
+        <div class="footer-col">
+          <h4>Product</h4>
+          <ul role="list">
+            <li><a href="#features">Features</a></li>
+            <li><a href="#views">Views</a></li>
+            <li><a href="#how-it-works">How it works</a></li>
+            <li><a href="#">Changelog</a></li>
+          </ul>
+        </div>
+
+        <div class="footer-col">
+          <h4>Company</h4>
+          <ul role="list">
+            <li><a href="#">About</a></li>
+            <li><a href="#">Privacy</a></li>
+            <li><a href="#">Terms</a></li>
+            <li><a href="#">Contact</a></li>
+          </ul>
+        </div>
+
+      </div>
+
+      <div class="footer-bottom">
+        <p>&copy; 2026 Flying Fridge. Made with <span class="footer-heart" aria-label="love">&#9829;</span> for families everywhere.</p>
+        <p style="color:var(--col-text-muted);font-size:0.8125rem;">Your fridge, unplugged.</p>
+      </div>
+    </div>
+  </footer>
