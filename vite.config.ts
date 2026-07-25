@@ -38,6 +38,12 @@ export default defineConfig({
     environment: 'jsdom',
     // A real origin so jsdom provides a working localStorage (opaque origins do not).
     environmentOptions: { jsdom: { url: 'http://localhost/' } },
+    // Blank the Firebase config in tests so isFirebaseConfigured is false and the
+    // app never contacts a live backend; features are tested via fakes/in-memory.
+    env: {
+      VITE_FIREBASE_API_KEY: '',
+      VITE_FIREBASE_PROJECT_ID: '',
+    },
     // The default 'forks' pool fails to spawn workers on this Windows/Node setup;
     // worker_threads start reliably.
     pool: 'threads',

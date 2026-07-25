@@ -18,6 +18,27 @@
     "home": "Home",
     "guide": "Guide"
   },
+  "auth": {
+    "signIn": {
+      "title": "Sign in to Flying Fridge",
+      "subtitle": "Join your family's board.",
+      "email": "Email",
+      "password": "Password",
+      "submit": "Sign in",
+      "register": "Create account",
+      "needAccount": "New here? Create an account",
+      "haveAccount": "Already have an account? Sign in",
+      "google": "Continue with Google",
+      "or": "or",
+      "needFields": "Enter your email and password.",
+      "failed": "That didn't work — check your details and try again.",
+      "loading": "Loading…"
+    },
+    "appTitle": "Your board",
+    "signedInAs": "Signed in as {{name}}",
+    "signOut": "Sign out",
+    "dashboardComing": "Your Tasks dashboard is coming here next."
+  },
   "guide": {
     "meta": { "title": "Guide — Flying Fridge" },
     "eyebrow": "Guide",

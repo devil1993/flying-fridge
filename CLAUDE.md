@@ -19,7 +19,7 @@ Every functional change must, **in the same change**, keep documentation current
 Frontend-only **React SPA (TypeScript, Vite, pnpm)** backed by **Firebase** (Auth + Firestore + Cloud Messaging), a **mobile-first PWA** with push. Not yet provisioned — Firebase config is a manual human step (`human-instructions/`), read lazily from `VITE_FIREBASE_*` env vars, so the app runs without it.
 
 - `src/pages/` — route screens. `src/pages/landing/` is the Requirement-1 landing page, preserved as raw markup + CSS with its script re-implemented as a React effect (see `docs/adr/0011`).
-- `src/lib/firebase/` — the **only** place the Firebase SDK is imported.
+- `src/lib/firebase/` — initializes the Firebase SDK and wraps **Auth / Firestore / Messaging / Analytics**. Components/pages never import Firebase; feature **repositories** (e.g. `features/tasks/firestoreTaskRepository.ts`) may call Firestore data APIs directly.
 - `src/features/*` (grows later), `src/components/`, `src/i18n/`, `src/styles/`, `src/test/`.
 - `docs/adr/` — Architecture Decision Records. `docs/design/` — design docs; **architecture is modelled as code with LikeC4** in `docs/design/architecture/*.c4` (`pnpm arch`).
 - `human-instructions/` — manual out-of-workspace steps. `requirements/`, `PROGRESS.md`, `README.md`.

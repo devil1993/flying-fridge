@@ -21,4 +21,15 @@ describe('App routing', () => {
     )
     expect(screen.getByText('Page not found')).toBeInTheDocument()
   })
+
+  it('gates /app behind sign-in when signed out', () => {
+    render(
+      <MemoryRouter initialEntries={['/app']}>
+        <App />
+      </MemoryRouter>,
+    )
+    expect(
+      screen.getByRole('heading', { name: /sign in to flying fridge/i }),
+    ).toBeInTheDocument()
+  })
 })

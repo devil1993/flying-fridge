@@ -87,8 +87,11 @@ another feature's internals.
 
 - `pages` → `features` → `components`. Pages compose features; features use
   shared components.
-- `features/*` → `lib/firebase` for all backend access. **No component or page
-  imports the Firebase SDK directly** — only `lib/firebase` does.
+- `lib/firebase` owns SDK **initialization** + Auth/Messaging/Analytics wrappers.
+  **No component or page imports the Firebase SDK** — but a feature's
+  **repository** module may use Firestore data APIs directly (e.g.
+  `features/tasks/firestoreTaskRepository.ts`), behind a repository interface so
+  the UI stays backend-agnostic and testable.
 - `components/` is Firebase-free and side-effect-free where possible, so it is
   trivially unit-testable and reusable.
 - Cross-cutting (`i18n`, `styles`, `test`) may be used anywhere.

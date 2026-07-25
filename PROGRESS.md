@@ -133,9 +133,18 @@ drag-and-drop, **Firebase Analytics** (via `measurementId`) for telemetry.
   helpers, my-tasks/board partition); a `TaskRepository` interface with an
   **in-memory** implementation (tests/offline) and a **Firestore** one
   (real-time, family-scoped, timelined). 11 unit tests (TDD).
-- ⬜ **Next:** auth (Email/Password + Google) + current-family context; Tasks UI
-  (auth-gated dashboard, add task, self-assign section, target-date colour
-  coding, mark done); telemetry events; drag-and-drop; then the other modules.
+- ✅ **Auth** — `src/features/auth/`: Firebase Email/Password + Google via
+  `lib/firebase/auth`; `AuthProvider`/`useAuth`; accessible `SignInPage`
+  (labels, error alert, keyboard); `/app` route gated (`RequireAuth`). Runs as
+  "signed out" without Firebase config so the landing/guide still work. Tests
+  for rendering, validation, and route gating.
+- ⬜ **Next:** current-family context; Tasks UI (dashboard, add task, self-assign
+  section, target-date colour coding, mark done); telemetry events; drag-and-drop;
+  then the other modules.
+
+Boundary note: `lib/firebase` owns SDK init + Auth/Messaging/Analytics wrappers;
+feature repositories may call Firestore data APIs directly behind the repository
+interface (docs reconciled in CLAUDE.md, architecture.md, folder-structure.md).
 
 Data model for Tasks recorded in `docs/design/data-model.md` §6a; keep C4 +
 Guide updated as the UI lands.

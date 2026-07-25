@@ -9,3 +9,11 @@ export {
   requestNotificationToken,
   onMessage,
 } from './messaging'
+export {
+  observeAuth,
+  signInWithEmail,
+  registerWithEmail,
+  signInWithGoogle,
+  signOutUser,
+  type AppUser,
+} from './auth'

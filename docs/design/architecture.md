@@ -78,7 +78,7 @@ dependencies point **inward** (`pages → features → components`,
 
 | Module | Responsibility | Depends on |
 | --- | --- | --- |
-| `lib/firebase/` | Initialise the Firebase app from env vars; expose typed handles for Auth, Firestore, Messaging plus thin data-access helpers. The **only** place the raw SDK is imported. | Firebase SDK, env |
+| `lib/firebase/` | Initialise the Firebase app from env vars; wrap Auth, Messaging, Analytics, and expose typed handles. Owns SDK **init**; feature repositories may use Firestore data APIs directly behind a repository interface. | Firebase SDK, env |
 | `features/*` | One folder per domain area (`auth`, `family`, and the five item types). Owns that feature's UI, hooks, local state, and data-access calls (through `lib/firebase`). | `lib/firebase`, `components`, `i18n` |
 | `pages/` | Route-level screens that compose features into a full view. Thin — orchestration, not business logic. | `features/*`, `components` |
 | `components/` | Shared, presentational, app-agnostic UI and accessibility primitives. No Firebase imports. | `i18n` |

@@ -51,13 +51,22 @@ model {
       guide = component 'features/guide' {
         description 'In-app user Guide — module registry + i18n content, kept current by guardrail tests (ADR-0012).'
       }
+      authFeature = component 'features/auth' {
+        description 'Sign-in (Email/Password + Google), auth state, route gating.'
+      }
+      tasks = component 'features/tasks' {
+        description 'Tasks domain + repository (Firestore + in-memory). UI in progress (req-4 slice).'
+      }
 
       pages -> features 'uses'
       pages -> guide 'routes to'
+      pages -> authFeature 'gated by'
       features -> components 'uses'
       features -> i18n 'uses'
       features -> firebaseLib 'reads/writes via'
       guide -> i18n 'reads content from'
+      authFeature -> firebaseLib 'authenticates via'
+      tasks -> firestore 'reads/writes, subscribes (family-scoped)'
     }
 
     workbox = container 'Workbox Service Worker' {
