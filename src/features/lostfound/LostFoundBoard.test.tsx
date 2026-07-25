@@ -14,10 +14,10 @@ const authValue = (): AuthContextValue => ({
   signOut: noop,
 })
 const familyValue = (): FamilyContextValue => ({
+  status: 'ready',
   familyId: 'fam',
   familyName: 'Fam',
-  join: () => {},
-  leave: () => {},
+  members: [],
 })
 
 function renderBoard(repo: InMemoryLostRepository) {

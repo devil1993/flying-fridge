@@ -16,7 +16,7 @@ import './topbar.css'
 export default function TopBar() {
   const { t } = useTranslation()
   const { status, signOut } = useAuth()
-  const { familyId, familyName, leave } = useFamily()
+  const { familyId, familyName } = useFamily()
   const { active, setActive } = useAppNav()
   const { pathname } = useLocation()
   const [open, setOpen] = useState(false)
@@ -110,19 +110,9 @@ export default function TopBar() {
           </nav>
 
           <div className="topbar-actions">
-            {inApp && (
+            {inApp && (familyName ?? familyId) && (
               <span className="topbar-family">
                 <span className="topbar-familyname">{familyName ?? familyId}</span>
-                <button
-                  type="button"
-                  className="topbar-switch"
-                  onClick={() => {
-                    leave()
-                    close()
-                  }}
-                >
-                  {t('tasks.family.leave')}
-                </button>
               </span>
             )}
             <ThemeControls />

@@ -2,26 +2,59 @@ rules_version = '2';
 
 // Flying Fridge — Firestore Security Rules.
 //
-// Current stage (requirement-4): any SIGNED-IN user may read/write the family
-// board collections. This is intentionally permissive because "family" is still
-// a client-side code (not stored in Firestore), so rules can't yet verify
-// membership. Everything else is denied by default.
-//
-// TODO (later, done on the console): store family membership in Firestore and
-// scope every rule to `isFamilyMember(familyId)` — see
-// docs/design/data-model.md §5.
+// Family membership is the access boundary: a `families/{familyId}` doc lists
+// `memberUids`, and every board item is scoped to a family. A user may read or
+// write an item only if they are a member of that item's family. Families are
+// bootstrapped manually in the console for now (see
+// human-instructions/03-bootstrap-family.md) — invite/join/approval comes later.
 
 service cloud.firestore {
   match /databases/{database}/documents {
 
-    // Board collections used by the feature modules.
-    match /tasks/{id}         { allow read, write: if request.auth != null; }
-    match /notices/{id}       { allow read, write: if request.auth != null; }
-    match /lostAndFound/{id}  { allow read, write: if request.auth != null; }
-    match /pantry/{id}        { allow read, write: if request.auth != null; }
-    match /questions/{id}     { allow read, write: if request.auth != null; }
+    function isMemberOf(familyId) {
+      return request.auth != null
+        && request.auth.uid in
+           get(/databases/$(database)/documents/families/$(familyId)).data.memberUids;
+    }
 
-    // Default deny for all other paths.
+    // Board items: read/write only for members of the item's family.
+    function itemAllowed() {
+      return isMemberOf(resource.data.familyId);
+    }
+    function newItemAllowed() {
+      return isMemberOf(request.resource.data.familyId);
+    }
+
+    match /tasks/{id} {
+      allow read, update, delete: if itemAllowed();
+      allow create: if newItemAllowed();
+    }
+    match /notices/{id} {
+      allow read, update, delete: if itemAllowed();
+      allow create: if newItemAllowed();
+    }
+    match /lostAndFound/{id} {
+      allow read, update, delete: if itemAllowed();
+      allow create: if newItemAllowed();
+    }
+    match /pantry/{id} {
+      allow read, update, delete: if itemAllowed();
+      allow create: if newItemAllowed();
+    }
+    match /questions/{id} {
+      allow read, update, delete: if itemAllowed();
+      allow create: if newItemAllowed();
+    }
+
+    // Families: members can read their family. Creating/editing membership is
+    // console/admin only for now (invite + approval flow comes later).
+    match /families/{familyId} {
+      allow read: if request.auth != null
+                  && request.auth.uid in resource.data.memberUids;
+      allow write: if false;
+    }
+
+    // Default deny.
     match /{document=**} {
       allow read, write: if false;
     }

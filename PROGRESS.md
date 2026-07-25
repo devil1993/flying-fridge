@@ -183,6 +183,31 @@ Guide updated as the UI lands.
 
 ---
 
+## Requirement 5 — Family backend, telemetry, settings/i18n, notifications 🚧
+
+Source: `requirements/requirement-5.md`. Four parts, built as increments.
+
+- ✅ **Family as a backend entity** — `families/{familyId}` doc with `memberUids`
+  + `members`; `FamilyProvider` resolves the signed-in user's family from
+  Firestore (`array-contains` on uid); **Security Rules scope every board
+  collection by family membership** (`isMemberOf` via `get()`); a "you're not in
+  a family yet" screen shows the user's UID to share. Families are
+  **bootstrapped in the console** — `human-instructions/03-bootstrap-family.md`.
+  (Offline/tests fall back to a demo family.)
+- ⬜ **Telemetry across all features** — clicks, per-feature usage counts, time
+  on feature (extend Firebase Analytics).
+- ⬜ **Settings page + i18n switch** — logout, theme, day/night, change family,
+  and language; add **Bengali** (`bn`).
+- ⬜ **Notifications** — FCM: notify family members when anything is added to the
+  board (needs a server trigger / Cloud Function).
+
+> ⚠️ **Manual steps for the family feature:** (1) re-publish `firestore.rules`
+> (now membership-scoped); (2) bootstrap a family document per
+> `human-instructions/03`. Until both are done, a signed-in user sees "not in a
+> family yet".
+
+---
+
 ## Backlog / candidate features (from requirement-1 "Polishing")
 
 Not scheduled — raised for consideration when writing future requirement files:

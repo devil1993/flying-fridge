@@ -21,7 +21,7 @@ function authValue(): AuthContextValue {
 }
 
 function familyValue(): FamilyContextValue {
-  return { familyId: 'fam', familyName: 'Fam', join: () => {}, leave: () => {} }
+  return { status: 'ready', familyId: 'fam', familyName: 'Fam', members: [] }
 }
 
 describe('TasksDashboard', () => {
@@ -53,9 +53,9 @@ describe('TasksDashboard', () => {
   })
 })
 
-describe('AppHome family gate', () => {
-  it('shows family setup, then the dashboard once a family is joined', () => {
-    localStorage.clear()
+describe('AppHome (signed in with a family)', () => {
+  it('resolves the family and shows the dashboard; shortcuts switch views', () => {
+    // Firebase is unconfigured in tests, so FamilyProvider yields a demo family.
     render(
       <AuthContext.Provider value={authValue()}>
         <FamilyProvider>
@@ -65,15 +65,6 @@ describe('AppHome family gate', () => {
         </FamilyProvider>
       </AuthContext.Provider>,
     )
-
-    expect(
-      screen.getByRole('heading', { name: /join your family/i }),
-    ).toBeInTheDocument()
-
-    fireEvent.change(screen.getByLabelText(/family name or code/i), {
-      target: { value: 'The Okonkwos' },
-    })
-    fireEvent.click(screen.getByRole('button', { name: /continue/i }))
 
     // Lands on the Dashboard (the default module).
     expect(

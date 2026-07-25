@@ -281,6 +281,25 @@ questions/{id}
   createdBy, createdByName, createdAt, updatedAt
 ```
 
+## 6d. Implemented — Families (requirement-5)
+
+Family membership is now backend-enforced (replacing the earlier client-side
+code).
+
+```
+families/{familyId} = {
+  name: string,
+  memberUids: string[],                 // access is granted to these uids
+  members: { [uid]: { name, email } }   // for display
+}
+```
+
+A user's current family is the `families` doc whose `memberUids` contains their
+uid (queried with `array-contains`). Security Rules gate every board collection
+by `isMemberOf(item.familyId)` — a `get()` of the family doc checks the caller's
+uid is in `memberUids`. Families are **bootstrapped in the console** for now
+(`human-instructions/03`); invite / join / approval + an admin screen come later.
+
 ## 7. Open questions (tracked, not resolved)
 
 - Subcollections vs. top-level collections with a `familyId` filter.

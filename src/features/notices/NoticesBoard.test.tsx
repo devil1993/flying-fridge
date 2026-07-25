@@ -18,7 +18,7 @@ function authValue(): AuthContextValue {
 }
 
 function familyValue(): FamilyContextValue {
-  return { familyId: 'fam', familyName: 'Fam', join: () => {}, leave: () => {} }
+  return { status: 'ready', familyId: 'fam', familyName: 'Fam', members: [] }
 }
 
 function renderBoard(repo: InMemoryNoticeRepository) {

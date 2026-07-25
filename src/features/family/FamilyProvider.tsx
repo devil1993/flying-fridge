@@ -1,47 +1,53 @@
-import { useCallback, useMemo, useState, type ReactNode } from 'react'
-import { FamilyContext, type FamilyContextValue } from './familyContext'
+import { useEffect, useMemo, useState, type ReactNode } from 'react'
+import { useAuth } from '../auth/authContext'
+import { familyRepository } from './familyRepositoryInstance'
+import {
+  FamilyContext,
+  type FamilyContextValue,
+  type FamilyStatus,
+  type Family,
+} from './familyContext'
 
-const ID_KEY = 'ff-familyId'
-const NAME_KEY = 'ff-familyName'
-
-/** Minimal family identity for the Tasks slice: a shared code everyone types
- *  in. Real membership + Firestore-backed families come with a later step. */
-function slugify(name: string): string {
-  return name
-    .trim()
-    .toLowerCase()
-    .replace(/[^a-z0-9]+/g, '-')
-    .replace(/^-+|-+$/g, '')
-}
-
+/**
+ * Resolves the signed-in user's family from the backend (families where the
+ * user is a member). Families are bootstrapped manually for now — see
+ * human-instructions/03-bootstrap-family.md.
+ */
 export function FamilyProvider({ children }: { children: ReactNode }) {
-  const [familyId, setFamilyId] = useState<string | null>(() =>
-    localStorage.getItem(ID_KEY),
-  )
-  const [familyName, setFamilyName] = useState<string | null>(() =>
-    localStorage.getItem(NAME_KEY),
-  )
+  const { user, status: authStatus } = useAuth()
+  const [family, setFamily] = useState<Family | null>(null)
+  const [status, setStatus] = useState<FamilyStatus>('loading')
 
-  const join = useCallback((name: string) => {
-    const id = slugify(name)
-    if (!id) return
-    const trimmed = name.trim()
-    localStorage.setItem(ID_KEY, id)
-    localStorage.setItem(NAME_KEY, trimmed)
-    setFamilyId(id)
-    setFamilyName(trimmed)
-  }, [])
-
-  const leave = useCallback(() => {
-    localStorage.removeItem(ID_KEY)
-    localStorage.removeItem(NAME_KEY)
-    setFamilyId(null)
-    setFamilyName(null)
-  }, [])
+  useEffect(() => {
+    if (authStatus === 'loading') {
+      setStatus('loading')
+      return
+    }
+    if (authStatus !== 'authenticated' || !user) {
+      setFamily(null)
+      setStatus('none')
+      return
+    }
+    setStatus('loading')
+    return familyRepository.subscribeMine(user.id, (families) => {
+      if (families.length > 0) {
+        setFamily(families[0])
+        setStatus('ready')
+      } else {
+        setFamily(null)
+        setStatus('none')
+      }
+    })
+  }, [user, authStatus])
 
   const value = useMemo<FamilyContextValue>(
-    () => ({ familyId, familyName, join, leave }),
-    [familyId, familyName, join, leave],
+    () => ({
+      status,
+      familyId: family?.id ?? null,
+      familyName: family?.name ?? null,
+      members: family?.members ?? [],
+    }),
+    [status, family],
   )
 
   return <FamilyContext.Provider value={value}>{children}</FamilyContext.Provider>
