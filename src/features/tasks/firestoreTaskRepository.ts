@@ -18,7 +18,9 @@ import type { TaskRepository } from './repository'
 const COLLECTION = 'tasks'
 
 function toTask(snap: QueryDocumentSnapshot<DocumentData>): Task {
-  const d = snap.data()
+  // 'estimate' so a just-added doc (server timestamp still pending) sorts with a
+  // real local time instead of null.
+  const d = snap.data({ serverTimestamps: 'estimate' })
   const created = d.createdAt?.toMillis?.() ?? 0
   const updated = d.updatedAt?.toMillis?.() ?? created
   return {

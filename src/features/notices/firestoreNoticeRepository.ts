@@ -18,7 +18,9 @@ import type { NoticeRepository } from './repository'
 const COLLECTION = 'notices'
 
 function toNotice(snap: QueryDocumentSnapshot<DocumentData>): Notice {
-  const d = snap.data()
+  // 'estimate' so a just-added doc (server timestamp still pending) gets a
+  // real local time instead of null — otherwise it looks epoch-0 / expired.
+  const d = snap.data({ serverTimestamps: 'estimate' })
   const created = d.createdAt?.toMillis?.() ?? 0
   const updated = d.updatedAt?.toMillis?.() ?? created
   return {
