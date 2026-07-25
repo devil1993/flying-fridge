@@ -137,7 +137,7 @@
     "title": "হারানো ও প্রাপ্তি",
     "add": {
       "descriptionLabel": "আপনি কী খুঁজছেন?",
-      "placeholder": "যেমন আমার নীল পানির বোতল",
+      "placeholder": "যেমন আমার নীল জলের বোতল",
       "submit": "পোস্ট"
     },
     "empty": "এখন কিছু হারায়নি।",
@@ -148,19 +148,19 @@
     "takeDown": "নামিয়ে দিন"
   },
   "pantry": {
-    "title": "প্যান্ট্রি",
+    "title": "ভাঁড়ার",
     "add": {
       "nameLabel": "খাবার",
-      "namePlaceholder": "যেমন অবশিষ্ট তরকারি",
+      "namePlaceholder": "যেমন বেঁচে যাওয়া তরকারি",
       "madeOn": "তৈরির তারিখ",
       "keepsDays": "টিকবে (দিন)",
       "quantity": "পরিমাণ",
       "submit": "যোগ"
     },
-    "empty": "প্যান্ট্রি তালিকা খালি।",
-    "freshUnknown": "সতেজতা অজানা",
-    "expired": "মেয়াদ পার",
-    "freshDays": "{{count}} দিন ভালো",
+    "empty": "ভাঁড়ার তালিকা খালি।",
+    "freshUnknown": "টাটকা কিনা অজানা",
+    "expired": "আর টাটকা নেই",
+    "freshDays": "আরও {{count}} দিন টাটকা",
     "madeOnLabel": "তৈরি {{date}}",
     "quantityLabel": "{{name}}-এর পরিমাণ",
     "decrease": "পরিমাণ কমান",
