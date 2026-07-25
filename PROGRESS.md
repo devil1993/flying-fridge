@@ -204,13 +204,35 @@ Source: `requirements/requirement-5.md`. Four parts, built as increments.
   (`supportedLngs`), core UI translated; the long-form Guide falls back to `en`
   for now. Language choice persists (LanguageDetector) and logs a
   `language_change` event.
-- ⬜ **Notifications** — FCM: notify family members when anything is added to the
-  board (needs a server trigger / Cloud Function).
+- ✅ **Notifications (in-app, real-time)** — a family-scoped, append-only
+  `notifications` collection (`src/features/notifications/`, same repository
+  pattern). Each board publishes on add (`notifyItemAdded`); every member
+  subscribes (`useNotifications`) and sees a **bell + live unread badge** in the
+  top bar (`NotificationBell`) that **stays visible on the bar even on mobile**
+  (never collapses into the hamburger). Only the language-neutral **excerpt** is
+  stored; the sentence is localised per viewer (en/bn). **Read state is per-user
+  & local** (`lastSeen` in `localStorage`). When the tab is unfocused and OS
+  permission is granted, a one-off `Notification` toast is raised. **ADR-0013.**
+  - ⏸️ **Background (app fully closed)** needs FCM web push + a **Cloud Function
+    on `notifications` create** (Blaze). Deferred but purely additive — the feed
+    already writes the docs. See `docs/design/pwa-and-notifications.md` §4.5.
+- ✅ **Soft delete everywhere** — the app never destroys data: delete/remove sets
+  a `deleted` marker (tasks/notices) or a terminal status; reads filter it out;
+  **Security Rules deny hard `delete`** on all board collections. **ADR-0013.**
+- ✅ **Task auto-assign on complete** — whoever marks a task done is set as its
+  assignee (reopening leaves it be). **ADR-0013.**
 
-> ⚠️ **Manual steps for the family feature:** (1) re-publish `firestore.rules`
-> (now membership-scoped); (2) bootstrap a family document per
-> `human-instructions/03`. Until both are done, a signed-in user sees "not in a
-> family yet".
+**Notes / decisions**
+- Guide gained a **Notifications** section (registry + en/bn-aware content +
+  icon); C4 model gained a `features/notifications` component; data model gained
+  §6e (notifications) + §6f (soft delete). Docs-currency policy (ADR-0012) met.
+- Bengali shifted to **Kolkata / West-Bengal Hindu dialect** (জল, ভাঁড়ার, টাটকা…).
+
+> ⚠️ **Manual steps (Firebase console):** (1) **re-publish `firestore.rules`** —
+> now adds the `notifications` collection AND denies hard `delete` on every board
+> collection (soft-delete is enforced server-side); (2) bootstrap a family
+> document per `human-instructions/03` with a **`memberUids`** array. Until both
+> are done, a signed-in user sees "not in a family yet".
 
 ---
 

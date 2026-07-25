@@ -219,10 +219,16 @@ tasks/{taskId}
   assigneeId:   string|null   // self-assign; null = unclaimed
   assigneeName: string|null
   status:       'open'|'done' // kept (timelined) even when done
+  deleted:      boolean       // soft-delete marker; true = off the board, never destroyed (ADR-0013)
   createdBy:    string        // uid
   createdAt:    timestamp
   updatedAt:    timestamp
 ```
+
+Completing a task **auto-assigns** it to whoever marks it done, so "who did
+this?" always has an answer (reopening leaves the assignee as-is). Removing a
+task is a **soft delete**: `remove()` sets `deleted: true` and reads filter it
+out — the record is preserved (see §6f and ADR-0013).
 
 Urgency buckets for colour coding (pure logic in `taskLogic.ts`): `overdue`,
 `today`, `soon` (≤3 days), `later`, `none` (done or no date).
@@ -245,6 +251,7 @@ notices/{noticeId}
   important:     boolean       // colour highlight
   permanent:     boolean       // stays until pulled down
   status:        'up'|'down'   // 'down' = taken off the board (kept/timelined)
+  deleted:       boolean       // soft-delete marker (ADR-0013); reads filter it out
   createdBy:     string
   createdByName: string
   createdAt:     timestamp
@@ -300,6 +307,44 @@ by `isMemberOf(item.familyId)` — a `get()` of the family doc checks the caller
 uid is in `memberUids`. Families are **bootstrapped in the console** for now
 (`human-instructions/03`); invite / join / approval + an admin screen come later.
 
+## 6e. Implemented — Notifications (requirement-5)
+
+A single family-scoped, **append-only** feed. Every board publishes one entry
+when an item is added (`notifyItemAdded` in `src/features/notifications/`), and
+every member subscribes for real-time in-app alerts (bell + unread badge in the
+top bar). Same repository pattern (Firestore + in-memory).
+
+```
+notifications/{id}
+  familyId:  string
+  module:    'tasks'|'notices'|'lostFound'|'pantry'|'questions'
+  excerpt:   string        // the author's own words (verbatim, language-neutral)
+  actorId:   string        // uid of who added the item
+  actorName: string
+  createdAt: timestamp
+```
+
+- **Localised per viewer:** only the `excerpt` is stored; the surrounding
+  sentence ("Ana posted in Tasks") is rendered from i18n so each member reads it
+  in their own language.
+- **Read state is per-user and local:** a `lastSeen` timestamp in `localStorage`
+  (keyed by family + uid). Unread = added by someone else, after `lastSeen`. No
+  extra writes, no cross-member contention.
+- **Immutable:** rules allow member `read` + own-authored `create` only; no
+  update/delete. Client caps the feed to the 50 most recent.
+- **Background delivery** (app closed) is **not** covered by this feed — that
+  needs FCM web push + a server-side sender; see
+  [`pwa-and-notifications.md`](./pwa-and-notifications.md) §7 and ADR-0013.
+
+## 6f. Soft delete (requirement-5, ADR-0013)
+
+**Data is never destroyed from the app.** Any "delete/remove" action sets a
+`deleted: true` marker (or a status like `down`/`consumed`/`closed` where the
+type already has one) and reads filter it out. Firestore Security Rules deny
+hard `delete` on every board collection outright, so the invariant holds even if
+a client tries. This keeps the family timeline/history intact and leaves room
+for a future "recently removed" / restore view.
+
 ## 7. Open questions (tracked, not resolved)
 
 - Subcollections vs. top-level collections with a `familyId` filter.
@@ -307,4 +352,6 @@ uid is in `memberUids`. Families are **bootstrapped in the console** for now
   server surface) or can stay client-only.
 - Response/threading model for Questions.
 - Multi-family UX and how "current family" is selected and persisted.
-- Soft-delete vs. hard-delete and any history/audit needs.
+- ~~Soft-delete vs. hard-delete and any history/audit needs.~~ **Resolved:**
+  soft-delete everywhere (ADR-0013); a restore/"recently removed" view is future
+  work.

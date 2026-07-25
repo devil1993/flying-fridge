@@ -144,6 +144,41 @@ const token = await getToken(messaging, {
 Handle notification **clicks** in the FCM worker (`notificationclick`) to focus
 an existing tab or open the app at the item referenced in `payload.data`.
 
+## 4.5 In-app notification feed (implemented today)
+
+Before any push infrastructure, Flying Fridge ships a **real-time in-app
+notification feed** that works with zero server code and no Blaze plan
+(requirement-5, ADR-0013):
+
+- A family-scoped, append-only **`notifications`** Firestore collection. Each
+  board writes one entry when an item is added (`notifyItemAdded`), and every
+  member subscribes via `onSnapshot` — so a bell + unread badge in the top bar
+  update **live** while the app is open. See
+  [`data-model.md`](./data-model.md) §6e for the document shape.
+- **Read state** is per-user and local (a `lastSeen` timestamp in
+  `localStorage`) — no writes, no contention.
+- **Tab alive but unfocused:** when a new entry arrives, `document.hidden` is
+  true, and the user has granted permission, the app raises a one-off
+  `new Notification(...)` (an OS toast). This is the closest a *page-alive* PWA
+  gets to "background" alerts.
+
+### What "run in the background" actually requires
+
+A key limitation to be honest about: **a PWA cannot keep a Firestore listener
+running once the app/tab is fully closed.** Service workers are event-driven and
+get killed by the OS; they can't hold an open socket to poll Firestore. The
+`notifications` feed above therefore only fires while a tab (foreground or
+backgrounded) is alive.
+
+To deliver alerts when the app is **closed**, the OS/browser push service must
+wake the `firebase-messaging-sw.js` worker via **FCM web push** (§4). That
+requires a **server-side sender**: something that, on a new `notifications`
+write, looks up the family members' `users/{uid}.fcmTokens` and calls the FCM
+send API. The natural implementation is a **Cloud Function** triggered on
+`notifications/{id}` create — which needs the **Blaze** plan. Until that exists,
+push-while-closed is unavailable; the in-app feed and the tab-alive OS toast are
+what work. This staging (feed now, push later) is deliberate and additive.
+
 ## 5. Full config contract
 
 FCM needs both the standard web config **and** the VAPID key. The app reads
@@ -171,8 +206,10 @@ provisioned yet, so real values are added during the manual setup step.
 - **iOS caveats:** installed web-app push has historically been limited/late on
   iOS Safari; treat push as an **enhancement** and never gate core flows on it.
 - **Sending messages** is out of scope for the frontend beyond token
-  registration. Who/what sends pushes (Cloud Function on Firestore changes vs. a
-  scheduled job) is an **open decision** tracked with the data model.
+  registration. The intended trigger is now concrete: a **Cloud Function on
+  `notifications/{id}` create** that fans out FCM push to members'
+  `fcmTokens` (Blaze plan). The in-app feed (§4.5) already writes those docs, so
+  push becomes a purely additive backend step.
 - **Testability:** the token-registration and permission logic live in
   `lib/firebase`/a feature hook and should be unit-testable with the SDK mocked
   (Vitest).

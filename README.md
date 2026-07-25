@@ -6,8 +6,11 @@ everyday things that are easy to forget:
 
 - **Tasks** · **Notices / Info** · **Lost & Found** · **Pantry** · **Questions**
 
-…across **List** and **Calendar** views. It's called *Flying* Fridge because the
-fridge door goes digital and travels with you.
+…across **List** and **Calendar** views. Adding anything to a board sends a
+**real-time in-app notification** to the rest of the family (bell + unread badge),
+and nothing is ever hard-deleted — the app **soft-deletes** so the family history
+stays intact. It's called *Flying* Fridge because the fridge door goes digital
+and travels with you.
 
 > **Project status:** early development. The **landing page** (Requirement 1) and
 > the **development-environment bootstrap** (Requirement 2 — React + Firebase PWA

@@ -54,3 +54,4 @@ Files are named `NNNN-short-slug.md` where `NNNN` is a zero-padded four-digit in
 | [0010](0010-client-side-routing-react-router.md) | Client-Side Routing via React Router | Accepted | 2026-07-25 |
 | [0011](0011-landing-page-static-markup.md) | Landing Page Ported as Static Markup | Accepted | 2026-07-25 |
 | [0012](0012-in-app-guide-and-docs-currency-policy.md) | In-App Guide (Data-Driven + Contract-Tested) and Documentation-Currency Policy | Accepted | 2026-07-25 |
+| [0013](0013-soft-delete-and-in-app-notification-feed.md) | Preserve-by-Default (Soft Delete) and an In-App Notification Feed | Accepted | 2026-07-26 |

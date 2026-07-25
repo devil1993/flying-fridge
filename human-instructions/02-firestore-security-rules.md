@@ -33,24 +33,25 @@ firebase deploy --only firestore:rules --project group-noticeboard
 
 ---
 
-> **Re-publish when the rules change.** `firestore.rules` now covers all five
-> board collections (`tasks`, `notices`, `lostAndFound`, `pantry`, `questions`).
-> Whenever this file changes (e.g. a new module or, later, family-scoped rules),
-> repeat Option A or B to re-publish.
+> **Re-publish when the rules change.** `firestore.rules` now (a) scopes all five
+> board collections to **family membership**, (b) adds the **`notifications`**
+> collection, and (c) **denies hard `delete`** everywhere (the app soft-deletes —
+> ADR-0013). Whenever this file changes, repeat Option A or B to re-publish.
 
 ## What these rules do (read this)
 
-- **Any signed-in user can read/write `tasks`.** They are **not yet scoped to a
-  family** — because "family" is currently just a shared code held in the
-  browser (`localStorage`), not stored in Firestore, so the rules have nothing
-  to check membership against. In practice: everyone signed in to your project
-  can see every family's tasks right now.
-- **Everything else is denied.**
+- **Family membership is the access boundary.** A `families/{familyId}` doc lists
+  `memberUids`; a user may read/write a board item only if their uid is in that
+  family's `memberUids`. Members can read their own family doc; membership is
+  **bootstrapped in the console** for now (see `03-bootstrap-family.md`).
+- **`notifications`** is an append-only feed: members can read it and create their
+  own entries (`actorId` must be the caller); no update/delete.
+- **Hard delete is denied** on every board collection. The app removes things by
+  setting a `deleted` marker (or a terminal status), so data is never destroyed.
+- **Everything else is denied** (default deny).
 
-This is fine for trying out the Tasks slice with your own account(s). Before this
-is shared more widely, we'll store family membership in Firestore and tighten the
-rules to `isFamilyMember(familyId)` (tracked in `docs/design/data-model.md` §5 and
-`PROGRESS.md`). Update `firestore.rules` and re-publish when we do.
+Tracked in `docs/design/data-model.md` §6d–6f and ADR-0013. Update
+`firestore.rules` and re-publish whenever rules change.
 
 ## Verify it worked
 

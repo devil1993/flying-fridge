@@ -72,6 +72,9 @@ model {
       family = component 'features/family' {
         description 'Current-family context (minimal shared code for now; Firestore-backed membership later).'
       }
+      notifications = component 'features/notifications' {
+        description 'Family notification feed: each board publishes on add; members subscribe in real time (bell + unread badge). Append-only, family-scoped. Background push via FCM is future work (ADR-0013).'
+      }
 
       pages -> features 'uses'
       pages -> guide 'routes to'
@@ -82,6 +85,13 @@ model {
       lostfound -> family 'scoped to'
       pantry -> family 'scoped to'
       questions -> family 'scoped to'
+      notifications -> family 'scoped to'
+      tasks -> notifications 'publishes on add'
+      notices -> notifications 'publishes on add'
+      lostfound -> notifications 'publishes on add'
+      pantry -> notifications 'publishes on add'
+      questions -> notifications 'publishes on add'
+      notifications -> firestore 'appends + subscribes (family-scoped)'
       notices -> firestore 'reads/writes, subscribes (family-scoped)'
       lostfound -> firestore 'reads/writes, subscribes (family-scoped)'
       pantry -> firestore 'reads/writes, subscribes (family-scoped)'
