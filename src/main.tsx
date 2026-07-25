@@ -21,9 +21,13 @@ registerSW({ immediate: true })
 const rootEl = document.getElementById('root')
 if (!rootEl) throw new Error('Root element #root not found')
 
+// Serve correctly from a sub-path (e.g. GitHub Pages '/flying-fridge/'). Vite
+// injects BASE_URL from `base`; strip the trailing slash for react-router.
+const basename = import.meta.env.BASE_URL.replace(/\/$/, '') || '/'
+
 createRoot(rootEl).render(
   <StrictMode>
-    <BrowserRouter>
+    <BrowserRouter basename={basename}>
       <App />
     </BrowserRouter>
   </StrictMode>,

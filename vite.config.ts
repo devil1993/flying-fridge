@@ -4,7 +4,14 @@ import react from '@vitejs/plugin-react'
 import { VitePWA } from 'vite-plugin-pwa'
 
 // https://vite.dev/config/
+//
+// `base` defaults to '/' for local dev/preview. For a GitHub Pages *project*
+// site the app is served from '/<repo>/', so the deploy workflow sets
+// `VITE_BASE=/<repo>/` (derived from the repo name — no hard-coding here). The
+// router reads it back via `import.meta.env.BASE_URL`, and the PWA manifest
+// uses base-relative start_url/scope so it works at either path.
 export default defineConfig({
+  base: process.env.VITE_BASE || '/',
   plugins: [
     react(),
     VitePWA({
@@ -18,8 +25,8 @@ export default defineConfig({
         theme_color: '#4F6DF5',
         background_color: '#F7F9FC',
         display: 'standalone',
-        start_url: '/',
-        scope: '/',
+        start_url: '.',
+        scope: '.',
         icons: [
           {
             src: 'favicon.svg',

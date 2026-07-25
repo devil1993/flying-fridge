@@ -6,6 +6,15 @@ import { toggleMode, setPalette, currentPalette, type Palette } from '../../lib/
 // See docs/adr/0011-landing-page-static-markup.md.
 import landingHtml from './landing.body.html?raw'
 
+// The raw markup uses root-absolute in-app links (`/app`, `/guide`). Prefix them
+// with Vite's BASE_URL so they resolve under a sub-path deploy (GitHub Pages
+// '/flying-fridge/'). At the default base ('/') this is a no-op, so the
+// requirement-1 markup still renders verbatim locally (ADR-0011).
+const base = import.meta.env.BASE_URL
+const landingHtmlBased = landingHtml
+  .replace(/href="\/app"/g, `href="${base}app"`)
+  .replace(/href="\/guide"/g, `href="${base}guide"`)
+
 export default function LandingPage() {
   const ref = useRef<HTMLDivElement>(null)
 
@@ -105,5 +114,5 @@ export default function LandingPage() {
     return () => cleanups.forEach((fn) => fn())
   }, [])
 
-  return <div ref={ref} dangerouslySetInnerHTML={{ __html: landingHtml }} />
+  return <div ref={ref} dangerouslySetInnerHTML={{ __html: landingHtmlBased }} />
 }
