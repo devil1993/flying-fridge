@@ -22,5 +22,6 @@ Think of these as the "flip the switches in the real world" steps that turn the 
 | File | Purpose |
 | --- | --- |
 | `01-firebase-project-setup.md` | Create the Firebase project and wire its config into the workspace. **Do this first.** |
+| `02-firestore-security-rules.md` | Publish Firestore Security Rules so the signed-in app can read/write `tasks` (fixes "Missing or insufficient permissions"). |
 
 More guides will be added here as future requirements need additional out-of-workspace setup (for example, deploying to a host, or configuring a custom domain).

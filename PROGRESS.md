@@ -148,6 +148,13 @@ drag-and-drop, **Firebase Analytics** (via `measurementId`) for telemetry.
   other modules — Notices, Lost & Found, Pantry, Questions — repeating the
   domain → repository → UI pattern.
 
+> ⚠️ **Manual step required now:** Firestore was created in production mode, so
+> writes fail with "Missing or insufficient permissions" until rules are
+> published. Rules live in `firestore.rules`; publish via
+> `human-instructions/02-firestore-security-rules.md`. Current rules allow any
+> signed-in user to read/write `tasks` (not yet family-scoped — see the note
+> above).
+
 Boundary note: `lib/firebase` owns SDK init + Auth/Messaging/Analytics wrappers;
 feature repositories may call Firestore data APIs directly behind the repository
 interface (docs reconciled in CLAUDE.md, architecture.md, folder-structure.md).

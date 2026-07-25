@@ -1,0 +1,25 @@
+rules_version = '2';
+
+// Flying Fridge — Firestore Security Rules.
+//
+// Current stage (requirement-4, Tasks slice): any SIGNED-IN user may read/write
+// tasks. This is intentionally permissive because "family" is still a
+// client-side code (not stored in Firestore), so rules can't yet verify
+// membership. Everything else is denied by default.
+//
+// TODO (later): store family membership in Firestore and scope every rule to
+// `isFamilyMember(familyId)` — see docs/design/data-model.md §5.
+
+service cloud.firestore {
+  match /databases/{database}/documents {
+
+    match /tasks/{taskId} {
+      allow read, write: if request.auth != null;
+    }
+
+    // Default deny for all other paths (implicit, stated for clarity).
+    match /{document=**} {
+      allow read, write: if false;
+    }
+  }
+}

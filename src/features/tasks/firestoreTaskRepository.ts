@@ -4,7 +4,6 @@ import {
   deleteDoc,
   doc,
   onSnapshot,
-  orderBy,
   query,
   serverTimestamp,
   updateDoc,
@@ -44,12 +43,15 @@ function toTask(snap: QueryDocumentSnapshot<DocumentData>): Task {
  */
 export const firestoreTaskRepository: TaskRepository = {
   subscribe(familyId, onChange) {
+    // Filter by family server-side; sort newest-first on the client so a single
+    // equality filter is enough (no composite index needed).
     const q = query(
       collection(getDb(), COLLECTION),
       where('familyId', '==', familyId),
-      orderBy('createdAt', 'desc'),
     )
-    return onSnapshot(q, (qs) => onChange(qs.docs.map(toTask)))
+    return onSnapshot(q, (qs) =>
+      onChange(qs.docs.map(toTask).sort((a, b) => b.createdAt - a.createdAt)),
+    )
   },
 
   async add(familyId, input: NewTaskInput, author: Actor) {
