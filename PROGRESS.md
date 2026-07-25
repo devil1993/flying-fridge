@@ -136,11 +136,17 @@ drag-and-drop, **Firebase Analytics** (via `measurementId`) for telemetry.
 - ✅ **Auth** — `src/features/auth/`: Firebase Email/Password + Google via
   `lib/firebase/auth`; `AuthProvider`/`useAuth`; accessible `SignInPage`
   (labels, error alert, keyboard); `/app` route gated (`RequireAuth`). Runs as
-  "signed out" without Firebase config so the landing/guide still work. Tests
-  for rendering, validation, and route gating.
-- ⬜ **Next:** current-family context; Tasks UI (dashboard, add task, self-assign
-  section, target-date colour coding, mark done); telemetry events; drag-and-drop;
-  then the other modules.
+  "signed out" without Firebase config so the landing/guide still work.
+- ✅ **Family + Tasks dashboard** — minimal family context (`src/features/family/`,
+  join by shared name/code); `/app` shows setup then the board. Add task,
+  self-assign with a **My tasks** section, **target-date colour coding**, mark
+  done, remove — all wired to the repository (Firestore when configured) via a
+  `useTasks` hook, with **Firebase Analytics** telemetry events (`task_add`,
+  `task_assign`, `task_complete`). Accessible + i18n. Integration tests for the
+  add→assign→done flow and the family gate.
+- ⬜ **Next:** simple **drag-and-drop** (dnd-kit) for claim/reorder; then the
+  other modules — Notices, Lost & Found, Pantry, Questions — repeating the
+  domain → repository → UI pattern.
 
 Boundary note: `lib/firebase` owns SDK init + Auth/Messaging/Analytics wrappers;
 feature repositories may call Firestore data APIs directly behind the repository

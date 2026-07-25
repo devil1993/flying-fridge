@@ -10,6 +10,7 @@ import AppHome from './pages/AppHome'
 import { AuthProvider } from './features/auth/AuthProvider'
 import { useAuth } from './features/auth/authContext'
 import SignInPage from './features/auth/SignInPage'
+import { FamilyProvider } from './features/family/FamilyProvider'
 
 /** Gates a route behind authentication; shows sign-in when signed out. */
 function RequireAuth({ children }: { children: ReactNode }) {
@@ -39,20 +40,22 @@ export default function App() {
 
   return (
     <AuthProvider>
-      <SkipLink />
-      <Routes>
-        <Route path="/" element={<LandingPage />} />
-        <Route path="/guide" element={<GuidePage />} />
-        <Route
-          path="/app"
-          element={
-            <RequireAuth>
-              <AppHome />
-            </RequireAuth>
-          }
-        />
-        <Route path="*" element={<NotFound />} />
-      </Routes>
+      <FamilyProvider>
+        <SkipLink />
+        <Routes>
+          <Route path="/" element={<LandingPage />} />
+          <Route path="/guide" element={<GuidePage />} />
+          <Route
+            path="/app"
+            element={
+              <RequireAuth>
+                <AppHome />
+              </RequireAuth>
+            }
+          />
+          <Route path="*" element={<NotFound />} />
+        </Routes>
+      </FamilyProvider>
     </AuthProvider>
   )
 }

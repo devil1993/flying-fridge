@@ -55,12 +55,17 @@ model {
         description 'Sign-in (Email/Password + Google), auth state, route gating.'
       }
       tasks = component 'features/tasks' {
-        description 'Tasks domain + repository (Firestore + in-memory). UI in progress (req-4 slice).'
+        description 'Tasks board: domain, repository (Firestore + in-memory), dashboard UI, telemetry.'
+      }
+      family = component 'features/family' {
+        description 'Current-family context (minimal shared code for now; Firestore-backed membership later).'
       }
 
       pages -> features 'uses'
       pages -> guide 'routes to'
       pages -> authFeature 'gated by'
+      pages -> family 'scoped by'
+      tasks -> family 'scoped to'
       features -> components 'uses'
       features -> i18n 'uses'
       features -> firebaseLib 'reads/writes via'

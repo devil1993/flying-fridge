@@ -39,6 +39,42 @@
     "signOut": "Sign out",
     "dashboardComing": "Your Tasks dashboard is coming here next."
   },
+  "tasks": {
+    "title": "Tasks",
+    "add": {
+      "descriptionLabel": "What needs doing?",
+      "descriptionPlaceholder": "e.g. Buy milk",
+      "dateLabel": "Target date (optional)",
+      "submit": "Add task"
+    },
+    "mine": "My tasks",
+    "board": "Board",
+    "empty": "Nothing here yet.",
+    "assignToMe": "Assign to me",
+    "release": "Release",
+    "markDone": "Mark done",
+    "markOpen": "Reopen",
+    "remove": "Remove task",
+    "assignedTo": "Claimed by {{name}}",
+    "unassigned": "Unclaimed",
+    "noDate": "No date",
+    "targetDate": "Due {{date}}",
+    "urgency": {
+      "overdue": "Overdue",
+      "today": "Due today",
+      "soon": "Due soon",
+      "later": "Upcoming",
+      "none": ""
+    },
+    "family": {
+      "setupTitle": "Join your family",
+      "setupBody": "Enter a name for your family — everyone who types the same name shares one board.",
+      "nameLabel": "Family name or code",
+      "join": "Continue",
+      "current": "Family: {{name}}",
+      "leave": "Switch family"
+    }
+  },
   "guide": {
     "meta": { "title": "Guide — Flying Fridge" },
     "eyebrow": "Guide",

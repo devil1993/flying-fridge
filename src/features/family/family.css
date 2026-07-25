@@ -1,0 +1,65 @@
+.family-setup {
+  min-height: 100dvh;
+  display: grid;
+  place-items: center;
+  padding: var(--sp-4) var(--sp-3);
+}
+.family-card {
+  width: 100%;
+  max-width: 420px;
+  background: var(--col-surface);
+  border: 1px solid var(--col-border);
+  border-radius: var(--r-lg);
+  box-shadow: var(--shadow-md);
+  padding: var(--sp-5);
+}
+.family-card h1 {
+  font-family: var(--font-display);
+  font-size: 1.5rem;
+  color: var(--col-text);
+  margin-bottom: 6px;
+}
+.family-card p {
+  color: var(--col-text-2);
+  margin-bottom: var(--sp-3);
+}
+.family-card form {
+  display: flex;
+  flex-direction: column;
+  gap: var(--sp-1);
+}
+.family-card label {
+  font-size: 0.85rem;
+  font-weight: 600;
+  color: var(--col-text);
+}
+.family-card input {
+  font: inherit;
+  color: var(--col-text);
+  background: var(--col-bg);
+  border: 1px solid var(--col-border);
+  border-radius: var(--r-sm);
+  padding: 10px 12px;
+}
+.family-card input:focus-visible {
+  outline: 3px solid var(--col-primary);
+  outline-offset: 2px;
+  border-color: var(--col-primary);
+}
+.family-card button {
+  margin-top: var(--sp-1);
+  font: 600 0.95rem var(--font-sans);
+  background: var(--col-primary);
+  color: #fff;
+  border: none;
+  border-radius: 999px;
+  padding: 11px 16px;
+  cursor: pointer;
+}
+.family-card button:hover {
+  background: var(--col-primary-dk);
+}
+.family-card button:focus-visible {
+  outline: 3px solid var(--col-primary);
+  outline-offset: 2px;
+}

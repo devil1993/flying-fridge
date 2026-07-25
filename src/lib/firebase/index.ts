@@ -17,3 +17,4 @@ export {
   signOutUser,
   type AppUser,
 } from './auth'
+export { track } from './analytics'

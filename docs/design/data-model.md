@@ -225,8 +225,12 @@ tasks/{taskId}
 ```
 
 Urgency buckets for colour coding (pure logic in `taskLogic.ts`): `overdue`,
-`today`, `soon` (≤3 days), `later`, `none` (done or no date). Still to wire:
-auth/family context and the Tasks UI (dashboard + self-assign section).
+`today`, `soon` (≤3 days), `later`, `none` (done or no date).
+
+Now wired: Firebase auth (Email/Password + Google), a **minimal client-side
+family** (a shared code held in `localStorage` — `familyId`; Firestore-backed
+membership and security rules come later), the Tasks dashboard UI, and Firebase
+Analytics telemetry. Still to add for Tasks: drag-and-drop.
 
 ## 7. Open questions (tracked, not resolved)
 
