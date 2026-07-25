@@ -1,0 +1,145 @@
+.guide {
+  display: block;
+  min-height: 100dvh;
+  padding: var(--sp-8) var(--sp-3);
+}
+
+.guide-wrap {
+  max-width: 760px;
+  margin: 0 auto;
+}
+
+.guide-eyebrow {
+  font-size: 0.75rem;
+  font-weight: 600;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--col-primary);
+  margin-bottom: var(--sp-1);
+}
+
+.guide-title {
+  font-family: var(--font-display);
+  font-size: clamp(1.9rem, 5vw, 2.6rem);
+  line-height: 1.15;
+  color: var(--col-text);
+  margin-bottom: var(--sp-2);
+}
+
+.guide-lead {
+  font-size: 1.05rem;
+  line-height: 1.65;
+  color: var(--col-text-2);
+  margin-bottom: var(--sp-5);
+}
+
+/* Table of contents */
+.guide-toc {
+  margin-bottom: var(--sp-6);
+}
+.guide-toc ul {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--sp-1);
+}
+.guide-toc a {
+  display: inline-block;
+  padding: 8px 14px;
+  border-radius: 999px;
+  background: var(--col-surface-2);
+  border: 1px solid var(--col-border);
+  color: var(--col-text);
+  font-size: 0.9rem;
+  font-weight: 600;
+  text-decoration: none;
+  transition:
+    border-color var(--dur-fast) var(--ease-out),
+    background-color var(--dur-fast) var(--ease-out);
+}
+.guide-toc a:hover {
+  border-color: var(--col-primary);
+}
+.guide-toc a:focus-visible {
+  outline: 3px solid var(--col-primary);
+  outline-offset: 2px;
+}
+
+/* Module sections */
+.guide-module {
+  scroll-margin-top: var(--sp-4);
+  background: var(--col-surface);
+  border: 1px solid var(--col-border);
+  border-left: 4px solid var(--accent, var(--col-primary));
+  border-radius: var(--r-md);
+  padding: var(--sp-4);
+  margin-bottom: var(--sp-4);
+  box-shadow: var(--shadow-sm);
+}
+
+.guide-module-head {
+  display: flex;
+  align-items: center;
+  gap: var(--sp-2);
+  margin-bottom: var(--sp-2);
+}
+.guide-module-icon {
+  display: inline-flex;
+  color: var(--accent, var(--col-primary));
+}
+.guide-module h2 {
+  font-size: 1.35rem;
+  color: var(--col-text);
+}
+
+.guide-summary {
+  color: var(--col-text-2);
+  line-height: 1.6;
+  margin-bottom: var(--sp-2);
+}
+
+.guide-steps {
+  margin: 0 0 var(--sp-2);
+  padding-left: 1.35rem;
+  color: var(--col-text);
+  line-height: 1.6;
+}
+.guide-steps li {
+  margin-bottom: 6px;
+}
+
+.guide-tip {
+  font-size: 0.92rem;
+  color: var(--col-text-2);
+  background: var(--col-surface-2);
+  border-radius: var(--r-sm);
+  padding: 10px 14px;
+}
+.guide-tip-label {
+  font-weight: 700;
+  color: var(--accent, var(--col-primary));
+}
+
+.guide-back {
+  margin-top: var(--sp-4);
+}
+.guide-back a {
+  color: var(--col-primary);
+  font-weight: 600;
+  text-decoration: none;
+}
+.guide-back a:focus-visible {
+  outline: 3px solid var(--col-primary);
+  outline-offset: 2px;
+}
+
+@media (min-width: 768px) {
+  .guide {
+    padding: var(--sp-10) var(--sp-4);
+  }
+  .guide-module {
+    padding: var(--sp-5);
+  }
+}

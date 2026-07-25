@@ -48,11 +48,16 @@ model {
       firebaseLib = component 'lib/firebase' {
         description 'SDK init + typed helpers. The ONLY place the Firebase SDK is imported.'
       }
+      guide = component 'features/guide' {
+        description 'In-app user Guide — module registry + i18n content, kept current by guardrail tests (ADR-0012).'
+      }
 
       pages -> features 'uses'
+      pages -> guide 'routes to'
       features -> components 'uses'
       features -> i18n 'uses'
       features -> firebaseLib 'reads/writes via'
+      guide -> i18n 'reads content from'
     }
 
     workbox = container 'Workbox Service Worker' {

@@ -37,6 +37,7 @@ recorded, the design docs **reference** an ADR rather than restating it.
 | [`data-model.md`](./data-model.md) | A **provisional** Firestore data model: `users`, `families` (membership), and the five family-scoped item collections, with suggested fields and how security rules gate access by family membership. |
 | [`pwa-and-notifications.md`](./pwa-and-notifications.md) | PWA design: manifest, install, offline/caching via Workbox, and the push-notification flow via Firebase Cloud Messaging (service worker, VAPID key, permission, foreground vs background messages). |
 | [`i18n-and-accessibility.md`](./i18n-and-accessibility.md) | Internationalization (react-i18next, `en` default, key structure, adding locales) and the accessibility baseline (WCAG 2.1 AA, keyboard-first, focus management, landmarks, reduced-motion, contrast, a11y testing). |
+| [`guide.md`](./guide.md) | The in-app user Guide (`/guide`): data-driven from a module registry + i18n content, with guardrail contract tests that keep it in sync with the modules. See ADR-0012. |
 
 ## Reading order
 

@@ -83,7 +83,7 @@ Source: `requirements/requirement-2.md`
   view. See `docs/design/architecture.md`.
 
 **Gate before the next requirement** ✅ (cleared 2026-07-25)
-- ✅ Firebase project created; **auth providers enabled**.
+- ✅ Firebase project created; **auth providers enabled: Email/Password + Google**.
 - ✅ **Cloud Firestore region: `asia-south1` (Mumbai)** — permanent.
 - ✅ **Analytics enabled**; `measurementId` present.
 - ✅ `.env.local` populated and verified — all eight `VITE_FIREBASE_*` vars set
@@ -93,6 +93,43 @@ Source: `requirements/requirement-2.md`
 > Follow-up (optional, future): Analytics is on, so `getAnalytics()` can be
 > wired in `src/lib/firebase/` when useful — the `measurementId` is already in
 > the config object.
+
+---
+
+## Requirement 3 — In-app Guide + docs-currency policy ✅
+
+Source: `requirements/requirement-3.md`
+
+- ✅ **`/guide` route** — a user Guide with a section per module (Tasks, Notices,
+  Lost & Found, Pantry, Questions, plus Appearance & accessibility), accessible
+  (main landmark, in-page TOC, semantic headings, keyboard/focus) and i18n-wired.
+- ✅ **Data-driven** — module registry (`src/features/guide/modules.ts`) as the
+  single source of truth; content in i18n under `guide.modules.<id>`.
+- ✅ **Guardrail tests** (`src/features/guide/*.contract.test.*`): fail CI if a
+  documented module lacks content, if content is orphaned, or if a core module
+  is undocumented.
+- ✅ **Persistent docs-currency policy** — every change updates docs/ADRs/specs,
+  the LikeC4 model, and the Guide in the same change. Recorded in **ADR-0012**,
+  `CLAUDE.md`, `README.md`, and saved to Claude's memory.
+- ✅ Guide content written to match **requirement-4**'s described behaviors so it
+  is accurate as those features land.
+
+**Notes / decisions**
+- Design tokens were lifted out of `landing.css` into a global
+  `src/styles/theme.css`, and theme control centralized in `src/lib/theme.ts`,
+  so **every route** (not just the landing page) is themed and palette/dark
+  choices apply everywhere.
+
+---
+
+## Requirement 4 — Feature modules ⬜ (next; large, build one by one)
+
+Source: `requirements/requirement-4.md`. Needs a foundation before the boards:
+**auth (sign-in) + family context + a Firestore data/repository layer**, then
+each module (Tasks first), then telemetry (Analytics/`measurementId`), optional
+drag-and-drop, and timelined/persistent history. Keep C4 + Guide updated per the
+policy above. Detailed sequence to be confirmed with the maintainer before the
+build.
 
 ---
 
@@ -119,5 +156,6 @@ Not scheduled — raised for consideration when writing future requirement files
 
 ## Next up ⬜
 
-Firebase human-setup gate is **cleared** — backend features are unblocked.
-Ready to build `requirements/requirement-3.md` when you are.
+Requirement 3 is **done**. Requirement 4 (feature modules) is next — a large
+build to be done one module at a time, starting with the auth/data foundation
+then Tasks. Sequence to be confirmed before starting.

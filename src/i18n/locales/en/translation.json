@@ -13,5 +13,88 @@
     "title": "Page not found",
     "body": "That note seems to have floated off the fridge door.",
     "home": "Back to home"
+  },
+  "nav": {
+    "home": "Home",
+    "guide": "Guide"
+  },
+  "guide": {
+    "meta": { "title": "Guide — Flying Fridge" },
+    "eyebrow": "Guide",
+    "title": "How Flying Fridge works",
+    "tocLabel": "On this page",
+    "tipLabel": "Tip",
+    "backHome": "← Back to home",
+    "intro": {
+      "body": "Flying Fridge is your family's shared noticeboard: one place for the everyday things that are easy to forget. Here's what each part does and how to use it — pick a section below."
+    },
+    "modules": {
+      "tasks": {
+        "title": "Tasks",
+        "summary": "Chores and to-dos for the family, colour-coded by their target date so what's urgent stands out.",
+        "steps": [
+          "Open Tasks and add one with a short description.",
+          "Optionally set a target date — the dashboard colour-codes tasks by how close that date is.",
+          "Assign a task to yourself so nobody else picks it up; your assigned tasks gather in their own section.",
+          "Mark it done when finished — it stays in the timeline even after it leaves the board."
+        ],
+        "tip": "No target date? The task still lives on the board — dates just drive the colour coding and calendar."
+      },
+      "notices": {
+        "title": "Notices & Info",
+        "summary": "Simple announcements that stay on the board for a month, or longer if you make them permanent.",
+        "steps": [
+          "Post a notice with the info the family should see.",
+          "It stays on the noticeboard for one month, or until someone takes it down.",
+          "Mark it permanent to keep it up until it's pulled down.",
+          "Mark it important to give it a colour highlight so it stands out."
+        ],
+        "tip": "Use 'important' for things people must not miss, and 'permanent' for standing info like the Wi-Fi password."
+      },
+      "lostFound": {
+        "title": "Lost & Found",
+        "summary": "Post something you're looking for; it stays up, with its posting date, until it's found or you take it down.",
+        "steps": [
+          "Add what you're looking for with a short description (a photo helps).",
+          "The posting date is shown so everyone sees how long it's been missing.",
+          "Family members can help locate it.",
+          "Take it down once it's found — it stays in the timeline either way."
+        ],
+        "tip": "Old, unresolved posts are easy to spot by their posting date."
+      },
+      "pantry": {
+        "title": "Pantry",
+        "summary": "Track food at home — when it was made, how long it stays good, and roughly how much is left.",
+        "steps": [
+          "Add a food item with when it was made and how long it's likely to stay good.",
+          "Set an approximate quantity so everyone understands how much there is.",
+          "Anyone can increase or reduce the amount as it's used.",
+          "Mark it consumed to remove it from the list — it's kept in the timeline."
+        ],
+        "tip": "Freshness comes from when it was made plus how long it keeps — check before you cook."
+      },
+      "questions": {
+        "title": "Questions",
+        "summary": "Ask the family anything that needs a group answer or a quick decision.",
+        "steps": [
+          "Post a question — for example, 'Pizza or pasta on Friday?'.",
+          "Family members chime in with answers.",
+          "Keep the discussion in one place instead of scattered messages.",
+          "Close it once it's answered; it stays in the timeline for later."
+        ],
+        "tip": "Great for quick decisions without a dozen back-and-forth texts."
+      },
+      "appearance": {
+        "title": "Appearance & accessibility",
+        "summary": "Make Flying Fridge comfortable — colour themes, light/dark, and full keyboard access.",
+        "steps": [
+          "Use the colour-theme picker in the top bar to switch palettes (Blueberry, Grape, Forest, Ocean).",
+          "Choose High Contrast for maximum legibility.",
+          "Use the sun/moon button to switch light and dark — by default it follows your device.",
+          "Everything is keyboard-navigable: press Tab to move, and use the skip link to jump to the content."
+        ],
+        "tip": "Prefer less motion? Flying Fridge respects your system's reduced-motion setting automatically."
+      }
+    }
   }
 }

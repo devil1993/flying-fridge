@@ -10,6 +10,10 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 Work is **requirement-driven**. Each `requirements/requirement-N.md` (Functional / Technical / Polishing) is the next unit of work. Read `requirements/overview.md` first. After finishing a requirement, update `PROGRESS.md`. `README.md` is the living onboarding doc — keep it accurate when structure/commands change.
 
+## Docs currency (REQUIRED — persistent, from requirement-3 on)
+
+Every functional change must, **in the same change**, keep documentation current: the relevant `docs/design/*`, ADRs (`docs/adr/`), the **LikeC4 model** (`docs/design/architecture/*.c4` — track real components + data models), and the **in-app Guide** (`src/features/guide/` registry + `guide.*` i18n content). The guide-currency **guardrail tests** (`src/features/guide/*.contract.test.*`) must pass — they assert every documented module has content, there's no orphan content, and every core module (tasks, notices, lostFound, pantry, questions) is documented. See ADR-0012.
+
 ## Stack & layout
 
 Frontend-only **React SPA (TypeScript, Vite, pnpm)** backed by **Firebase** (Auth + Firestore + Cloud Messaging), a **mobile-first PWA** with push. Not yet provisioned — Firebase config is a manual human step (`human-instructions/`), read lazily from `VITE_FIREBASE_*` env vars, so the app runs without it.

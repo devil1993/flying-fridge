@@ -125,6 +125,7 @@ flying-fridge/
 | If you want to… | Read |
 | --- | --- |
 | Understand the system shape (C4: context→container→component) | [`docs/design/architecture.md`](./docs/design/architecture.md) |
+| Understand the in-app Guide (`/guide`) and its guardrails | [`docs/design/guide.md`](./docs/design/guide.md) |
 | See folder conventions, data model, PWA/notifications, i18n/a11y | [`docs/design/`](./docs/design/) |
 | Know *why* a technology was chosen | [`docs/adr/`](./docs/adr/) |
 | Set up Firebase / other manual steps | [`human-instructions/`](./human-instructions/) |
@@ -180,6 +181,15 @@ two patterns.
   e.g. `feat(landing): …`, `chore: …`, `docs: …`).
 
 ---
+
+## Documentation currency (project rule)
+
+From requirement-3 onward, **every functional change keeps the docs current in
+the same change**: `docs/design/*`, ADRs, the LikeC4 model, and the in-app
+**Guide** (`src/features/guide/`). The Guide is guardrailed — contract tests
+(`src/features/guide/*.contract.test.*`) fail CI if a documented module lacks
+content, if content is orphaned, or if a core module is undocumented. See
+[ADR-0012](./docs/adr/0012-in-app-guide-and-docs-currency-policy.md).
 
 ## Keeping this README current
 

@@ -56,11 +56,13 @@ src/
 │  ├─ notices/           #   Info/Notices board
 │  ├─ lostAndFound/      #   Lost & Found board (mark as found)
 │  ├─ pantry/            #   Pantry board (mark consumed/deleted)
-│  └─ questions/         #   Questions board
+│  ├─ questions/         #   Questions board
+│  └─ guide/             #   In-app user Guide: module registry + i18n content + guardrail tests (docs/design/guide.md)
 ├─ lib/
-│  └─ firebase/          # Firebase SDK init from env + typed Auth/Firestore/Messaging helpers (only place the SDK is imported)
+│  ├─ firebase/          # Firebase SDK init from env + typed Auth/Firestore/Messaging helpers (only place the SDK is imported)
+│  └─ theme.ts           # App-wide theme control: light/dark + palette, applied to <html> (tokens in styles/theme.css)
 ├─ i18n/                  # react-i18next config + locale resource bundles (en default)
-├─ styles/               # Global styles, theme tokens (light/dark from system), reduced-motion rules
+├─ styles/               # Global styles: theme.css (design tokens, palettes, light/dark), global.css (base reset)
 └─ test/                 # Test setup + shared testing utilities (Vitest + React Testing Library)
 ```
 

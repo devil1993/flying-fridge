@@ -17,6 +17,10 @@ coverage/
 .env.local
 .env.*.local
 
+# Scratch / paste files (may contain config or keys — never commit)
+scratch.*
+*.scratch
+
 # TS incremental build info
 *.tsbuildinfo
 
