@@ -1,0 +1,1750 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="description" content="Flying Fridge — the digital noticeboard for families. Share tasks, notices, pantry updates, lost &amp; found, and questions with your family. A modern fridge magnet board that travels with you." />
+  <title>Flying Fridge — Your Family's Digital Noticeboard</title>
+
+  <style>
+    /* ============================================================
+       DESIGN TOKENS — light theme (default)
+    ============================================================ */
+    :root {
+      /* Palette */
+      --col-bg:          #FDFAF6;
+      --col-surface:     #FFFFFF;
+      --col-surface-2:   #F5F0E8;
+      --col-border:      #E2D9C8;
+      --col-text:        #2C2416;
+      --col-text-2:      #6B5D45;
+      --col-text-muted:  #9D8E78;
+
+      /* Brand primaries */
+      --col-primary:     #E8622A;   /* warm tangerine */
+      --col-primary-dk:  #C44E1E;
+      --col-primary-lt:  #FBEEE7;
+      --col-accent:      #3D9E6E;   /* sage green */
+      --col-accent-dk:   #2E7A55;
+      --col-accent-lt:   #E8F5EE;
+
+      /* Magnet palette — five categories */
+      --mag-tasks:       #E8622A;  /* tangerine */
+      --mag-notices:     #3D9E6E;  /* sage */
+      --mag-lostfound:   #7B5EA7;  /* lavender */
+      --mag-pantry:      #D4A017;  /* amber */
+      --mag-questions:   #2A8FC4;  /* sky */
+
+      /* Typography */
+      --font-sans: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+      --font-display: Georgia, "Times New Roman", serif;
+
+      /* Spacing scale (8pt) */
+      --sp-1: 8px;   --sp-2: 16px;  --sp-3: 24px;  --sp-4: 32px;
+      --sp-5: 40px;  --sp-6: 48px;  --sp-8: 64px;  --sp-10: 80px;
+
+      /* Radii */
+      --r-sm: 6px;   --r-md: 12px;  --r-lg: 20px;  --r-xl: 32px;
+
+      /* Shadows */
+      --shadow-sm: 0 1px 4px rgba(44,36,22,0.08), 0 1px 2px rgba(44,36,22,0.06);
+      --shadow-md: 0 4px 16px rgba(44,36,22,0.10), 0 2px 6px rgba(44,36,22,0.07);
+      --shadow-lg: 0 8px 32px rgba(44,36,22,0.12), 0 4px 12px rgba(44,36,22,0.08);
+      --shadow-fridge: 0 20px 60px rgba(44,36,22,0.18), 0 8px 24px rgba(44,36,22,0.12);
+
+      /* Motion */
+      --dur-fast: 160ms;
+      --dur-mid:  280ms;
+      --dur-slow: 500ms;
+      --ease-out: cubic-bezier(0.22, 1, 0.36, 1);
+    }
+
+    /* ============================================================
+       DARK THEME
+    ============================================================ */
+    @media (prefers-color-scheme: dark) {
+      :root {
+        --col-bg:          #1A1610;
+        --col-surface:     #241E15;
+        --col-surface-2:   #2E2619;
+        --col-border:      #3D3327;
+        --col-text:        #F0EAE0;
+        --col-text-2:      #C4B49A;
+        --col-text-muted:  #8A7A66;
+
+        --col-primary:     #F07840;
+        --col-primary-dk:  #E8622A;
+        --col-primary-lt:  #2E1E14;
+        --col-accent:      #4DB87E;
+        --col-accent-dk:   #3D9E6E;
+        --col-accent-lt:   #142818;
+
+        --shadow-sm: 0 1px 4px rgba(0,0,0,0.25), 0 1px 2px rgba(0,0,0,0.18);
+        --shadow-md: 0 4px 16px rgba(0,0,0,0.30), 0 2px 6px rgba(0,0,0,0.22);
+        --shadow-lg: 0 8px 32px rgba(0,0,0,0.36), 0 4px 12px rgba(0,0,0,0.26);
+        --shadow-fridge: 0 20px 60px rgba(0,0,0,0.5), 0 8px 24px rgba(0,0,0,0.36);
+      }
+    }
+
+    /* ============================================================
+       MANUAL THEME TOGGLE (overrides system preference)
+    ============================================================ */
+    html[data-theme="light"] {
+      --col-bg:          #FDFAF6;
+      --col-surface:     #FFFFFF;
+      --col-surface-2:   #F5F0E8;
+      --col-border:      #E2D9C8;
+      --col-text:        #2C2416;
+      --col-text-2:      #6B5D45;
+      --col-text-muted:  #9D8E78;
+      --col-primary:     #E8622A;
+      --col-primary-dk:  #C44E1E;
+      --col-primary-lt:  #FBEEE7;
+      --col-accent:      #3D9E6E;
+      --col-accent-dk:   #2E7A55;
+      --col-accent-lt:   #E8F5EE;
+      --shadow-sm: 0 1px 4px rgba(44,36,22,0.08), 0 1px 2px rgba(44,36,22,0.06);
+      --shadow-md: 0 4px 16px rgba(44,36,22,0.10), 0 2px 6px rgba(44,36,22,0.07);
+      --shadow-lg: 0 8px 32px rgba(44,36,22,0.12), 0 4px 12px rgba(44,36,22,0.08);
+      --shadow-fridge: 0 20px 60px rgba(44,36,22,0.18), 0 8px 24px rgba(44,36,22,0.12);
+    }
+
+    html[data-theme="dark"] {
+      --col-bg:          #1A1610;
+      --col-surface:     #241E15;
+      --col-surface-2:   #2E2619;
+      --col-border:      #3D3327;
+      --col-text:        #F0EAE0;
+      --col-text-2:      #C4B49A;
+      --col-text-muted:  #8A7A66;
+      --col-primary:     #F07840;
+      --col-primary-dk:  #E8622A;
+      --col-primary-lt:  #2E1E14;
+      --col-accent:      #4DB87E;
+      --col-accent-dk:   #3D9E6E;
+      --col-accent-lt:   #142818;
+      --shadow-sm: 0 1px 4px rgba(0,0,0,0.25), 0 1px 2px rgba(0,0,0,0.18);
+      --shadow-md: 0 4px 16px rgba(0,0,0,0.30), 0 2px 6px rgba(0,0,0,0.22);
+      --shadow-lg: 0 8px 32px rgba(0,0,0,0.36), 0 4px 12px rgba(0,0,0,0.26);
+      --shadow-fridge: 0 20px 60px rgba(0,0,0,0.5), 0 8px 24px rgba(0,0,0,0.36);
+    }
+
+    /* ============================================================
+       RESET & BASE
+    ============================================================ */
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    html { scroll-behavior: smooth; }
+
+    body {
+      font-family: var(--font-sans);
+      font-size: 16px;
+      line-height: 1.6;
+      background-color: var(--col-bg);
+      color: var(--col-text);
+      transition: background-color var(--dur-mid) ease, color var(--dur-mid) ease;
+      -webkit-font-smoothing: antialiased;
+    }
+
+    img, svg { display: block; }
+
+    a {
+      color: var(--col-primary);
+      text-decoration: none;
+    }
+    a:focus-visible {
+      outline: 3px solid var(--col-primary);
+      outline-offset: 3px;
+      border-radius: var(--r-sm);
+    }
+
+    /* ============================================================
+       TYPOGRAPHY HELPERS
+    ============================================================ */
+    .display-xl {
+      font-family: var(--font-display);
+      font-size: clamp(2.4rem, 5.5vw, 4rem);
+      font-weight: 700;
+      line-height: 1.12;
+      letter-spacing: -0.02em;
+      color: var(--col-text);
+    }
+    .display-lg {
+      font-family: var(--font-display);
+      font-size: clamp(1.75rem, 3.5vw, 2.5rem);
+      font-weight: 700;
+      line-height: 1.2;
+      letter-spacing: -0.015em;
+      color: var(--col-text);
+    }
+    .display-md {
+      font-family: var(--font-display);
+      font-size: clamp(1.3rem, 2.5vw, 1.75rem);
+      font-weight: 700;
+      line-height: 1.25;
+      color: var(--col-text);
+    }
+    .body-lg  { font-size: 1.125rem; line-height: 1.65; color: var(--col-text-2); }
+    .body-md  { font-size: 1rem;     line-height: 1.6;  color: var(--col-text-2); }
+    .label    { font-size: 0.75rem;  font-weight: 600;  letter-spacing: 0.08em; text-transform: uppercase; color: var(--col-text-muted); }
+    .text-accent  { color: var(--col-primary); }
+    .text-green   { color: var(--col-accent);  }
+
+    /* ============================================================
+       LAYOUT
+    ============================================================ */
+    .container {
+      width: 100%;
+      max-width: 1140px;
+      margin: 0 auto;
+      padding: 0 var(--sp-3);
+    }
+    @media (min-width: 768px) { .container { padding: 0 var(--sp-4); } }
+
+    section { padding: var(--sp-10) 0; }
+
+    /* ============================================================
+       BUTTONS
+    ============================================================ */
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      gap: var(--sp-1);
+      padding: 14px 28px;
+      border-radius: var(--r-md);
+      font-size: 1rem;
+      font-weight: 600;
+      font-family: var(--font-sans);
+      cursor: pointer;
+      border: 2px solid transparent;
+      transition:
+        background-color var(--dur-fast) ease,
+        color           var(--dur-fast) ease,
+        border-color    var(--dur-fast) ease,
+        box-shadow      var(--dur-fast) ease,
+        transform       var(--dur-fast) ease;
+      white-space: nowrap;
+    }
+    .btn:focus-visible {
+      outline: 3px solid var(--col-primary);
+      outline-offset: 3px;
+    }
+    .btn:active { transform: scale(0.97); }
+
+    .btn-primary {
+      background-color: var(--col-primary);
+      color: #FFFFFF;
+      box-shadow: 0 4px 14px rgba(232,98,42,0.35);
+    }
+    .btn-primary:hover {
+      background-color: var(--col-primary-dk);
+      box-shadow: 0 6px 20px rgba(232,98,42,0.45);
+      transform: translateY(-1px);
+    }
+
+    .btn-secondary {
+      background-color: transparent;
+      border-color: var(--col-border);
+      color: var(--col-text);
+    }
+    .btn-secondary:hover {
+      background-color: var(--col-surface-2);
+      border-color: var(--col-text-muted);
+      transform: translateY(-1px);
+    }
+
+    .btn-ghost {
+      background-color: rgba(255,255,255,0.15);
+      color: #FFFFFF;
+      border-color: rgba(255,255,255,0.3);
+      backdrop-filter: blur(4px);
+    }
+    .btn-ghost:hover {
+      background-color: rgba(255,255,255,0.25);
+      border-color: rgba(255,255,255,0.5);
+      transform: translateY(-1px);
+    }
+
+    /* ============================================================
+       HEADER / NAV
+    ============================================================ */
+    .site-header {
+      position: sticky;
+      top: 0;
+      z-index: 100;
+      background-color: var(--col-bg);
+      border-bottom: 1px solid var(--col-border);
+      backdrop-filter: blur(12px);
+      transition: background-color var(--dur-mid) ease, border-color var(--dur-mid) ease;
+    }
+
+    .nav {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      height: 64px;
+    }
+
+    .nav-logo {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      color: var(--col-text);
+      font-family: var(--font-display);
+      font-size: 1.25rem;
+      font-weight: 700;
+      letter-spacing: -0.01em;
+    }
+    .nav-logo:hover { color: var(--col-primary); }
+    .nav-logo svg { flex-shrink: 0; }
+
+    .nav-links {
+      display: none;
+      align-items: center;
+      gap: var(--sp-4);
+      list-style: none;
+    }
+    @media (min-width: 768px) { .nav-links { display: flex; } }
+
+    .nav-links a {
+      color: var(--col-text-2);
+      font-size: 0.9375rem;
+      font-weight: 500;
+      transition: color var(--dur-fast) ease;
+    }
+    .nav-links a:hover { color: var(--col-primary); }
+
+    .nav-actions {
+      display: flex;
+      align-items: center;
+      gap: var(--sp-2);
+    }
+
+    /* Theme toggle */
+    .theme-toggle {
+      width: 40px;
+      height: 40px;
+      border-radius: var(--r-md);
+      background: var(--col-surface-2);
+      border: 1px solid var(--col-border);
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition:
+        background-color var(--dur-fast) ease,
+        border-color     var(--dur-fast) ease,
+        transform        var(--dur-fast) ease;
+      color: var(--col-text-2);
+    }
+    .theme-toggle:hover {
+      background: var(--col-primary-lt);
+      border-color: var(--col-primary);
+      color: var(--col-primary);
+      transform: rotate(15deg);
+    }
+    .theme-toggle:focus-visible {
+      outline: 3px solid var(--col-primary);
+      outline-offset: 3px;
+    }
+    .theme-toggle .icon-sun  { display: none; }
+    .theme-toggle .icon-moon { display: block; }
+
+    html[data-theme="dark"]  .theme-toggle .icon-sun  { display: block; }
+    html[data-theme="dark"]  .theme-toggle .icon-moon { display: none; }
+
+    @media (prefers-color-scheme: dark) {
+      html:not([data-theme]) .theme-toggle .icon-sun  { display: block; }
+      html:not([data-theme]) .theme-toggle .icon-moon { display: none; }
+    }
+
+    .nav-cta { display: none; }
+    @media (min-width: 640px) { .nav-cta { display: inline-flex; } }
+
+    /* ============================================================
+       HERO
+    ============================================================ */
+    .hero {
+      padding: var(--sp-10) 0 var(--sp-8);
+      overflow: hidden;
+      position: relative;
+    }
+
+    .hero-inner {
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: var(--sp-8);
+      align-items: center;
+    }
+    @media (min-width: 900px) {
+      .hero-inner {
+        grid-template-columns: 1fr 1fr;
+        gap: var(--sp-6);
+      }
+    }
+
+    .hero-eyebrow {
+      display: inline-flex;
+      align-items: center;
+      gap: var(--sp-1);
+      padding: 6px 14px;
+      background: var(--col-primary-lt);
+      border: 1px solid rgba(232,98,42,0.25);
+      border-radius: 999px;
+      font-size: 0.8125rem;
+      font-weight: 600;
+      color: var(--col-primary);
+      margin-bottom: var(--sp-3);
+    }
+
+    .hero-headline { margin-bottom: var(--sp-3); }
+    .hero-sub {
+      font-size: 1.125rem;
+      line-height: 1.65;
+      color: var(--col-text-2);
+      max-width: 500px;
+      margin-bottom: var(--sp-5);
+    }
+
+    .hero-ctas {
+      display: flex;
+      flex-wrap: wrap;
+      gap: var(--sp-2);
+    }
+
+    .hero-visual {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      position: relative;
+    }
+
+    /* Fridge animations */
+    @keyframes float-gentle {
+      0%, 100% { transform: translateY(0px) rotate(var(--rot, 0deg)); }
+      50%       { transform: translateY(-8px) rotate(var(--rot, 0deg)); }
+    }
+    @keyframes wiggle-note {
+      0%, 100% { transform: rotate(var(--rot, 0deg)); }
+      33%       { transform: rotate(calc(var(--rot, 0deg) + 2deg)); }
+      66%       { transform: rotate(calc(var(--rot, 0deg) - 2deg)); }
+    }
+    @keyframes fade-slide-up {
+      from { opacity: 0; transform: translateY(24px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
+    @keyframes fade-in {
+      from { opacity: 0; }
+      to   { opacity: 1; }
+    }
+    @keyframes spin-slow {
+      from { transform: rotate(0deg); }
+      to   { transform: rotate(360deg); }
+    }
+    @keyframes pulse-glow {
+      0%, 100% { opacity: 0.6; }
+      50%       { opacity: 1; }
+    }
+
+    .fridge-svg {
+      filter: drop-shadow(var(--shadow-fridge));
+      max-width: 100%;
+      animation: float-gentle 6s ease-in-out infinite;
+      will-change: transform;
+    }
+
+    .magnet-note {
+      animation: wiggle-note 4s ease-in-out infinite;
+      transform-origin: center;
+    }
+    .magnet-note:nth-child(1)  { --rot: -3deg;  animation-delay: 0s;    animation-duration: 4.2s; }
+    .magnet-note:nth-child(2)  { --rot:  4deg;  animation-delay: 0.5s;  animation-duration: 3.8s; }
+    .magnet-note:nth-child(3)  { --rot: -2deg;  animation-delay: 1s;    animation-duration: 4.5s; }
+    .magnet-note:nth-child(4)  { --rot:  5deg;  animation-delay: 1.5s;  animation-duration: 3.6s; }
+    .magnet-note:nth-child(5)  { --rot: -4deg;  animation-delay: 0.8s;  animation-duration: 4.1s; }
+
+    @media (prefers-reduced-motion: reduce) {
+      .fridge-svg,
+      .magnet-note,
+      .floating-chip { animation: none !important; }
+      html { scroll-behavior: auto; }
+      .theme-toggle:hover { transform: none; }
+      .btn:hover         { transform: none; }
+    }
+
+    /* ============================================================
+       SCROLL REVEAL
+    ============================================================ */
+    .reveal {
+      opacity: 0;
+      transform: translateY(28px);
+      transition:
+        opacity  var(--dur-slow) var(--ease-out),
+        transform var(--dur-slow) var(--ease-out);
+    }
+    .reveal.visible {
+      opacity: 1;
+      transform: translateY(0);
+    }
+    .reveal-delay-1 { transition-delay: 100ms; }
+    .reveal-delay-2 { transition-delay: 200ms; }
+    .reveal-delay-3 { transition-delay: 300ms; }
+    .reveal-delay-4 { transition-delay: 400ms; }
+    .reveal-delay-5 { transition-delay: 500ms; }
+
+    @media (prefers-reduced-motion: reduce) {
+      .reveal { opacity: 1; transform: none; transition: none; }
+    }
+
+    /* ============================================================
+       SECTION HEADERS
+    ============================================================ */
+    .section-header {
+      text-align: center;
+      margin-bottom: var(--sp-8);
+    }
+    .section-header .label { margin-bottom: var(--sp-2); }
+    .section-header .display-lg { margin-bottom: var(--sp-2); }
+    .section-header .body-lg { max-width: 560px; margin: 0 auto; }
+
+    /* ============================================================
+       FEATURES GRID
+    ============================================================ */
+    .features-bg {
+      background: var(--col-surface-2);
+      border-top: 1px solid var(--col-border);
+      border-bottom: 1px solid var(--col-border);
+    }
+
+    .features-grid {
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: var(--sp-3);
+    }
+    @media (min-width: 600px) {
+      .features-grid { grid-template-columns: repeat(2, 1fr); }
+    }
+    @media (min-width: 1000px) {
+      .features-grid { grid-template-columns: repeat(3, 1fr); }
+    }
+
+    .feature-card {
+      background: var(--col-surface);
+      border: 1px solid var(--col-border);
+      border-radius: var(--r-lg);
+      padding: var(--sp-4);
+      transition:
+        box-shadow  var(--dur-mid) ease,
+        transform   var(--dur-mid) ease,
+        border-color var(--dur-mid) ease;
+      position: relative;
+      overflow: hidden;
+    }
+    .feature-card::before {
+      content: '';
+      position: absolute;
+      top: 0; left: 0; right: 0;
+      height: 3px;
+      background: var(--card-accent, var(--col-primary));
+      border-radius: var(--r-lg) var(--r-lg) 0 0;
+      transition: height var(--dur-mid) ease;
+    }
+    .feature-card:hover {
+      box-shadow: var(--shadow-lg);
+      transform: translateY(-4px);
+      border-color: var(--card-accent, var(--col-primary));
+    }
+    .feature-card:hover::before { height: 4px; }
+
+    .feature-icon-wrap {
+      width: 56px;
+      height: 56px;
+      border-radius: var(--r-md);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin-bottom: var(--sp-3);
+      background: var(--card-accent-lt, var(--col-primary-lt));
+    }
+
+    .feature-title {
+      font-family: var(--font-display);
+      font-size: 1.125rem;
+      font-weight: 700;
+      color: var(--col-text);
+      margin-bottom: var(--sp-1);
+    }
+
+    /* Fifth card spans full width on 2-col layout, centers in 3-col */
+    @media (min-width: 600px) and (max-width: 999px) {
+      .feature-card:nth-child(5) {
+        grid-column: 1 / -1;
+        max-width: 50%;
+        justify-self: center;
+      }
+    }
+
+    /* ============================================================
+       VIEWS SECTION
+    ============================================================ */
+    .views-inner {
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: var(--sp-4);
+    }
+    @media (min-width: 768px) {
+      .views-inner { grid-template-columns: 1fr 1fr; }
+    }
+
+    .view-card {
+      background: var(--col-surface);
+      border: 1px solid var(--col-border);
+      border-radius: var(--r-lg);
+      overflow: hidden;
+      box-shadow: var(--shadow-md);
+      transition: box-shadow var(--dur-mid) ease, transform var(--dur-mid) ease;
+    }
+    .view-card:hover {
+      box-shadow: var(--shadow-lg);
+      transform: translateY(-4px);
+    }
+
+    .view-card-header {
+      padding: var(--sp-3) var(--sp-4);
+      border-bottom: 1px solid var(--col-border);
+      background: var(--col-surface-2);
+      display: flex;
+      align-items: center;
+      gap: var(--sp-2);
+    }
+    .view-card-header svg { color: var(--col-primary); }
+    .view-card-title {
+      font-family: var(--font-display);
+      font-size: 1.125rem;
+      font-weight: 700;
+      color: var(--col-text);
+    }
+
+    .view-card-body {
+      padding: var(--sp-4);
+    }
+    .view-card-body p {
+      color: var(--col-text-2);
+      line-height: 1.65;
+      margin-bottom: var(--sp-3);
+    }
+
+    /* Mock list view */
+    .mock-list {
+      display: flex;
+      flex-direction: column;
+      gap: var(--sp-1);
+    }
+    .mock-row {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      padding: 10px 12px;
+      background: var(--col-surface-2);
+      border-radius: var(--r-sm);
+      border: 1px solid var(--col-border);
+    }
+    .mock-dot {
+      width: 10px;
+      height: 10px;
+      border-radius: 50%;
+      flex-shrink: 0;
+    }
+    .mock-label {
+      font-size: 0.8125rem;
+      color: var(--col-text-2);
+      flex: 1;
+    }
+    .mock-chip {
+      font-size: 0.6875rem;
+      font-weight: 600;
+      padding: 2px 8px;
+      border-radius: 999px;
+      background: var(--col-surface);
+      border: 1px solid var(--col-border);
+      color: var(--col-text-muted);
+    }
+
+    /* Mock calendar view */
+    .mock-cal {
+      display: grid;
+      grid-template-columns: repeat(7, 1fr);
+      gap: 4px;
+    }
+    .mock-cal-header {
+      text-align: center;
+      font-size: 0.625rem;
+      font-weight: 700;
+      color: var(--col-text-muted);
+      padding: 4px 0;
+      letter-spacing: 0.05em;
+      text-transform: uppercase;
+    }
+    .mock-cal-day {
+      aspect-ratio: 1;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: flex-start;
+      padding: 3px;
+      border-radius: 4px;
+      background: var(--col-surface-2);
+      border: 1px solid var(--col-border);
+      font-size: 0.6875rem;
+      color: var(--col-text-2);
+      transition: background var(--dur-fast);
+    }
+    .mock-cal-day.today {
+      background: var(--col-primary);
+      color: #fff;
+      font-weight: 700;
+      border-color: var(--col-primary);
+    }
+    .mock-cal-dot {
+      width: 4px;
+      height: 4px;
+      border-radius: 50%;
+      margin-top: 2px;
+    }
+
+    /* ============================================================
+       HOW IT WORKS
+    ============================================================ */
+    .how-bg {
+      background: var(--col-surface-2);
+      border-top: 1px solid var(--col-border);
+      border-bottom: 1px solid var(--col-border);
+    }
+
+    .steps-grid {
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: var(--sp-6);
+      position: relative;
+    }
+    @media (min-width: 768px) {
+      .steps-grid {
+        grid-template-columns: repeat(3, 1fr);
+        gap: var(--sp-4);
+      }
+      .steps-grid::before {
+        content: '';
+        position: absolute;
+        top: 36px;
+        left: calc(16.67% + 20px);
+        right: calc(16.67% + 20px);
+        height: 2px;
+        background: linear-gradient(90deg, var(--col-primary), var(--col-accent));
+        border-radius: 2px;
+        opacity: 0.35;
+      }
+    }
+
+    .step {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      text-align: center;
+    }
+
+    .step-number {
+      width: 72px;
+      height: 72px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin-bottom: var(--sp-3);
+      font-family: var(--font-display);
+      font-size: 1.5rem;
+      font-weight: 700;
+      position: relative;
+      z-index: 1;
+      flex-shrink: 0;
+    }
+    .step:nth-child(1) .step-number {
+      background: linear-gradient(135deg, var(--col-primary), #F5A060);
+      color: #fff;
+      box-shadow: 0 6px 20px rgba(232,98,42,0.35);
+    }
+    .step:nth-child(2) .step-number {
+      background: linear-gradient(135deg, var(--col-accent), #6DD4A0);
+      color: #fff;
+      box-shadow: 0 6px 20px rgba(61,158,110,0.35);
+    }
+    .step:nth-child(3) .step-number {
+      background: linear-gradient(135deg, #7B5EA7, #A080D0);
+      color: #fff;
+      box-shadow: 0 6px 20px rgba(123,94,167,0.35);
+    }
+
+    .step-title {
+      font-family: var(--font-display);
+      font-size: 1.125rem;
+      font-weight: 700;
+      color: var(--col-text);
+      margin-bottom: var(--sp-1);
+    }
+    .step p { color: var(--col-text-2); font-size: 0.9375rem; line-height: 1.6; }
+
+    /* ============================================================
+       CTA BAND
+    ============================================================ */
+    .cta-band {
+      background: linear-gradient(135deg, var(--col-primary) 0%, #C44E1E 50%, #A03A14 100%);
+      padding: var(--sp-10) 0;
+      position: relative;
+      overflow: hidden;
+    }
+    .cta-band::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background:
+        radial-gradient(ellipse 60% 80% at 10% 50%, rgba(255,255,255,0.07) 0%, transparent 60%),
+        radial-gradient(ellipse 40% 60% at 90% 20%, rgba(255,200,150,0.10) 0%, transparent 50%);
+      pointer-events: none;
+    }
+
+    .cta-band-inner {
+      position: relative;
+      text-align: center;
+    }
+
+    .cta-band h2 {
+      font-family: var(--font-display);
+      font-size: clamp(1.75rem, 4vw, 2.75rem);
+      font-weight: 700;
+      color: #FFFFFF;
+      margin-bottom: var(--sp-2);
+      letter-spacing: -0.02em;
+      line-height: 1.15;
+    }
+    .cta-band p {
+      color: rgba(255,255,255,0.80);
+      font-size: 1.0625rem;
+      margin-bottom: var(--sp-5);
+      max-width: 480px;
+      margin-left: auto;
+      margin-right: auto;
+    }
+    .cta-band-actions {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+      gap: var(--sp-2);
+    }
+
+    /* ============================================================
+       FOOTER
+    ============================================================ */
+    .site-footer {
+      background: var(--col-surface);
+      border-top: 1px solid var(--col-border);
+      padding: var(--sp-8) 0 var(--sp-4);
+    }
+
+    .footer-grid {
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: var(--sp-6);
+      margin-bottom: var(--sp-6);
+    }
+    @media (min-width: 640px) {
+      .footer-grid { grid-template-columns: 2fr 1fr 1fr; }
+    }
+
+    .footer-brand {}
+    .footer-logo {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      font-family: var(--font-display);
+      font-size: 1.125rem;
+      font-weight: 700;
+      color: var(--col-text);
+      margin-bottom: var(--sp-2);
+    }
+    .footer-tagline {
+      color: var(--col-text-muted);
+      font-size: 0.875rem;
+      line-height: 1.6;
+      max-width: 260px;
+    }
+
+    .footer-col h4 {
+      font-size: 0.8125rem;
+      font-weight: 700;
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+      color: var(--col-text-muted);
+      margin-bottom: var(--sp-2);
+    }
+    .footer-col ul { list-style: none; }
+    .footer-col li { margin-bottom: 10px; }
+    .footer-col a {
+      color: var(--col-text-2);
+      font-size: 0.9375rem;
+      transition: color var(--dur-fast) ease;
+    }
+    .footer-col a:hover { color: var(--col-primary); }
+
+    .footer-bottom {
+      border-top: 1px solid var(--col-border);
+      padding-top: var(--sp-3);
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      justify-content: space-between;
+      gap: var(--sp-2);
+    }
+    .footer-bottom p {
+      color: var(--col-text-muted);
+      font-size: 0.8125rem;
+    }
+    .footer-heart { color: var(--col-primary); }
+
+    /* ============================================================
+       FLOATING BACKGROUND CHIPS (hero decoration)
+    ============================================================ */
+    .hero-bg-decoration {
+      position: absolute;
+      inset: 0;
+      pointer-events: none;
+      overflow: hidden;
+      z-index: 0;
+    }
+    .floating-chip {
+      position: absolute;
+      border-radius: var(--r-sm);
+      font-size: 0.6875rem;
+      font-weight: 600;
+      padding: 4px 10px;
+      white-space: nowrap;
+      opacity: 0;
+    }
+    .floating-chip.visible {
+      opacity: 0.65;
+      animation: float-gentle 7s ease-in-out infinite;
+    }
+
+    .hero-content { position: relative; z-index: 1; }
+
+    /* ============================================================
+       POSSIBLE FEATURES TEASER
+    ============================================================ */
+    .teaser-grid {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: var(--sp-2);
+    }
+    @media (min-width: 768px) {
+      .teaser-grid { grid-template-columns: repeat(4, 1fr); }
+    }
+    .teaser-item {
+      background: var(--col-surface);
+      border: 1px solid var(--col-border);
+      border-radius: var(--r-md);
+      padding: var(--sp-3);
+      text-align: center;
+      transition: box-shadow var(--dur-mid) ease, transform var(--dur-mid) ease;
+    }
+    .teaser-item:hover {
+      box-shadow: var(--shadow-md);
+      transform: translateY(-2px);
+    }
+    .teaser-emoji { font-size: 1.5rem; margin-bottom: var(--sp-1); }
+    .teaser-title {
+      font-size: 0.875rem;
+      font-weight: 600;
+      color: var(--col-text);
+      margin-bottom: 4px;
+    }
+    .teaser-desc {
+      font-size: 0.75rem;
+      color: var(--col-text-muted);
+      line-height: 1.5;
+    }
+  </style>
+</head>
+
+<body>
+
+  <!-- ============================================================
+       HEADER / NAV
+  ============================================================ -->
+  <header class="site-header" role="banner">
+    <div class="container">
+      <nav class="nav" role="navigation" aria-label="Main navigation">
+
+        <!-- Logo -->
+        <a href="#" class="nav-logo" aria-label="Flying Fridge — home">
+          <!-- Inline SVG: fridge with magnet dot -->
+          <svg width="36" height="36" viewBox="0 0 36 36" fill="none" aria-hidden="true">
+            <rect x="6" y="3" width="24" height="30" rx="4" fill="var(--col-primary)" opacity="0.15"/>
+            <rect x="6" y="3" width="24" height="30" rx="4" stroke="var(--col-primary)" stroke-width="2"/>
+            <line x1="6" y1="13" x2="30" y2="13" stroke="var(--col-primary)" stroke-width="2"/>
+            <!-- handle top -->
+            <rect x="22" y="7" width="4" height="3" rx="1.5" fill="var(--col-primary)" opacity="0.6"/>
+            <!-- handle bottom -->
+            <rect x="22" y="17" width="4" height="4" rx="1.5" fill="var(--col-primary)" opacity="0.6"/>
+            <!-- magnet circle - top left fridge face -->
+            <circle cx="12" cy="8.5" r="2.5" fill="var(--col-primary)"/>
+            <!-- sticky note on fridge body -->
+            <rect x="10" y="17" width="8" height="7" rx="1" fill="#D4A017" opacity="0.85"/>
+            <line x1="11.5" y1="19.5" x2="16.5" y2="19.5" stroke="#fff" stroke-width="1" opacity="0.7"/>
+            <line x1="11.5" y1="21.5" x2="15" y2="21.5" stroke="#fff" stroke-width="1" opacity="0.7"/>
+            <!-- wing lines (the "flying" element) -->
+            <path d="M30 10 Q34 8 34 13 Q34 17 30 16" stroke="var(--col-primary)" stroke-width="1.5" fill="none" opacity="0.5" stroke-linecap="round"/>
+            <path d="M6 10 Q2 8 2 13 Q2 17 6 16" stroke="var(--col-primary)" stroke-width="1.5" fill="none" opacity="0.5" stroke-linecap="round"/>
+          </svg>
+          Flying Fridge
+        </a>
+
+        <!-- Nav links -->
+        <ul class="nav-links" role="list">
+          <li><a href="#features">Features</a></li>
+          <li><a href="#views">Views</a></li>
+          <li><a href="#how-it-works">How it works</a></li>
+        </ul>
+
+        <div class="nav-actions">
+          <!-- Theme toggle -->
+          <button
+            class="theme-toggle"
+            id="themeToggle"
+            aria-label="Toggle light/dark theme"
+            title="Toggle theme"
+          >
+            <!-- Sun icon (shown in dark mode) -->
+            <svg class="icon-sun" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+              <circle cx="12" cy="12" r="5"/>
+              <line x1="12" y1="1" x2="12" y2="3"/>
+              <line x1="12" y1="21" x2="12" y2="23"/>
+              <line x1="4.22" y1="4.22" x2="5.64" y2="5.64"/>
+              <line x1="18.36" y1="18.36" x2="19.78" y2="19.78"/>
+              <line x1="1" y1="12" x2="3" y2="12"/>
+              <line x1="21" y1="12" x2="23" y2="12"/>
+              <line x1="4.22" y1="19.78" x2="5.64" y2="18.36"/>
+              <line x1="18.36" y1="5.64" x2="19.78" y2="4.22"/>
+            </svg>
+            <!-- Moon icon (shown in light mode) -->
+            <svg class="icon-moon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+              <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/>
+            </svg>
+          </button>
+
+          <a href="#" class="btn btn-primary nav-cta" style="padding:10px 20px;font-size:0.9rem;">Get started</a>
+        </div>
+
+      </nav>
+    </div>
+  </header>
+
+  <main id="main" role="main">
+
+    <!-- ============================================================
+         HERO
+    ============================================================ -->
+    <section class="hero" aria-labelledby="hero-heading">
+      <!-- Background decoration -->
+      <div class="hero-bg-decoration" aria-hidden="true">
+        <div class="floating-chip" style="top:15%;left:5%;background:var(--col-primary-lt);color:var(--col-primary);--rot:-8deg;animation-delay:0s;">Shopping list</div>
+        <div class="floating-chip" style="top:65%;left:3%;background:var(--col-accent-lt);color:var(--col-accent);--rot:5deg;animation-delay:1.2s;">Dinner at 7pm</div>
+        <div class="floating-chip" style="top:80%;right:5%;background:#F3EEFF;color:#7B5EA7;--rot:-4deg;animation-delay:0.6s;">Lost: My Keys!</div>
+        <div class="floating-chip" style="top:10%;right:8%;background:#FFF8E1;color:#D4A017;--rot:6deg;animation-delay:1.8s;">Milk running low</div>
+      </div>
+
+      <div class="container">
+        <div class="hero-inner">
+          <!-- Left: copy -->
+          <div class="hero-content">
+            <div class="hero-eyebrow" aria-hidden="true">
+              <svg width="14" height="14" viewBox="0 0 14 14" fill="currentColor"><circle cx="7" cy="7" r="3"/></svg>
+              For modern families
+            </div>
+            <h1 class="display-xl hero-headline" id="hero-heading">
+              Your fridge door,<br>
+              <span class="text-accent">everywhere you go</span>
+            </h1>
+            <p class="hero-sub">
+              Flying Fridge is the digital noticeboard that keeps your whole family on the same page — tasks, notices, pantry, lost &amp; found, and open questions, all in one shared space.
+            </p>
+            <div class="hero-ctas">
+              <a href="#" class="btn btn-primary">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M22 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
+                Join your family
+              </a>
+              <a href="#how-it-works" class="btn btn-secondary">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="10"/><polygon points="10 8 16 12 10 16 10 8"/></svg>
+                See how it works
+              </a>
+            </div>
+          </div>
+
+          <!-- Right: fridge SVG illustration -->
+          <div class="hero-visual" aria-hidden="true">
+            <svg class="fridge-svg" width="380" height="480" viewBox="0 0 380 480" fill="none" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Illustrated fridge covered in sticky notes and magnets">
+
+              <!-- Fridge body shadow -->
+              <ellipse cx="190" cy="468" rx="130" ry="12" fill="var(--col-text)" opacity="0.08"/>
+
+              <!-- Fridge body -->
+              <rect x="50" y="20" width="280" height="440" rx="20" fill="var(--col-surface)"/>
+              <rect x="50" y="20" width="280" height="440" rx="20" stroke="var(--col-border)" stroke-width="2"/>
+
+              <!-- Fridge gradient overlay -->
+              <rect x="50" y="20" width="280" height="440" rx="20" fill="url(#fridgeGrad)" opacity="0.4"/>
+
+              <!-- Fridge separator line (freezer / fridge) -->
+              <rect x="50" y="160" width="280" height="3" fill="var(--col-border)"/>
+
+              <!-- Fridge handle (top - freezer) -->
+              <rect x="290" y="60" width="8" height="60" rx="4" fill="var(--col-border)"/>
+              <rect x="288" y="58" width="12" height="4" rx="2" fill="var(--col-text-muted)" opacity="0.5"/>
+              <rect x="288" y="116" width="12" height="4" rx="2" fill="var(--col-text-muted)" opacity="0.5"/>
+
+              <!-- Fridge handle (bottom - main) -->
+              <rect x="290" y="210" width="8" height="80" rx="4" fill="var(--col-border)"/>
+              <rect x="288" y="208" width="12" height="4" rx="2" fill="var(--col-text-muted)" opacity="0.5"/>
+              <rect x="288" y="288" width="12" height="4" rx="2" fill="var(--col-text-muted)" opacity="0.5"/>
+
+              <!-- Wing left -->
+              <path d="M50 80 Q20 80 18 120 Q16 160 50 155" stroke="var(--col-border)" stroke-width="2" fill="var(--col-surface-2)" opacity="0.6"/>
+              <path d="M50 80 Q30 80 28 120 Q26 155 50 155" fill="var(--col-surface-2)" stroke="var(--col-border)" stroke-width="1.5" opacity="0.5"/>
+
+              <!-- Wing right -->
+              <path d="M330 80 Q360 80 362 120 Q364 160 330 155" fill="var(--col-surface-2)" stroke="var(--col-border)" stroke-width="1.5" opacity="0.5"/>
+
+              <!-- =====================
+                   STICKY NOTES / MAGNETS ON FRIDGE
+              ===================== -->
+
+              <!-- Note 1: Tasks (tangerine) - top left area -->
+              <g class="magnet-note" transform="translate(70,35)">
+                <rect width="90" height="75" rx="3" fill="#E8622A" filter="url(#noteShadow)"/>
+                <rect width="90" height="75" rx="3" fill="url(#noteGrad1)" opacity="0.3"/>
+                <!-- Magnet -->
+                <circle cx="45" cy="6" r="7" fill="#C44E1E"/>
+                <circle cx="45" cy="6" r="4" fill="#FF9970"/>
+                <rect x="8" y="18" width="74" height="44" rx="2" fill="rgba(255,255,255,0.15)"/>
+                <!-- Lines of text -->
+                <rect x="12" y="24" width="50" height="3" rx="1.5" fill="rgba(255,255,255,0.8)"/>
+                <rect x="12" y="32" width="60" height="3" rx="1.5" fill="rgba(255,255,255,0.6)"/>
+                <rect x="12" y="40" width="44" height="3" rx="1.5" fill="rgba(255,255,255,0.6)"/>
+                <rect x="12" y="48" width="55" height="3" rx="1.5" fill="rgba(255,255,255,0.4)"/>
+                <text x="12" y="16" font-size="6" font-weight="700" fill="rgba(255,255,255,0.9)" font-family="system-ui">TASKS</text>
+              </g>
+
+              <!-- Note 2: Notices (green) - top right area -->
+              <g class="magnet-note" transform="translate(210,25)">
+                <rect width="86" height="70" rx="3" fill="#3D9E6E" filter="url(#noteShadow)"/>
+                <rect width="86" height="70" rx="3" fill="url(#noteGrad2)" opacity="0.3"/>
+                <circle cx="43" cy="6" r="7" fill="#2E7A55"/>
+                <circle cx="43" cy="6" r="4" fill="#7DD4AA"/>
+                <rect x="8" y="17" width="70" height="42" rx="2" fill="rgba(255,255,255,0.15)"/>
+                <rect x="12" y="23" width="54" height="3" rx="1.5" fill="rgba(255,255,255,0.8)"/>
+                <rect x="12" y="31" width="46" height="3" rx="1.5" fill="rgba(255,255,255,0.6)"/>
+                <rect x="12" y="39" width="58" height="3" rx="1.5" fill="rgba(255,255,255,0.5)"/>
+                <text x="12" y="15" font-size="6" font-weight="700" fill="rgba(255,255,255,0.9)" font-family="system-ui">NOTICES</text>
+              </g>
+
+              <!-- Note 3: Lost & Found (lavender) - middle left -->
+              <g class="magnet-note" transform="translate(65,175)">
+                <rect width="100" height="80" rx="3" fill="#7B5EA7" filter="url(#noteShadow)"/>
+                <rect width="100" height="80" rx="3" fill="url(#noteGrad3)" opacity="0.25"/>
+                <circle cx="50" cy="6" r="7" fill="#5D4280"/>
+                <circle cx="50" cy="6" r="4" fill="#B090D8"/>
+                <rect x="8" y="18" width="84" height="50" rx="2" fill="rgba(255,255,255,0.12)"/>
+                <rect x="12" y="24" width="50" height="3" rx="1.5" fill="rgba(255,255,255,0.8)"/>
+                <rect x="12" y="32" width="70" height="3" rx="1.5" fill="rgba(255,255,255,0.6)"/>
+                <rect x="12" y="40" width="56" height="3" rx="1.5" fill="rgba(255,255,255,0.55)"/>
+                <rect x="12" y="48" width="64" height="3" rx="1.5" fill="rgba(255,255,255,0.4)"/>
+                <text x="12" y="16" font-size="5.5" font-weight="700" fill="rgba(255,255,255,0.9)" font-family="system-ui">LOST &amp; FOUND</text>
+              </g>
+
+              <!-- Note 4: Pantry (amber) - middle right -->
+              <g class="magnet-note" transform="translate(205,175)">
+                <rect width="95" height="85" rx="3" fill="#D4A017" filter="url(#noteShadow)"/>
+                <rect width="95" height="85" rx="3" fill="url(#noteGrad4)" opacity="0.3"/>
+                <circle cx="47" cy="6" r="7" fill="#A87A10"/>
+                <circle cx="47" cy="6" r="4" fill="#F8D060"/>
+                <rect x="8" y="18" width="79" height="54" rx="2" fill="rgba(255,255,255,0.15)"/>
+                <rect x="12" y="24" width="58" height="3" rx="1.5" fill="rgba(255,255,255,0.85)"/>
+                <rect x="12" y="32" width="50" height="3" rx="1.5" fill="rgba(255,255,255,0.65)"/>
+                <rect x="12" y="40" width="66" height="3" rx="1.5" fill="rgba(255,255,255,0.55)"/>
+                <rect x="12" y="48" width="44" height="3" rx="1.5" fill="rgba(255,255,255,0.45)"/>
+                <rect x="12" y="56" width="60" height="3" rx="1.5" fill="rgba(255,255,255,0.35)"/>
+                <text x="12" y="16" font-size="6" font-weight="700" fill="rgba(255,255,255,0.9)" font-family="system-ui">PANTRY</text>
+              </g>
+
+              <!-- Note 5: Questions (sky blue) - bottom area -->
+              <g class="magnet-note" transform="translate(130,310)">
+                <rect width="105" height="80" rx="3" fill="#2A8FC4" filter="url(#noteShadow)"/>
+                <rect width="105" height="80" rx="3" fill="url(#noteGrad5)" opacity="0.25"/>
+                <circle cx="52" cy="6" r="7" fill="#1E6E9A"/>
+                <circle cx="52" cy="6" r="4" fill="#70C4EC"/>
+                <rect x="8" y="18" width="89" height="50" rx="2" fill="rgba(255,255,255,0.12)"/>
+                <rect x="12" y="24" width="68" height="3" rx="1.5" fill="rgba(255,255,255,0.8)"/>
+                <rect x="12" y="32" width="56" height="3" rx="1.5" fill="rgba(255,255,255,0.6)"/>
+                <rect x="12" y="40" width="72" height="3" rx="1.5" fill="rgba(255,255,255,0.5)"/>
+                <rect x="12" y="48" width="48" height="3" rx="1.5" fill="rgba(255,255,255,0.4)"/>
+                <text x="12" y="16" font-size="6" font-weight="700" fill="rgba(255,255,255,0.9)" font-family="system-ui">QUESTIONS</text>
+              </g>
+
+              <!-- Extra magnet dots scattered -->
+              <circle cx="90" cy="165" r="8" fill="#E8622A" opacity="0.7"/>
+              <circle cx="90" cy="165" r="4.5" fill="#FF9970"/>
+              <circle cx="200" cy="160" r="7" fill="#3D9E6E" opacity="0.7"/>
+              <circle cx="200" cy="160" r="4" fill="#7DD4AA"/>
+              <circle cx="265" cy="170" r="9" fill="#D4A017" opacity="0.7"/>
+              <circle cx="265" cy="170" r="5" fill="#F8D060"/>
+
+              <!-- Extra small magnets -->
+              <circle cx="105" cy="290" r="5.5" fill="#7B5EA7" opacity="0.6"/>
+              <circle cx="105" cy="290" r="3" fill="#B090D8"/>
+              <circle cx="250" cy="295" r="5.5" fill="#2A8FC4" opacity="0.6"/>
+              <circle cx="250" cy="295" r="3" fill="#70C4EC"/>
+
+              <!-- Bottom row small notes (decorative) -->
+              <rect x="65" y="405" width="60" height="40" rx="3" fill="#E8622A" opacity="0.25"/>
+              <rect x="140" y="415" width="80" height="32" rx="3" fill="#3D9E6E" opacity="0.2"/>
+              <rect x="235" y="408" width="70" height="38" rx="3" fill="#7B5EA7" opacity="0.22"/>
+
+              <!-- Defs -->
+              <defs>
+                <linearGradient id="fridgeGrad" x1="0" y1="0" x2="1" y2="1">
+                  <stop offset="0%" stop-color="#FFFFFF"/>
+                  <stop offset="100%" stop-color="var(--col-surface-2)"/>
+                </linearGradient>
+                <linearGradient id="noteGrad1" x1="0" y1="0" x2="1" y2="1">
+                  <stop offset="0%" stop-color="#FFFFFF"/>
+                  <stop offset="100%" stop-color="#E8622A"/>
+                </linearGradient>
+                <linearGradient id="noteGrad2" x1="0" y1="0" x2="1" y2="1">
+                  <stop offset="0%" stop-color="#FFFFFF"/>
+                  <stop offset="100%" stop-color="#3D9E6E"/>
+                </linearGradient>
+                <linearGradient id="noteGrad3" x1="0" y1="0" x2="1" y2="1">
+                  <stop offset="0%" stop-color="#FFFFFF"/>
+                  <stop offset="100%" stop-color="#7B5EA7"/>
+                </linearGradient>
+                <linearGradient id="noteGrad4" x1="0" y1="0" x2="1" y2="1">
+                  <stop offset="0%" stop-color="#FFFFFF"/>
+                  <stop offset="100%" stop-color="#D4A017"/>
+                </linearGradient>
+                <linearGradient id="noteGrad5" x1="0" y1="0" x2="1" y2="1">
+                  <stop offset="0%" stop-color="#FFFFFF"/>
+                  <stop offset="100%" stop-color="#2A8FC4"/>
+                </linearGradient>
+                <filter id="noteShadow" x="-20%" y="-20%" width="140%" height="140%">
+                  <feDropShadow dx="2" dy="3" stdDeviation="3" flood-color="rgba(44,36,22,0.2)"/>
+                </filter>
+              </defs>
+            </svg>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ============================================================
+         FEATURES
+    ============================================================ -->
+    <section class="features-bg" id="features" aria-labelledby="features-heading">
+      <div class="container">
+        <div class="section-header reveal">
+          <p class="label">Everything your family shares</p>
+          <h2 class="display-lg" id="features-heading">Five magnets, one board</h2>
+          <p class="body-lg">Each topic gets its own colour-coded space — just like the physical magnets on your real fridge door, but digital, searchable, and always with you.</p>
+        </div>
+
+        <div class="features-grid">
+
+          <!-- Tasks -->
+          <article class="feature-card reveal reveal-delay-1" style="--card-accent:var(--mag-tasks);--card-accent-lt:var(--col-primary-lt);">
+            <div class="feature-icon-wrap">
+              <svg width="28" height="28" viewBox="0 0 28 28" fill="none" aria-hidden="true">
+                <rect x="3" y="5" width="22" height="18" rx="3" stroke="var(--mag-tasks)" stroke-width="2"/>
+                <path d="M8 10 L10.5 12.5 L14.5 8" stroke="var(--mag-tasks)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                <rect x="17" y="9" width="5" height="2" rx="1" fill="var(--mag-tasks)" opacity="0.5"/>
+                <path d="M8 16 L10.5 18.5 L14.5 14" stroke="var(--mag-tasks)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                <rect x="17" y="15" width="4" height="2" rx="1" fill="var(--mag-tasks)" opacity="0.5"/>
+              </svg>
+            </div>
+            <h3 class="feature-title">Tasks</h3>
+            <p class="body-md">From shopping runs to paying bills — post chores and to-dos so nothing slips through the cracks. Anyone in the family can pick it up and mark it done.</p>
+          </article>
+
+          <!-- Notices -->
+          <article class="feature-card reveal reveal-delay-2" style="--card-accent:var(--mag-notices);--card-accent-lt:var(--col-accent-lt);">
+            <div class="feature-icon-wrap" style="background:var(--col-accent-lt);">
+              <svg width="28" height="28" viewBox="0 0 28 28" fill="none" aria-hidden="true">
+                <path d="M14 3 L25 8 L25 20 Q25 25 14 27 Q3 25 3 20 L3 8 Z" stroke="var(--mag-notices)" stroke-width="2" fill="none" stroke-linejoin="round"/>
+                <circle cx="14" cy="12" r="2.5" fill="var(--mag-notices)"/>
+                <line x1="14" y1="15" x2="14" y2="20" stroke="var(--mag-notices)" stroke-width="2" stroke-linecap="round"/>
+              </svg>
+            </div>
+            <h3 class="feature-title">Notices &amp; Info</h3>
+            <p class="body-md">Heading out early? Working late? Drop an announcement so the whole family knows what's happening, without the "why didn't you tell me?" moment.</p>
+          </article>
+
+          <!-- Lost & Found -->
+          <article class="feature-card reveal reveal-delay-3" style="--card-accent:var(--mag-lostfound);--card-accent-lt:#F3EEFF;">
+            <div class="feature-icon-wrap" style="background:#F3EEFF;">
+              <svg width="28" height="28" viewBox="0 0 28 28" fill="none" aria-hidden="true">
+                <circle cx="12" cy="12" r="7" stroke="var(--mag-lostfound)" stroke-width="2"/>
+                <line x1="17.2" y1="17.2" x2="24" y2="24" stroke="var(--mag-lostfound)" stroke-width="2.5" stroke-linecap="round"/>
+                <circle cx="12" cy="12" r="2" fill="var(--mag-lostfound)" opacity="0.5"/>
+                <!-- question mark in lens -->
+                <text x="9.5" y="15" font-size="8" font-weight="700" fill="var(--mag-lostfound)" font-family="system-ui">?</text>
+              </svg>
+            </div>
+            <h3 class="feature-title">Lost &amp; Found</h3>
+            <p class="body-md">Missing your keys again? Post it and let the family track it down. Others can mark items as found so you stop looking in all the wrong places.</p>
+          </article>
+
+          <!-- Pantry -->
+          <article class="feature-card reveal reveal-delay-4" style="--card-accent:var(--mag-pantry);--card-accent-lt:#FFF8E1;">
+            <div class="feature-icon-wrap" style="background:#FFF8E1;">
+              <svg width="28" height="28" viewBox="0 0 28 28" fill="none" aria-hidden="true">
+                <!-- jar -->
+                <rect x="8" y="8" width="12" height="14" rx="2" stroke="var(--mag-pantry)" stroke-width="2"/>
+                <rect x="10" y="5" width="8" height="4" rx="1" stroke="var(--mag-pantry)" stroke-width="1.5"/>
+                <!-- fill level -->
+                <rect x="9" y="15" width="10" height="6" rx="1" fill="var(--mag-pantry)" opacity="0.35"/>
+                <!-- label line -->
+                <line x1="10" y1="12" x2="18" y2="12" stroke="var(--mag-pantry)" stroke-width="1.5" stroke-linecap="round"/>
+              </svg>
+            </div>
+            <h3 class="feature-title">Pantry</h3>
+            <p class="body-md">Track what's in the fridge and what's running low. Note expiry warnings, leftovers, and quantities so nobody buys milk you already have three cartons of.</p>
+          </article>
+
+          <!-- Questions -->
+          <article class="feature-card reveal reveal-delay-5" style="--card-accent:var(--mag-questions);--card-accent-lt:#E8F5FB;">
+            <div class="feature-icon-wrap" style="background:#E8F5FB;">
+              <svg width="28" height="28" viewBox="0 0 28 28" fill="none" aria-hidden="true">
+                <!-- speech bubbles -->
+                <path d="M4 5 Q4 3 6 3 L20 3 Q22 3 22 5 L22 14 Q22 16 20 16 L14 16 L10 20 L10 16 L6 16 Q4 16 4 14 Z" stroke="var(--mag-questions)" stroke-width="2" fill="none" stroke-linejoin="round"/>
+                <text x="10.5" y="13" font-size="9" font-weight="700" fill="var(--mag-questions)" font-family="system-ui">?</text>
+              </svg>
+            </div>
+            <h3 class="feature-title">Questions</h3>
+            <p class="body-md">Movies this Sunday — is anyone in? Post open questions to the family and collect replies. It's the digital version of a note left on the kitchen table.</p>
+          </article>
+
+        </div>
+      </div>
+    </section>
+
+    <!-- ============================================================
+         VIEWS SECTION
+    ============================================================ -->
+    <section id="views" aria-labelledby="views-heading">
+      <div class="container">
+        <div class="section-header reveal">
+          <p class="label">Two ways to see it all</p>
+          <h2 class="display-lg" id="views-heading">Your board, your way</h2>
+          <p class="body-lg">Switch between a clean list for getting things done and a calendar for spotting what's coming up — same data, different lens.</p>
+        </div>
+
+        <div class="views-inner">
+
+          <!-- List view card -->
+          <div class="view-card reveal reveal-delay-1">
+            <div class="view-card-header">
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="var(--col-primary)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                <line x1="8" y1="6" x2="21" y2="6"/>
+                <line x1="8" y1="12" x2="21" y2="12"/>
+                <line x1="8" y1="18" x2="21" y2="18"/>
+                <line x1="3" y1="6" x2="3.01" y2="6"/>
+                <line x1="3" y1="12" x2="3.01" y2="12"/>
+                <line x1="3" y1="18" x2="3.01" y2="18"/>
+              </svg>
+              <span class="view-card-title">List view</span>
+            </div>
+            <div class="view-card-body">
+              <p>All your family's posts in a clean, scannable list. Filter by category, assign to a person, and tick things off as they get done.</p>
+              <!-- Mock list UI -->
+              <div class="mock-list" aria-hidden="true">
+                <div class="mock-row">
+                  <div class="mock-dot" style="background:var(--mag-tasks);"></div>
+                  <span class="mock-label">Buy milk &amp; bread</span>
+                  <span class="mock-chip">Task</span>
+                </div>
+                <div class="mock-row">
+                  <div class="mock-dot" style="background:var(--mag-notices);"></div>
+                  <span class="mock-label">Early office day Monday</span>
+                  <span class="mock-chip">Notice</span>
+                </div>
+                <div class="mock-row">
+                  <div class="mock-dot" style="background:var(--mag-lostfound);"></div>
+                  <span class="mock-label">Seen my black gloves?</span>
+                  <span class="mock-chip">Lost</span>
+                </div>
+                <div class="mock-row">
+                  <div class="mock-dot" style="background:var(--mag-pantry);"></div>
+                  <span class="mock-label">Rice — expires Sunday</span>
+                  <span class="mock-chip">Pantry</span>
+                </div>
+                <div class="mock-row">
+                  <div class="mock-dot" style="background:var(--mag-questions);"></div>
+                  <span class="mock-label">Movies Sunday — who's in?</span>
+                  <span class="mock-chip">Question</span>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Calendar view card -->
+          <div class="view-card reveal reveal-delay-2">
+            <div class="view-card-header">
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="var(--col-primary)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                <rect x="3" y="4" width="18" height="18" rx="2" ry="2"/>
+                <line x1="16" y1="2" x2="16" y2="6"/>
+                <line x1="8" y1="2" x2="8" y2="6"/>
+                <line x1="3" y1="10" x2="21" y2="10"/>
+              </svg>
+              <span class="view-card-title">Calendar view</span>
+            </div>
+            <div class="view-card-body">
+              <p>See upcoming tasks, events, and expiry dates laid out on a monthly calendar. Spot busy days at a glance and plan ahead as a family.</p>
+              <!-- Mock calendar UI -->
+              <div class="mock-cal" aria-hidden="true">
+                <div class="mock-cal-header">Mo</div>
+                <div class="mock-cal-header">Tu</div>
+                <div class="mock-cal-header">We</div>
+                <div class="mock-cal-header">Th</div>
+                <div class="mock-cal-header">Fr</div>
+                <div class="mock-cal-header">Sa</div>
+                <div class="mock-cal-header">Su</div>
+
+                <!-- Week 1 -->
+                <div class="mock-cal-day">1</div>
+                <div class="mock-cal-day">2<div class="mock-cal-dot" style="background:var(--mag-tasks);"></div></div>
+                <div class="mock-cal-day">3</div>
+                <div class="mock-cal-day">4<div class="mock-cal-dot" style="background:var(--mag-notices);"></div></div>
+                <div class="mock-cal-day">5</div>
+                <div class="mock-cal-day">6<div class="mock-cal-dot" style="background:var(--mag-pantry);"></div></div>
+                <div class="mock-cal-day">7</div>
+
+                <!-- Week 2 -->
+                <div class="mock-cal-day today">8</div>
+                <div class="mock-cal-day">9</div>
+                <div class="mock-cal-day">10<div class="mock-cal-dot" style="background:var(--mag-tasks);"></div></div>
+                <div class="mock-cal-day">11</div>
+                <div class="mock-cal-day">12<div class="mock-cal-dot" style="background:var(--mag-lostfound);"></div></div>
+                <div class="mock-cal-day">13</div>
+                <div class="mock-cal-day">14<div class="mock-cal-dot" style="background:var(--mag-questions);"></div></div>
+
+                <!-- Week 3 -->
+                <div class="mock-cal-day">15</div>
+                <div class="mock-cal-day">16<div class="mock-cal-dot" style="background:var(--mag-notices);"></div></div>
+                <div class="mock-cal-day">17</div>
+                <div class="mock-cal-day">18<div class="mock-cal-dot" style="background:var(--mag-tasks);"></div></div>
+                <div class="mock-cal-day">19</div>
+                <div class="mock-cal-day">20</div>
+                <div class="mock-cal-day">21<div class="mock-cal-dot" style="background:var(--mag-pantry);"></div></div>
+              </div>
+            </div>
+          </div>
+
+        </div>
+      </div>
+    </section>
+
+    <!-- ============================================================
+         HOW IT WORKS
+    ============================================================ -->
+    <section class="how-bg" id="how-it-works" aria-labelledby="how-heading">
+      <div class="container">
+        <div class="section-header reveal">
+          <p class="label">Up and running in minutes</p>
+          <h2 class="display-lg" id="how-heading">Three steps to a shared board</h2>
+          <p class="body-lg">No complicated setup, no manual to read. If your family can put a magnet on a fridge, they can use Flying Fridge.</p>
+        </div>
+
+        <div class="steps-grid">
+
+          <div class="step reveal reveal-delay-1">
+            <div class="step-number" aria-hidden="true">1</div>
+            <h3 class="step-title">Create your account</h3>
+            <p>Sign up in seconds. No app store needed — Flying Fridge lives in your browser, so every device in the house can reach it instantly.</p>
+          </div>
+
+          <div class="step reveal reveal-delay-2">
+            <div class="step-number" aria-hidden="true">2</div>
+            <h3 class="step-title">Invite your family</h3>
+            <p>Share a simple invite link or code. Each person joins your shared family space — everyone sees the same board, in real time.</p>
+          </div>
+
+          <div class="step reveal reveal-delay-3">
+            <div class="step-number" aria-hidden="true">3</div>
+            <h3 class="step-title">Start sharing</h3>
+            <p>Post tasks, drop a notice, flag a lost item, update the pantry. Your fridge door just got a lot smarter — and it travels in your pocket.</p>
+          </div>
+
+        </div>
+
+      </div>
+    </section>
+
+    <!-- ============================================================
+         COMING SOON / POSSIBLE FEATURES TEASER
+    ============================================================ -->
+    <section aria-labelledby="coming-heading">
+      <div class="container">
+        <div class="section-header reveal">
+          <p class="label">On the roadmap</p>
+          <h2 class="display-lg" id="coming-heading">More goodness coming</h2>
+          <p class="body-lg">Flying Fridge is growing. Here's a taste of what's being cooked up next.</p>
+        </div>
+        <div class="teaser-grid">
+          <div class="teaser-item reveal reveal-delay-1">
+            <div class="teaser-emoji" aria-hidden="true">
+              <svg width="28" height="28" viewBox="0 0 28 28" fill="none"><path d="M14 3C8.477 3 4 7.477 4 13s4.477 10 10 10 10-4.477 10-10S19.523 3 14 3z" stroke="var(--col-primary)" stroke-width="1.8"/><path d="M14 8v6l4 2" stroke="var(--col-primary)" stroke-width="1.8" stroke-linecap="round"/></svg>
+            </div>
+            <div class="teaser-title">Reminders</div>
+            <div class="teaser-desc">Nudges for tasks with deadlines and expiring pantry items.</div>
+          </div>
+          <div class="teaser-item reveal reveal-delay-2">
+            <div class="teaser-emoji" aria-hidden="true">
+              <svg width="28" height="28" viewBox="0 0 28 28" fill="none"><rect x="4" y="4" width="20" height="20" rx="4" stroke="var(--col-accent)" stroke-width="1.8"/><path d="M9 14l3 3 7-7" stroke="var(--col-accent)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+            </div>
+            <div class="teaser-title">Voting &amp; Polls</div>
+            <div class="teaser-desc">Let the family vote on questions and group decisions.</div>
+          </div>
+          <div class="teaser-item reveal reveal-delay-3">
+            <div class="teaser-emoji" aria-hidden="true">
+              <svg width="28" height="28" viewBox="0 0 28 28" fill="none"><circle cx="14" cy="10" r="4" stroke="#7B5EA7" stroke-width="1.8"/><path d="M6 22c0-4.418 3.582-8 8-8s8 3.582 8 8" stroke="#7B5EA7" stroke-width="1.8" stroke-linecap="round"/><circle cx="22" cy="8" r="3" fill="#7B5EA7" opacity="0.4" stroke="#7B5EA7" stroke-width="1.2"/></svg>
+            </div>
+            <div class="teaser-title">Guest access</div>
+            <div class="teaser-desc">Share read-only access with grandparents or carers.</div>
+          </div>
+          <div class="teaser-item reveal reveal-delay-4">
+            <div class="teaser-emoji" aria-hidden="true">
+              <svg width="28" height="28" viewBox="0 0 28 28" fill="none"><path d="M14 4L4 9v6c0 5.25 4.25 10.15 10 11 5.75-.85 10-5.75 10-11V9L14 4z" stroke="#D4A017" stroke-width="1.8" stroke-linejoin="round"/><path d="M9 14l3 3 7-7" stroke="#D4A017" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>
+            </div>
+            <div class="teaser-title">Smart pantry</div>
+            <div class="teaser-desc">Auto-generate a shopping list from what's running low.</div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ============================================================
+         CTA BAND
+    ============================================================ -->
+    <section class="cta-band" aria-labelledby="cta-heading">
+      <div class="container">
+        <div class="cta-band-inner reveal">
+          <!-- Inline SVG: small fridge icon cluster for decoration -->
+          <div aria-hidden="true" style="display:flex;justify-content:center;margin-bottom:24px;gap:12px;align-items:center;">
+            <svg width="22" height="22" viewBox="0 0 22 22" fill="none"><circle cx="11" cy="11" r="10" fill="rgba(255,255,255,0.2)"/><circle cx="11" cy="11" r="5" fill="rgba(255,255,255,0.5)"/></svg>
+            <svg width="32" height="32" viewBox="0 0 32 32" fill="none"><circle cx="16" cy="16" r="14" fill="rgba(255,255,255,0.25)"/><circle cx="16" cy="16" r="7" fill="rgba(255,255,255,0.6)"/></svg>
+            <svg width="22" height="22" viewBox="0 0 22 22" fill="none"><circle cx="11" cy="11" r="10" fill="rgba(255,255,255,0.2)"/><circle cx="11" cy="11" r="5" fill="rgba(255,255,255,0.5)"/></svg>
+          </div>
+          <h2 id="cta-heading">Ready to stick it to forgetting?</h2>
+          <p>Your family's shared board is one click away. Free to start, easy to grow with.</p>
+          <div class="cta-band-actions">
+            <a href="#" class="btn" style="background:#FFFFFF;color:var(--col-primary);font-weight:700;box-shadow:0 4px 16px rgba(0,0,0,0.15);">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="var(--col-primary)" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M22 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
+              Get started — it's free
+            </a>
+            <a href="#features" class="btn btn-ghost">See all features</a>
+          </div>
+        </div>
+      </div>
+    </section>
+
+  </main>
+
+  <!-- ============================================================
+       FOOTER
+  ============================================================ -->
+  <footer class="site-footer" role="contentinfo">
+    <div class="container">
+      <div class="footer-grid">
+
+        <div class="footer-brand">
+          <div class="footer-logo">
+            <svg width="28" height="28" viewBox="0 0 36 36" fill="none" aria-hidden="true">
+              <rect x="6" y="3" width="24" height="30" rx="4" fill="var(--col-primary)" opacity="0.15"/>
+              <rect x="6" y="3" width="24" height="30" rx="4" stroke="var(--col-primary)" stroke-width="2"/>
+              <line x1="6" y1="13" x2="30" y2="13" stroke="var(--col-primary)" stroke-width="2"/>
+              <rect x="22" y="7" width="4" height="3" rx="1.5" fill="var(--col-primary)" opacity="0.6"/>
+              <rect x="22" y="17" width="4" height="4" rx="1.5" fill="var(--col-primary)" opacity="0.6"/>
+              <circle cx="12" cy="8.5" r="2.5" fill="var(--col-primary)"/>
+              <rect x="10" y="17" width="8" height="7" rx="1" fill="#D4A017" opacity="0.85"/>
+              <path d="M30 10 Q34 8 34 13 Q34 17 30 16" stroke="var(--col-primary)" stroke-width="1.5" fill="none" opacity="0.5" stroke-linecap="round"/>
+              <path d="M6 10 Q2 8 2 13 Q2 17 6 16" stroke="var(--col-primary)" stroke-width="1.5" fill="none" opacity="0.5" stroke-linecap="round"/>
+            </svg>
+            Flying Fridge
+          </div>
+          <p class="footer-tagline">The digital fridge door that keeps your whole family on the same page — wherever you are.</p>
+        </div>
+
+        <div class="footer-col">
+          <h4>Product</h4>
+          <ul role="list">
+            <li><a href="#features">Features</a></li>
+            <li><a href="#views">Views</a></li>
+            <li><a href="#how-it-works">How it works</a></li>
+            <li><a href="#">Changelog</a></li>
+          </ul>
+        </div>
+
+        <div class="footer-col">
+          <h4>Company</h4>
+          <ul role="list">
+            <li><a href="#">About</a></li>
+            <li><a href="#">Privacy</a></li>
+            <li><a href="#">Terms</a></li>
+            <li><a href="#">Contact</a></li>
+          </ul>
+        </div>
+
+      </div>
+
+      <div class="footer-bottom">
+        <p>&copy; 2026 Flying Fridge. Made with <span class="footer-heart" aria-label="love">&#9829;</span> for families everywhere.</p>
+        <p style="color:var(--col-text-muted);font-size:0.8125rem;">Your fridge, unplugged.</p>
+      </div>
+    </div>
+  </footer>
+
+  <!-- ============================================================
+       JAVASCRIPT
+  ============================================================ -->
+  <script>
+    'use strict';
+
+    /* ----------------------------------------------------------
+       THEME TOGGLE
+    ---------------------------------------------------------- */
+    (function () {
+      const html = document.documentElement;
+      const btn  = document.getElementById('themeToggle');
+      if (!btn) return;
+
+      // Determine initial effective theme
+      function getSystemTheme() {
+        return window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
+      }
+
+      // On page load, honour localStorage if set, else follow system
+      const stored = localStorage.getItem('ff-theme');
+      if (stored === 'dark' || stored === 'light') {
+        html.setAttribute('data-theme', stored);
+      }
+      // (no attr set = CSS media query takes over — intentional)
+
+      btn.addEventListener('click', function () {
+        const current = html.getAttribute('data-theme') || getSystemTheme();
+        const next    = current === 'dark' ? 'light' : 'dark';
+        html.setAttribute('data-theme', next);
+        localStorage.setItem('ff-theme', next);
+      });
+
+      // Keep in sync if system changes while page is open
+      window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change', function (e) {
+        if (!localStorage.getItem('ff-theme')) {
+          // no manual override — let CSS handle it naturally (remove attr)
+          html.removeAttribute('data-theme');
+        }
+      });
+    }());
+
+    /* ----------------------------------------------------------
+       INTERSECTION OBSERVER — scroll reveal
+    ---------------------------------------------------------- */
+    (function () {
+      // Respect prefers-reduced-motion: elements are already opacity:1 via CSS
+      const prefersReduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+      if (prefersReduced) {
+        document.querySelectorAll('.reveal').forEach(function (el) {
+          el.classList.add('visible');
+        });
+        return;
+      }
+
+      const observer = new IntersectionObserver(
+        function (entries) {
+          entries.forEach(function (entry) {
+            if (entry.isIntersecting) {
+              entry.target.classList.add('visible');
+              observer.unobserve(entry.target);
+            }
+          });
+        },
+        { threshold: 0.12 }
+      );
+
+      document.querySelectorAll('.reveal').forEach(function (el) {
+        observer.observe(el);
+      });
+    }());
+
+    /* ----------------------------------------------------------
+       FLOATING CHIPS — delayed entrance
+    ---------------------------------------------------------- */
+    (function () {
+      const prefersReduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+      const chips = document.querySelectorAll('.floating-chip');
+      chips.forEach(function (chip, i) {
+        setTimeout(function () {
+          chip.classList.add('visible');
+        }, prefersReduced ? 0 : (600 + i * 300));
+      });
+    }());
+
+    /* ----------------------------------------------------------
+       NAV — active link highlight on scroll
+    ---------------------------------------------------------- */
+    (function () {
+      const sections = document.querySelectorAll('section[id]');
+      const navLinks = document.querySelectorAll('.nav-links a[href^="#"]');
+      if (!sections.length || !navLinks.length) return;
+
+      const observer = new IntersectionObserver(
+        function (entries) {
+          entries.forEach(function (entry) {
+            if (entry.isIntersecting) {
+              navLinks.forEach(function (link) {
+                link.style.color = '';
+                if (link.getAttribute('href') === '#' + entry.target.id) {
+                  link.style.color = 'var(--col-primary)';
+                }
+              });
+            }
+          });
+        },
+        { rootMargin: '-30% 0px -60% 0px' }
+      );
+
+      sections.forEach(function (sec) { observer.observe(sec); });
+    }());
+
+    /* ----------------------------------------------------------
+       HEADER — shadow on scroll
+    ---------------------------------------------------------- */
+    (function () {
+      const header = document.querySelector('.site-header');
+      if (!header) return;
+      window.addEventListener('scroll', function () {
+        if (window.scrollY > 8) {
+          header.style.boxShadow = 'var(--shadow-md)';
+        } else {
+          header.style.boxShadow = 'none';
+        }
+      }, { passive: true });
+    }());
+  </script>
+
+</body>
+</html>
