@@ -82,10 +82,17 @@ Source: `requirements/requirement-2.md`
 - Architecture diagrams are **modelled as code with LikeC4** — `pnpm arch` to
   view. See `docs/design/architecture.md`.
 
-**Gate before the next requirement**
-- 🔲 **Human step:** create the Firebase project and populate `.env.local`
-  following `human-instructions/01-firebase-project-setup.md`, then report back
-  (auth providers enabled, Firestore region, `.env.local` populated).
+**Gate before the next requirement** ✅ (cleared 2026-07-25)
+- ✅ Firebase project created; **auth providers enabled**.
+- ✅ **Cloud Firestore region: `asia-south1` (Mumbai)** — permanent.
+- ✅ **Analytics enabled**; `measurementId` present.
+- ✅ `.env.local` populated and verified — all eight `VITE_FIREBASE_*` vars set
+  (incl. `VITE_FIREBASE_VAPID_KEY`, so FCM push is wired). File is gitignored;
+  values were not printed or committed.
+
+> Follow-up (optional, future): Analytics is on, so `getAnalytics()` can be
+> wired in `src/lib/firebase/` when useful — the `measurementId` is already in
+> the config object.
 
 ---
 
@@ -112,5 +119,5 @@ Not scheduled — raised for consideration when writing future requirement files
 
 ## Next up ⬜
 
-Awaiting `requirements/requirement-3.md` — and the Firebase human-setup gate
-above to be completed so backend features can be built.
+Firebase human-setup gate is **cleared** — backend features are unblocked.
+Ready to build `requirements/requirement-3.md` when you are.
