@@ -4,31 +4,39 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 ## Project
 
-**Flying Fridge** is a digital noticeboard for families — a modern, online take on the classic fridge-and-magnets way of sharing household information (hence "flying"). Planned features: users log in and join a family, then share **tasks, info/notices, lost & found, pantry, and questions**, with both **list and calendar views**. The goal is to capture the everyday family topics that are easily forgotten.
+**Flying Fridge** is a digital noticeboard for families — a modern, online take on the classic fridge-and-magnets way of sharing household information (hence "flying"). Users log in and join a family, then share **tasks, info/notices, lost & found, pantry, and questions**, with both **list and calendar views**. The goal is to capture the everyday family topics that are easily forgotten.
 
-## Current state
+## How this project grows
 
-The repo is **requirements-only — there is no application code yet.** The work is driven by numbered requirement files, not an existing build system.
+Work is **requirement-driven**. Each `requirements/requirement-N.md` (Functional / Technical / Polishing) is the next unit of work. Read `requirements/overview.md` first. After finishing a requirement, update `PROGRESS.md`. `README.md` is the living onboarding doc — keep it accurate when structure/commands change.
 
-- `requirements/overview.md` — the product vision (read first).
-- `requirements/requirement-N.md` — one file per requirement batch, each with Functional / Technical / Polishing sections. New requirement files are added over time; treat each as the next unit of work.
+## Stack & layout
 
-**Ignore `.claude/settings.local.json` as a source of truth for the stack.** Its allowed commands (pnpm/vitest/vite, `khorcha-bhag`, SplitwiseClone paths) are carried over from an unrelated project and do not describe Flying Fridge's tooling.
+Frontend-only **React SPA (TypeScript, Vite, pnpm)** backed by **Firebase** (Auth + Firestore + Cloud Messaging), a **mobile-first PWA** with push. Not yet provisioned — Firebase config is a manual human step (`human-instructions/`), read lazily from `VITE_FIREBASE_*` env vars, so the app runs without it.
 
-## Requirement 1 — landing page (active)
+- `src/pages/` — route screens. `src/pages/landing/` is the Requirement-1 landing page, preserved as raw markup + CSS with its script re-implemented as a React effect (see `docs/adr/0011`).
+- `src/lib/firebase/` — the **only** place the Firebase SDK is imported.
+- `src/features/*` (grows later), `src/components/`, `src/i18n/`, `src/styles/`, `src/test/`.
+- `docs/adr/` — Architecture Decision Records. `docs/design/` — design docs; **architecture is modelled as code with LikeC4** in `docs/design/architecture/*.c4` (`pnpm arch`).
+- `human-instructions/` — manual out-of-workspace steps. `requirements/`, `PROGRESS.md`, `README.md`.
 
-Build a fun, modern landing page with standard landing-page sections and CTAs. Hard constraints from `requirements/requirement-1.md`:
+## Commands
 
-- **Single self-contained HTML file** — all CSS/JS inline, no build step, no external dependencies. This file will later become the `index` page of the actual app, so keep it drop-in ready.
-- **Light/dark theme driven by the system** (`prefers-color-scheme`), not a manual toggle unless requested.
-- **Simple, fun animations.**
-- **Maintain a progress plan** so future requirement files can build on prior work incrementally. Keep it updated as requirements are completed.
+- `pnpm dev` · `pnpm build` · `pnpm preview`
+- `pnpm lint` · `pnpm typecheck` · `pnpm test:run` (CI runs these four + build)
+- `pnpm arch` (LikeC4 viewer) · `pnpm arch:check` (validate model)
+- Single test: `pnpm exec vitest run src/path/to.test.tsx`
+
+## Conventions & gotchas
+
+- **All user-facing strings via i18n keys** (`src/i18n/locales/`). Keep the **accessibility baseline**: keyboard-first, semantic landmarks, visible focus, reduced-motion (WCAG 2.1 AA). Tests are set up for TDD (Vitest + RTL).
+- Toolchain is pinned: **TypeScript 5.9**, **ESLint 9** (TS 7 / ESLint 10 aren't yet supported by `typescript-eslint` / `eslint-plugin-jsx-a11y`) — don't blindly bump these.
+- Vitest uses the **threads** pool + a `localStorage` polyfill in `src/test/setup.ts` (the default forks pool fails to spawn workers on this Windows/Node 25 setup).
 
 ## Git workflow (required)
 
-- All work must be committed to git with proper, scoped commit messages.
-- **Git credentials must be local to this repo only** — never use or modify system-wide credentials. If git identity isn't configured, guide the user through per-repo setup (e.g. `git config --local user.name/user.email`, `git config --local credential.helper ...`) rather than assuming global config.
+- Commit with proper, scoped messages (Conventional Commits). **Repo-local git identity only** — never use or modify system-wide credentials. Nothing is pushed from here unless asked.
 
 ## Environment notes
 
-- Platform is Windows; the primary shell is PowerShell, with a Bash (POSIX) tool also available. Watch for path quoting — the repo path contains spaces (`Learning and POC`).
+- Windows; primary shell is PowerShell, with a Bash (POSIX) tool also available. Watch path quoting — the repo path contains spaces (`Learning and POC`).

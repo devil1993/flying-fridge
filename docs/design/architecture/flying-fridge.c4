@@ -1,0 +1,136 @@
+// Flying Fridge — architecture as code (LikeC4).
+// View it:   pnpm arch         (interactive dev server)
+// Build it:  pnpm arch:build   (static site into docs/design/architecture/dist)
+// Export:    pnpm dlx likec4 export png -o docs/design/architecture/exports docs/design/architecture
+
+specification {
+  element person {
+    style {
+      shape person
+    }
+  }
+  element system
+  element container
+  element component
+
+  tag external
+}
+
+model {
+
+  member = person 'Family Member' {
+    description 'Signs in, joins a family, and shares tasks, notices, pantry, lost & found and questions across List and Calendar views.'
+  }
+
+  flyingFridge = system 'Flying Fridge' {
+    description 'Mobile-first PWA family noticeboard (frontend-only React app).'
+
+    spa = container 'React SPA' {
+      technology 'TypeScript, Vite, react-router, react-i18next'
+      description 'UI, routing, i18n, theming. All backend access funnels through lib/firebase.'
+
+      pages = component 'pages' {
+        description 'Route screens; thin orchestration. Includes the landing page.'
+      }
+      features = component 'features/*' {
+        description 'auth, family, tasks, notices, lostAndFound, pantry, questions.'
+      }
+      components = component 'components' {
+        description 'Shared presentational + accessibility primitives. No Firebase imports.'
+      }
+      i18n = component 'i18n' {
+        technology 'react-i18next'
+        description 'Strings and locales; en default.'
+      }
+      styles = component 'styles' {
+        description 'Global CSS + theme tokens (light/dark from system, reduced-motion).'
+      }
+      firebaseLib = component 'lib/firebase' {
+        description 'SDK init + typed helpers. The ONLY place the Firebase SDK is imported.'
+      }
+
+      pages -> features 'uses'
+      features -> components 'uses'
+      features -> i18n 'uses'
+      features -> firebaseLib 'reads/writes via'
+    }
+
+    workbox = container 'Workbox Service Worker' {
+      technology 'vite-plugin-pwa / Workbox'
+      description 'Offline app shell, precache, runtime cache, installability.'
+    }
+
+    fcmSw = container 'FCM Service Worker' {
+      technology 'firebase-messaging-sw.js'
+      description 'Receives background push and shows notifications when the app is not focused.'
+    }
+
+    spa -> workbox 'registers'
+    spa -> fcmSw 'registers'
+  }
+
+  firebase = system 'Firebase Platform' {
+    #external
+    description 'Managed backend platform (no server of our own).'
+
+    auth = container 'Firebase Auth' {
+      description 'Identity (uid) and sign-in providers.'
+    }
+    firestore = container 'Cloud Firestore' {
+      style {
+        shape storage
+      }
+      description 'NoSQL datastore; realtime listeners; Security Rules enforce family membership.'
+    }
+    fcm = container 'Cloud Messaging' {
+      description 'Push delivery (VAPID); device tokens registered from the client.'
+    }
+  }
+
+  webpush = system 'Web Push Service' {
+    #external
+    description 'Browser / OS push delivery channel.'
+  }
+
+  // --- Context & container relationships ---
+  member -> flyingFridge 'uses'
+  member -> spa 'interacts with' 'HTTPS'
+
+  spa -> auth 'signs in' 'Firebase Web SDK'
+  spa -> firestore 'reads/writes, subscribes' 'Web SDK / WebSocket'
+  spa -> fcm 'registers device token' 'Web SDK'
+  firebaseLib -> auth 'getAuth'
+  firebaseLib -> firestore 'getFirestore'
+  firebaseLib -> fcm 'getMessaging'
+  fcm -> fcmSw 'delivers background messages' 'Push'
+  firebase -> webpush 'sends push via'
+  webpush -> member 'shows notifications to'
+}
+
+views {
+
+  view index {
+    title 'System Context — Flying Fridge'
+    include *
+  }
+
+  view containers of flyingFridge {
+    title 'Containers — Flying Fridge'
+    include *
+  }
+
+  view spaComponents of spa {
+    title 'Components — React SPA'
+    include *
+  }
+
+  dynamic view dataFlow {
+    title 'Dynamic — live read & write'
+    member -> spa 'opens a family board'
+    spa -> firestore 'subscribe(familyId, collection)'
+    firestore -> spa 'snapshot stream (WebSocket)'
+    member -> spa 'adds a task'
+    spa -> firestore 'write — Security Rules verify membership'
+    firestore -> spa 'echo via the same live listener'
+  }
+}

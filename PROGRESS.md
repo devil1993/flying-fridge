@@ -46,6 +46,49 @@ Source: `requirements/requirement-1.md`
 
 ---
 
+## Requirement 2 — Development environment ✅
+
+Source: `requirements/requirement-2.md`
+
+- ✅ **App scaffolded** — React + TypeScript + Vite, pnpm, react-router. Runs
+  with `pnpm dev`; builds with `pnpm build`.
+- ✅ **Landing page moved into the app** — ported to `src/pages/landing/` (raw
+  markup + original CSS preserved; the inline script re-implemented as a React
+  effect). The root `index.html` is now the Vite app shell.
+- ✅ **PWA with notification capability** — `vite-plugin-pwa` (Workbox) service
+  worker + web manifest; FCM helpers in `src/lib/firebase/messaging.ts`
+  (foreground token/permission now; background SW deferred, documented).
+- ✅ **Firebase wiring (config-only)** — `src/lib/firebase/` initialises lazily
+  from `VITE_FIREBASE_*` env vars; app runs without a project so the landing
+  page works before Firebase exists.
+- ✅ **i18n** — react-i18next, `en` default, structured for more locales.
+- ✅ **Accessibility baseline** — skip link, focus styles, semantic landmarks,
+  reduced-motion; `eslint-plugin-jsx-a11y` in lint.
+- ✅ **Tests (TDD-ready)** — Vitest + React Testing Library; 9 tests across
+  util / i18n / component / routing. `pnpm test:run`.
+- ✅ **CI** — GitHub Actions runs install → lint → typecheck → test → build.
+- ✅ **Docs & structure** — ADRs (`docs/adr/`), design docs (`docs/design/`,
+  architecture as **LikeC4** in `docs/design/architecture/`), and
+  `human-instructions/` (Firebase setup guide).
+- ✅ **Onboarding README** — living `README.md` so new members (with or without
+  an AI assistant) can go from clone to running app.
+
+**Notes / decisions**
+- Stack decisions recorded as ADRs (`docs/adr/0001`–`0011`).
+- Toolchain pinned for compatibility: **TypeScript 5.9**, **ESLint 9** (latest
+  TS 7 / ESLint 10 aren't yet supported by `typescript-eslint` / `jsx-a11y`).
+- Vitest uses the **threads** pool + a small `localStorage` polyfill (the forks
+  pool failed to spawn workers on this Windows/Node 25 setup).
+- Architecture diagrams are **modelled as code with LikeC4** — `pnpm arch` to
+  view. See `docs/design/architecture.md`.
+
+**Gate before the next requirement**
+- 🔲 **Human step:** create the Firebase project and populate `.env.local`
+  following `human-instructions/01-firebase-project-setup.md`, then report back
+  (auth providers enabled, Firestore region, `.env.local` populated).
+
+---
+
 ## Backlog / candidate features (from requirement-1 "Polishing")
 
 Not scheduled — raised for consideration when writing future requirement files:
@@ -69,4 +112,5 @@ Not scheduled — raised for consideration when writing future requirement files
 
 ## Next up ⬜
 
-Awaiting `requirements/requirement-2.md`.
+Awaiting `requirements/requirement-3.md` — and the Firebase human-setup gate
+above to be completed so backend features can be built.
