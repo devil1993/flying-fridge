@@ -15,8 +15,8 @@ export default defineConfig({
         short_name: 'Flying Fridge',
         description:
           "Your family's digital noticeboard — tasks, notices, pantry, lost & found and questions.",
-        theme_color: '#E8622A',
-        background_color: '#FDFAF6',
+        theme_color: '#4F6DF5',
+        background_color: '#F7F9FC',
         display: 'standalone',
         start_url: '/',
         scope: '/',

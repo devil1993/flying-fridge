@@ -5,7 +5,7 @@
   z-index: 1000;
   padding: 10px 16px;
   border-radius: 8px;
-  background: #e8622a;
+  background: var(--col-primary, #4f6df5);
   color: #ffffff;
   font: 600 0.95rem/1 system-ui, -apple-system, sans-serif;
   text-decoration: none;

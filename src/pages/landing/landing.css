@@ -1,31 +1,14 @@
     /* ============================================================
-       DESIGN TOKENS — light theme (default)
+       DESIGN TOKENS
+       Colour is a two-axis system, both set on <html> by the React
+       effect (mode is resolved from the system preference by default):
+         • mode    — light / dark            [data-theme]
+         • palette — blueberry (default), grape, forest, ocean,
+                     contrast (accessibility) [data-palette]
+       Non-colour tokens are shared; colours are overridden per
+       (palette, mode) further down.
     ============================================================ */
     :root {
-      /* Palette */
-      --col-bg:          #FDFAF6;
-      --col-surface:     #FFFFFF;
-      --col-surface-2:   #F5F0E8;
-      --col-border:      #E2D9C8;
-      --col-text:        #2C2416;
-      --col-text-2:      #6B5D45;
-      --col-text-muted:  #9D8E78;
-
-      /* Brand primaries */
-      --col-primary:     #E8622A;   /* warm tangerine */
-      --col-primary-dk:  #C44E1E;
-      --col-primary-lt:  #FBEEE7;
-      --col-accent:      #3D9E6E;   /* sage green */
-      --col-accent-dk:   #2E7A55;
-      --col-accent-lt:   #E8F5EE;
-
-      /* Magnet palette — five categories */
-      --mag-tasks:       #E8622A;  /* tangerine */
-      --mag-notices:     #3D9E6E;  /* sage */
-      --mag-lostfound:   #7B5EA7;  /* lavender */
-      --mag-pantry:      #D4A017;  /* amber */
-      --mag-questions:   #2A8FC4;  /* sky */
-
       /* Typography */
       --font-sans: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
       --font-display: Georgia, "Times New Roman", serif;
@@ -37,88 +20,169 @@
       /* Radii */
       --r-sm: 6px;   --r-md: 12px;  --r-lg: 20px;  --r-xl: 32px;
 
-      /* Shadows */
-      --shadow-sm: 0 1px 4px rgba(44,36,22,0.08), 0 1px 2px rgba(44,36,22,0.06);
-      --shadow-md: 0 4px 16px rgba(44,36,22,0.10), 0 2px 6px rgba(44,36,22,0.07);
-      --shadow-lg: 0 8px 32px rgba(44,36,22,0.12), 0 4px 12px rgba(44,36,22,0.08);
-      --shadow-fridge: 0 20px 60px rgba(44,36,22,0.18), 0 8px 24px rgba(44,36,22,0.12);
-
       /* Motion */
       --dur-fast: 160ms;
       --dur-mid:  280ms;
       --dur-slow: 500ms;
       --ease-out: cubic-bezier(0.22, 1, 0.36, 1);
+
+      /* Default colours — Blueberry, light (also the pre-JS fallback) */
+      --col-bg:          #F7F9FC;
+      --col-surface:     #FFFFFF;
+      --col-surface-2:   #EDF1F8;
+      --col-border:      #D8E0EC;
+      --col-text:        #1B2333;
+      --col-text-2:      #4A5568;
+      --col-text-muted:  #8A97AC;
+      --col-primary:     #4F6DF5;
+      --col-primary-dk:  #3B54D0;
+      --col-primary-lt:  #EAEFFE;
+      --col-accent:      #17B39A;
+      --col-accent-dk:   #0E8C78;
+      --col-accent-lt:   #E3F7F3;
+      --mag-tasks:       #4F6DF5;
+      --mag-notices:     #17B39A;
+      --mag-lostfound:   #8B5CF6;
+      --mag-pantry:      #F59E0B;
+      --mag-questions:   #0EA5E9;
+
+      /* Light shadows (cool neutral tint) */
+      --shadow-sm: 0 1px 4px rgba(23,32,54,0.08), 0 1px 2px rgba(23,32,54,0.06);
+      --shadow-md: 0 4px 16px rgba(23,32,54,0.10), 0 2px 6px rgba(23,32,54,0.07);
+      --shadow-lg: 0 8px 32px rgba(23,32,54,0.12), 0 4px 12px rgba(23,32,54,0.08);
+      --shadow-fridge: 0 20px 60px rgba(23,32,54,0.18), 0 8px 24px rgba(23,32,54,0.12);
     }
 
     /* ============================================================
-       DARK THEME
-    ============================================================ */
-    @media (prefers-color-scheme: dark) {
-      :root {
-        --col-bg:          #1A1610;
-        --col-surface:     #241E15;
-        --col-surface-2:   #2E2619;
-        --col-border:      #3D3327;
-        --col-text:        #F0EAE0;
-        --col-text-2:      #C4B49A;
-        --col-text-muted:  #8A7A66;
-
-        --col-primary:     #F07840;
-        --col-primary-dk:  #E8622A;
-        --col-primary-lt:  #2E1E14;
-        --col-accent:      #4DB87E;
-        --col-accent-dk:   #3D9E6E;
-        --col-accent-lt:   #142818;
-
-        --shadow-sm: 0 1px 4px rgba(0,0,0,0.25), 0 1px 2px rgba(0,0,0,0.18);
-        --shadow-md: 0 4px 16px rgba(0,0,0,0.30), 0 2px 6px rgba(0,0,0,0.22);
-        --shadow-lg: 0 8px 32px rgba(0,0,0,0.36), 0 4px 12px rgba(0,0,0,0.26);
-        --shadow-fridge: 0 20px 60px rgba(0,0,0,0.5), 0 8px 24px rgba(0,0,0,0.36);
-      }
-    }
-
-    /* ============================================================
-       MANUAL THEME TOGGLE (overrides system preference)
+       SHADOWS BY MODE (palette-independent)
     ============================================================ */
     html[data-theme="light"] {
-      --col-bg:          #FDFAF6;
-      --col-surface:     #FFFFFF;
-      --col-surface-2:   #F5F0E8;
-      --col-border:      #E2D9C8;
-      --col-text:        #2C2416;
-      --col-text-2:      #6B5D45;
-      --col-text-muted:  #9D8E78;
-      --col-primary:     #E8622A;
-      --col-primary-dk:  #C44E1E;
-      --col-primary-lt:  #FBEEE7;
-      --col-accent:      #3D9E6E;
-      --col-accent-dk:   #2E7A55;
-      --col-accent-lt:   #E8F5EE;
-      --shadow-sm: 0 1px 4px rgba(44,36,22,0.08), 0 1px 2px rgba(44,36,22,0.06);
-      --shadow-md: 0 4px 16px rgba(44,36,22,0.10), 0 2px 6px rgba(44,36,22,0.07);
-      --shadow-lg: 0 8px 32px rgba(44,36,22,0.12), 0 4px 12px rgba(44,36,22,0.08);
-      --shadow-fridge: 0 20px 60px rgba(44,36,22,0.18), 0 8px 24px rgba(44,36,22,0.12);
+      --shadow-sm: 0 1px 4px rgba(23,32,54,0.08), 0 1px 2px rgba(23,32,54,0.06);
+      --shadow-md: 0 4px 16px rgba(23,32,54,0.10), 0 2px 6px rgba(23,32,54,0.07);
+      --shadow-lg: 0 8px 32px rgba(23,32,54,0.12), 0 4px 12px rgba(23,32,54,0.08);
+      --shadow-fridge: 0 20px 60px rgba(23,32,54,0.18), 0 8px 24px rgba(23,32,54,0.12);
     }
-
     html[data-theme="dark"] {
-      --col-bg:          #1A1610;
-      --col-surface:     #241E15;
-      --col-surface-2:   #2E2619;
-      --col-border:      #3D3327;
-      --col-text:        #F0EAE0;
-      --col-text-2:      #C4B49A;
-      --col-text-muted:  #8A7A66;
-      --col-primary:     #F07840;
-      --col-primary-dk:  #E8622A;
-      --col-primary-lt:  #2E1E14;
-      --col-accent:      #4DB87E;
-      --col-accent-dk:   #3D9E6E;
-      --col-accent-lt:   #142818;
       --shadow-sm: 0 1px 4px rgba(0,0,0,0.25), 0 1px 2px rgba(0,0,0,0.18);
       --shadow-md: 0 4px 16px rgba(0,0,0,0.30), 0 2px 6px rgba(0,0,0,0.22);
       --shadow-lg: 0 8px 32px rgba(0,0,0,0.36), 0 4px 12px rgba(0,0,0,0.26);
       --shadow-fridge: 0 20px 60px rgba(0,0,0,0.5), 0 8px 24px rgba(0,0,0,0.36);
     }
+
+    /* ============================================================
+       MAGNET PALETTE (five categories) BY PALETTE
+    ============================================================ */
+    html[data-palette="blueberry"] { --mag-tasks:#4F6DF5; --mag-notices:#17B39A; --mag-lostfound:#8B5CF6; --mag-pantry:#F59E0B; --mag-questions:#0EA5E9; }
+    html[data-palette="grape"]     { --mag-tasks:#7C5CFC; --mag-notices:#10B981; --mag-lostfound:#EC4899; --mag-pantry:#F59E0B; --mag-questions:#3B82F6; }
+    html[data-palette="forest"]    { --mag-tasks:#2E9E5B; --mag-notices:#0EA5E9; --mag-lostfound:#E0457B; --mag-pantry:#E8A317; --mag-questions:#6366F1; }
+    html[data-palette="ocean"]     { --mag-tasks:#0E8FA8; --mag-notices:#14B8A6; --mag-lostfound:#7C6FF0; --mag-pantry:#F5A524; --mag-questions:#FF6B5E; }
+
+    /* ============================================================
+       NEUTRALS + BRAND BY (PALETTE, MODE)
+    ============================================================ */
+
+    /* ---- Blueberry & Mint ---- */
+    html[data-theme="light"][data-palette="blueberry"] {
+      --col-bg:#F7F9FC; --col-surface:#FFFFFF; --col-surface-2:#EDF1F8; --col-border:#D8E0EC;
+      --col-text:#1B2333; --col-text-2:#4A5568; --col-text-muted:#8A97AC;
+      --col-primary:#4F6DF5; --col-primary-dk:#3B54D0; --col-primary-lt:#EAEFFE;
+      --col-accent:#17B39A; --col-accent-dk:#0E8C78; --col-accent-lt:#E3F7F3;
+    }
+    html[data-theme="dark"][data-palette="blueberry"] {
+      --col-bg:#0F1420; --col-surface:#171E2E; --col-surface-2:#1F2838; --col-border:#313C52;
+      --col-text:#EAEEF6; --col-text-2:#B4C0D4; --col-text-muted:#7A879E;
+      --col-primary:#6E88FF; --col-primary-dk:#4F6DF5; --col-primary-lt:#1A2236;
+      --col-accent:#2CD3B6; --col-accent-dk:#17B39A; --col-accent-lt:#10231F;
+    }
+
+    /* ---- Grape Soda ---- */
+    html[data-theme="light"][data-palette="grape"] {
+      --col-bg:#FAF8FF; --col-surface:#FFFFFF; --col-surface-2:#F1ECFB; --col-border:#E2D8F5;
+      --col-text:#241B33; --col-text-2:#554667; --col-text-muted:#9587AC;
+      --col-primary:#7C5CFC; --col-primary-dk:#6438E8; --col-primary-lt:#F0EBFF;
+      --col-accent:#EC4899; --col-accent-dk:#D12B7E; --col-accent-lt:#FCE7F2;
+    }
+    html[data-theme="dark"][data-palette="grape"] {
+      --col-bg:#14101F; --col-surface:#1E1830; --col-surface-2:#281F3E; --col-border:#3B2F55;
+      --col-text:#EFEAF6; --col-text-2:#C3B4D6; --col-text-muted:#8B7AA2;
+      --col-primary:#9B7DFF; --col-primary-dk:#7C5CFC; --col-primary-lt:#241A38;
+      --col-accent:#F471B5; --col-accent-dk:#EC4899; --col-accent-lt:#2A1626;
+    }
+
+    /* ---- Forest & Berry ---- */
+    html[data-theme="light"][data-palette="forest"] {
+      --col-bg:#F8FAF7; --col-surface:#FFFFFF; --col-surface-2:#EBF1E9; --col-border:#D6E2D2;
+      --col-text:#1C2620; --col-text-2:#4C5A4F; --col-text-muted:#8A988C;
+      --col-primary:#2E9E5B; --col-primary-dk:#227A45; --col-primary-lt:#E6F4EC;
+      --col-accent:#E0457B; --col-accent-dk:#C22C61; --col-accent-lt:#FBE7EF;
+    }
+    html[data-theme="dark"][data-palette="forest"] {
+      --col-bg:#101711; --col-surface:#18211A; --col-surface-2:#202B23; --col-border:#334037;
+      --col-text:#E9F0EA; --col-text-2:#B2C4B6; --col-text-muted:#7C8C80;
+      --col-primary:#46C077; --col-primary-dk:#2E9E5B; --col-primary-lt:#142A1B;
+      --col-accent:#F06699; --col-accent-dk:#E0457B; --col-accent-lt:#2A1620;
+    }
+
+    /* ---- Ocean & Coral ---- */
+    html[data-theme="light"][data-palette="ocean"] {
+      --col-bg:#F5FAFB; --col-surface:#FFFFFF; --col-surface-2:#E6F2F4; --col-border:#CFE3E6;
+      --col-text:#14252A; --col-text-2:#43585E; --col-text-muted:#86999E;
+      --col-primary:#0E8FA8; --col-primary-dk:#0A6F82; --col-primary-lt:#E1F4F7;
+      --col-accent:#FF6B5E; --col-accent-dk:#E24C3F; --col-accent-lt:#FFE9E6;
+    }
+    html[data-theme="dark"][data-palette="ocean"] {
+      --col-bg:#0C1719; --col-surface:#122226; --col-surface-2:#182D31; --col-border:#2A4247;
+      --col-text:#E7F1F2; --col-text-2:#AEC5C9; --col-text-muted:#7A9195;
+      --col-primary:#2CB6CE; --col-primary-dk:#0E8FA8; --col-primary-lt:#0F262B;
+      --col-accent:#FF8578; --col-accent-dk:#FF6B5E; --col-accent-lt:#2A1613;
+    }
+
+    /* ---- High Contrast (accessibility): maximises contrast; overrides
+           its own magnets per mode so dots/strokes stay legible. ---- */
+    html[data-theme="light"][data-palette="contrast"] {
+      --col-bg:#FFFFFF; --col-surface:#FFFFFF; --col-surface-2:#F2F2F2; --col-border:#1A1A1A;
+      --col-text:#000000; --col-text-2:#141414; --col-text-muted:#333333;
+      --col-primary:#0040C1; --col-primary-dk:#002E8F; --col-primary-lt:#E4EBFB;
+      --col-accent:#005C2E; --col-accent-dk:#00401F; --col-accent-lt:#E0F0E7;
+      --mag-tasks:#0040C1; --mag-notices:#005C2E; --mag-lostfound:#7A1FA2; --mag-pantry:#8A4B00; --mag-questions:#0A5A8A;
+    }
+    html[data-theme="dark"][data-palette="contrast"] {
+      --col-bg:#000000; --col-surface:#000000; --col-surface-2:#101010; --col-border:#FFFFFF;
+      --col-text:#FFFFFF; --col-text-2:#F0F0F0; --col-text-muted:#CFCFCF;
+      --col-primary:#8FB4FF; --col-primary-dk:#5C8CF0; --col-primary-lt:#0A1428;
+      --col-accent:#4FE3A6; --col-accent-dk:#22C48A; --col-accent-lt:#06231A;
+      --mag-tasks:#8FB4FF; --mag-notices:#4FE3A6; --mag-lostfound:#D89CF5; --mag-pantry:#F2B366; --mag-questions:#7CD4FF;
+    }
+
+    /* Mode + palette are both explicit attributes on <html>; the combined
+       [data-theme][data-palette] rules above cover every combination, so no
+       separate manual-toggle block is needed. */
+
+    /* ============================================================
+       PALETTE SWITCHER (accessible native <select>)
+    ============================================================ */
+    .palette-select {
+      appearance: none;
+      -webkit-appearance: none;
+      font: 600 0.82rem/1 var(--font-sans);
+      color: var(--col-text);
+      background-color: var(--col-surface-2);
+      border: 1px solid var(--col-border);
+      border-radius: 999px;
+      padding: 9px 30px 9px 14px;
+      cursor: pointer;
+      background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 24 24' fill='none' stroke='%23888888' stroke-width='3' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpolyline points='6 9 12 15 18 9'/%3E%3C/svg%3E");
+      background-repeat: no-repeat;
+      background-position: right 10px center;
+      transition: border-color var(--dur-fast) var(--ease-out),
+                  box-shadow var(--dur-fast) var(--ease-out);
+    }
+    .palette-select:hover { border-color: var(--col-primary); }
+    .palette-select:focus-visible {
+      outline: 3px solid var(--col-primary);
+      outline-offset: 2px;
+    }
+    .palette-select option { color: #000; }
 
     /* ============================================================
        RESET & BASE
