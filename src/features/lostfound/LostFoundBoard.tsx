@@ -35,7 +35,7 @@ export default function LostFoundBoard({
   }
 
   return (
-    <section className="module" aria-labelledby="lost-heading">
+    <section className="module lostfound" aria-labelledby="lost-heading">
       <h1 id="lost-heading" className="module-title">
         {t('lostFound.title')}
       </h1>

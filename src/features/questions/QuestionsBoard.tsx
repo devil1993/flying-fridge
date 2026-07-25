@@ -34,7 +34,7 @@ export default function QuestionsBoard({
   }
 
   return (
-    <section className="module" aria-labelledby="questions-heading">
+    <section className="module questions" aria-labelledby="questions-heading">
       <h1 id="questions-heading" className="module-title">
         {t('questions.title')}
       </h1>

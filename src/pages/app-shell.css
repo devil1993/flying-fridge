@@ -1,22 +1,113 @@
+/* ============================================================
+   App shell — the main content wrapper for the signed-in app.
+   Compact mobile-first layout with a warm patterned background.
+============================================================ */
+
 .app-shell {
   min-height: 100dvh;
-  padding: var(--sp-5) var(--sp-3);
+  /* Tighter on mobile: sp-3 top (24 px) saves ~16 px vs sp-5 */
+  padding: var(--sp-3) var(--sp-2);
+  /* Subtle dot-matrix pattern echoing fridge magnets;
+     falls back cleanly when CSS gradients aren't available.
+     Uses only theming tokens so it works on all palettes + dark + HC. */
+  background-image: radial-gradient(
+    circle,
+    color-mix(in srgb, var(--col-border) 60%, transparent) 1px,
+    transparent 1px
+  );
+  background-size: 20px 20px;
 }
+
 .app-shell-wrap {
   max-width: 720px;
   margin: 0 auto;
 }
 
-/* Shared module heading (each module view's h1). */
+/* Shared module heading (each module view's h1).
+   Now uses the display (Baloo Da 2) typeface with a tighter bottom
+   margin so the form/first element feels closer. */
 .module-title {
   font-family: var(--font-display);
-  font-size: 1.5rem;
+  font-size: clamp(1.35rem, 4vw, 1.75rem);
+  font-weight: 700;
+  line-height: 1.2;
   color: var(--col-text);
-  margin-bottom: var(--sp-3);
+  margin-bottom: var(--sp-2);
+  /* Thin left-bar anchors the title to the module accent;
+     each module overrides --module-accent on its root element. */
+  padding-left: var(--sp-2);
+  border-left: 3px solid var(--module-accent, var(--col-primary));
+}
+
+/* Compact hero band at the top of every module, sits above the title */
+.module-eyebrow {
+  font-size: 0.7rem;
+  font-weight: 700;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--module-accent, var(--col-primary));
+  margin-bottom: 4px;
+  padding-left: var(--sp-2);
+  /* Only show if explicitly rendered — most modules don't need it */
+}
+
+/* Module accent colours — applied to the .module element root so
+   .module-title automatically picks up the right stripe. */
+.module.tasks        { --module-accent: var(--mag-tasks); }
+.module.notices      { --module-accent: var(--mag-notices); }
+.module.lostfound    { --module-accent: var(--mag-lostfound); }
+.module.pantry       { --module-accent: var(--mag-pantry); }
+.module.questions    { --module-accent: var(--mag-questions); }
+.module.dashboard    { --module-accent: var(--col-primary); }
+.module.settings     { --module-accent: var(--col-text-muted); }
+
+/* Warm surface card behind module content — keeps the dot-pattern
+   background visible at the edges while the content sits on clean white/dark. */
+.module {
+  background: var(--col-surface);
+  border: 1px solid var(--col-border);
+  border-radius: var(--r-lg);
+  padding: var(--sp-3) var(--sp-2);
+  box-shadow: var(--shadow-sm);
+}
+
+/* A subtle five-dot magnet strip at the very top of each module —
+   each dot picks up the module accent colour. Pure CSS, no extra DOM. */
+.module::before {
+  content: '';
+  display: block;
+  width: 60px;
+  height: 6px;
+  border-radius: 3px;
+  background: var(--module-accent, var(--col-primary));
+  opacity: 0.25;
+  margin-bottom: 10px;
+}
+
+/* High Contrast: remove the decorative tint, keep border */
+html[data-palette="contrast"] .module::before {
+  display: none;
+}
+
+@media (min-width: 560px) {
+  .module {
+    padding: var(--sp-3);
+  }
+}
+@media (min-width: 768px) {
+  .module {
+    padding: var(--sp-4);
+  }
+}
+
+@media (min-width: 560px) {
+  .app-shell {
+    padding: var(--sp-3) var(--sp-3);
+  }
 }
 
 @media (min-width: 768px) {
   .app-shell {
-    padding: var(--sp-6) var(--sp-4);
+    padding: var(--sp-4) var(--sp-4);
   }
 }

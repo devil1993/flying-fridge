@@ -40,7 +40,7 @@ export default function NoticesBoard({
   }
 
   return (
-    <section className="module" aria-labelledby="notices-heading">
+    <section className="module notices" aria-labelledby="notices-heading">
       <h1 id="notices-heading" className="module-title">
         {t('notices.title')}
       </h1>

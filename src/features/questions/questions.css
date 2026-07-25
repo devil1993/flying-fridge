@@ -1,131 +1,157 @@
+/* ============================================================
+   Questions module — compact ask-form + threaded Q&A cards.
+============================================================ */
+
 .question-ask {
   display: flex;
   flex-wrap: wrap;
-  gap: var(--sp-1);
-  margin-bottom: var(--sp-5);
-}
-.question-ask-input {
-  flex: 1 1 220px;
-  font: inherit;
-  color: var(--col-text);
+  gap: 6px;
+  margin-bottom: var(--sp-3);
   background: var(--col-surface);
   border: 1px solid var(--col-border);
-  border-radius: var(--r-sm);
+  border-radius: var(--r-md);
   padding: 10px 12px;
+  box-shadow: var(--shadow-sm);
+}
+.question-ask-input {
+  flex: 1 1 180px;
+  font: inherit;
+  font-size: 0.9rem;
+  color: var(--col-text);
+  background: var(--col-surface-2);
+  border: 1px solid var(--col-border);
+  border-radius: var(--r-sm);
+  padding: 8px 10px;
 }
 .question-ask-input:focus-visible {
-  outline: 3px solid var(--col-primary);
+  outline: 3px solid var(--mag-questions);
   outline-offset: 2px;
-  border-color: var(--col-primary);
+  border-color: var(--mag-questions);
 }
 .question-ask-submit {
-  font: 600 0.9rem var(--font-sans);
-  background: var(--col-primary);
+  font: 600 0.88rem var(--font-sans);
+  background: var(--mag-questions);
   color: #fff;
   border: none;
   border-radius: var(--r-sm);
-  padding: 10px 18px;
+  padding: 8px 16px;
   cursor: pointer;
+  min-height: 36px;
+  transition: background-color var(--dur-fast) var(--ease-out);
 }
 .question-ask-submit:hover {
-  background: var(--col-primary-dk);
+  background: color-mix(in srgb, var(--mag-questions) 80%, #000);
 }
 
+/* ---- Card list ---- */
 .question-list {
   list-style: none;
   margin: 0;
   padding: 0;
   display: flex;
   flex-direction: column;
-  gap: var(--sp-2);
+  gap: 8px;
 }
 .question-card {
   background: var(--col-surface);
   border: 1px solid var(--col-border);
-  border-left: 4px solid var(--mag-questions);
+  border-left: 3px solid var(--mag-questions);
   border-radius: var(--r-md);
-  padding: var(--sp-3);
+  padding: 10px 12px;
   box-shadow: var(--shadow-sm);
+  transition: box-shadow var(--dur-fast) var(--ease-out);
+}
+@media (prefers-reduced-motion: no-preference) {
+  .question-card:hover {
+    box-shadow: var(--shadow-md);
+  }
 }
 .question-head {
   display: flex;
-  gap: var(--sp-2);
+  gap: var(--sp-1);
   align-items: flex-start;
   justify-content: space-between;
-  margin-bottom: var(--sp-1);
+  margin-bottom: 8px;
 }
 .question-text {
   color: var(--col-text);
   font-weight: 600;
+  font-size: 0.92rem;
   word-break: break-word;
 }
 .question-close {
   flex-shrink: 0;
-  font: 600 0.76rem var(--font-sans);
+  font: 600 0.72rem var(--font-sans);
   background: var(--col-surface-2);
   color: var(--col-text);
   border: 1px solid var(--col-border);
   border-radius: 999px;
-  padding: 6px 12px;
+  padding: 5px 10px;
   cursor: pointer;
+  min-height: 28px;
+  transition: border-color var(--dur-fast) var(--ease-out);
 }
 .question-close:hover {
-  border-color: var(--col-primary);
+  border-color: var(--mag-questions);
 }
 
+/* ---- Answers ---- */
 .answer-list {
   list-style: none;
-  margin: 0 0 var(--sp-2);
+  margin: 0 0 8px;
   padding: 0;
   display: flex;
   flex-direction: column;
   gap: 4px;
 }
 .answer {
-  font-size: 0.9rem;
+  font-size: 0.88rem;
   color: var(--col-text);
-  padding: 6px 10px;
+  padding: 5px 9px;
   background: var(--col-surface-2);
   border-radius: var(--r-sm);
 }
 .answer-by {
-  font-size: 0.76rem;
+  font-size: 0.73rem;
   color: var(--col-text-muted);
 }
 
 .answer-add {
   display: flex;
-  gap: var(--sp-1);
+  gap: 6px;
 }
 .answer-add-input {
   flex: 1;
   font: inherit;
+  font-size: 0.88rem;
   color: var(--col-text);
   background: var(--col-bg);
   border: 1px solid var(--col-border);
   border-radius: var(--r-sm);
-  padding: 8px 10px;
+  padding: 7px 9px;
 }
 .answer-add-input:focus-visible {
-  outline: 3px solid var(--col-primary);
+  outline: 3px solid var(--mag-questions);
   outline-offset: 2px;
-  border-color: var(--col-primary);
+  border-color: var(--mag-questions);
 }
 .answer-add-submit {
-  font: 600 0.8rem var(--font-sans);
+  font: 600 0.78rem var(--font-sans);
   background: var(--col-surface-2);
   color: var(--col-text);
   border: 1px solid var(--col-border);
   border-radius: var(--r-sm);
-  padding: 8px 14px;
+  padding: 7px 13px;
   cursor: pointer;
+  min-height: 34px;
+  transition: border-color var(--dur-fast) var(--ease-out);
 }
 .answer-add-submit:hover {
-  border-color: var(--col-primary);
+  border-color: var(--mag-questions);
 }
 .question-close:focus-visible,
 .question-ask-submit:focus-visible,
 .answer-add-submit:focus-visible {
-  outline: 3px solid var(--col-primary);
+  outline: 3px solid var(--mag-questions);
   outline-offset: 2px;
 }

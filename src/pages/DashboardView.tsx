@@ -16,6 +16,7 @@ import { pantryRepository } from '../features/pantry/pantryRepositoryInstance'
 import { isInStock } from '../features/pantry/pantryLogic'
 import { useQuestions } from '../features/questions/useQuestions'
 import { questionRepository } from '../features/questions/questionRepositoryInstance'
+import FridgeDoodle from '../components/FridgeDoodle'
 import './dashboard.css'
 
 /** A single overview across the family board's modules. */
@@ -45,12 +46,15 @@ export default function DashboardView() {
 
   return (
     <section className="module dashboard" aria-labelledby="dashboard-heading">
-      <h1 id="dashboard-heading" className="module-title">
-        {t('dashboard.title')}
-      </h1>
+      <div className="dash-header-row">
+        <h1 id="dashboard-heading" className="module-title">
+          {t('dashboard.title')}
+        </h1>
+        <FridgeDoodle size={56} />
+      </div>
 
       <div className="dash-cards">
-        <article className="dash-card">
+        <article className="dash-card dash-card--tasks">
           <h2>{t('tasks.title')}</h2>
           <p className="dash-stat">
             <strong>{mine.length}</strong> {t('dashboard.tasksMine')}
@@ -68,7 +72,7 @@ export default function DashboardView() {
           </button>
         </article>
 
-        <article className="dash-card">
+        <article className="dash-card dash-card--notices">
           <h2>{t('notices.title')}</h2>
           <p className="dash-stat">
             <strong>{onBoardNotices.length}</strong>{' '}
@@ -86,7 +90,7 @@ export default function DashboardView() {
           </button>
         </article>
 
-        <article className="dash-card">
+        <article className="dash-card dash-card--lostfound">
           <h2>{t('lostFound.title')}</h2>
           <p className="dash-stat">
             <strong>{searching}</strong> {t('dashboard.lostSearching')}
@@ -100,7 +104,7 @@ export default function DashboardView() {
           </button>
         </article>
 
-        <article className="dash-card">
+        <article className="dash-card dash-card--pantry">
           <h2>{t('pantry.title')}</h2>
           <p className="dash-stat">
             <strong>{inStock}</strong> {t('dashboard.pantryInStock')}
@@ -114,7 +118,7 @@ export default function DashboardView() {
           </button>
         </article>
 
-        <article className="dash-card">
+        <article className="dash-card dash-card--questions">
           <h2>{t('questions.title')}</h2>
           <p className="dash-stat">
             <strong>{openQuestions}</strong> {t('dashboard.questionsOpen')}

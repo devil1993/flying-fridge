@@ -56,7 +56,7 @@ export default function PantryBoard({
   }
 
   return (
-    <section className="module" aria-labelledby="pantry-heading">
+    <section className="module pantry" aria-labelledby="pantry-heading">
       <h1 id="pantry-heading" className="module-title">
         {t('pantry.title')}
       </h1>

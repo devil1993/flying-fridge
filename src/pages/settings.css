@@ -1,18 +1,27 @@
+/* ============================================================
+   Settings view — compact grouped sections.
+============================================================ */
+
 .settings-group {
-  padding: var(--sp-3) 0;
+  padding: var(--sp-2) 0;
   border-bottom: 1px solid var(--col-border);
 }
 .settings-group:last-child {
   border-bottom: none;
 }
 .settings-group h2 {
-  font-size: 1rem;
-  color: var(--col-text);
-  margin-bottom: var(--sp-2);
+  font-family: var(--font-display);
+  font-size: 0.88rem;
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--col-text-muted);
+  margin-bottom: var(--sp-1);
 }
 .settings-value {
   color: var(--col-text-2);
-  margin-bottom: var(--sp-1);
+  font-size: 0.92rem;
+  margin-bottom: 8px;
 }
 .settings-members {
   list-style: none;
@@ -20,24 +29,25 @@
   padding: 0;
   display: flex;
   flex-wrap: wrap;
-  gap: 6px;
+  gap: 5px;
 }
 .settings-members li {
-  font-size: 0.85rem;
+  font-size: 0.82rem;
   color: var(--col-text-2);
   background: var(--col-surface-2);
   border: 1px solid var(--col-border);
   border-radius: 999px;
-  padding: 4px 12px;
+  padding: 3px 10px;
 }
 .settings-select {
   font: inherit;
+  font-size: 0.92rem;
   color: var(--col-text);
   background: var(--col-surface);
   border: 1px solid var(--col-border);
   border-radius: var(--r-sm);
-  padding: 9px 12px;
-  min-width: 12rem;
+  padding: 8px 11px;
+  min-width: 11rem;
 }
 .settings-select:focus-visible {
   outline: 3px solid var(--col-primary);
@@ -45,13 +55,15 @@
   border-color: var(--col-primary);
 }
 .settings-signout {
-  font: 600 0.9rem var(--font-sans);
+  font: 600 0.88rem var(--font-sans);
   color: #fff;
   background: var(--col-primary);
   border: none;
   border-radius: 999px;
-  padding: 9px 18px;
+  padding: 8px 17px;
   cursor: pointer;
+  min-height: 36px;
+  transition: background-color var(--dur-fast) var(--ease-out);
 }
 .settings-signout:hover {
   background: var(--col-primary-dk);
