@@ -936,39 +936,86 @@
     .hero-content { position: relative; z-index: 1; }
 
     /* ============================================================
-       POSSIBLE FEATURES TEASER
+       TESTIMONIALS — comedic relief, styled as pinned sticky notes
     ============================================================ */
-    .teaser-grid {
+    .quips-bg {
+      background: var(--col-surface-2);
+      border-top: 1px solid var(--col-border);
+      border-bottom: 1px solid var(--col-border);
+    }
+    .quips-grid {
       display: grid;
-      grid-template-columns: repeat(2, 1fr);
-      gap: var(--sp-2);
+      grid-template-columns: 1fr;
+      gap: var(--sp-5);
+      max-width: 1080px;
+      margin: 0 auto;
     }
-    @media (min-width: 768px) {
-      .teaser-grid { grid-template-columns: repeat(4, 1fr); }
-    }
-    .teaser-item {
+    @media (min-width: 600px) { .quips-grid { grid-template-columns: repeat(2, 1fr); } }
+    @media (min-width: 940px) { .quips-grid { grid-template-columns: repeat(3, 1fr); } }
+
+    .quip-note {
+      position: relative;
       background: var(--col-surface);
       border: 1px solid var(--col-border);
+      border-top: 4px solid var(--quip-accent, var(--col-primary));
       border-radius: var(--r-md);
-      padding: var(--sp-3);
-      text-align: center;
-      transition: box-shadow var(--dur-mid) ease, transform var(--dur-mid) ease;
-    }
-    .teaser-item:hover {
+      padding: var(--sp-4) var(--sp-3) var(--sp-3);
       box-shadow: var(--shadow-md);
-      transform: translateY(-2px);
+      transform: rotate(var(--tilt, 0deg));
+      transition: transform var(--dur-mid) var(--ease-out),
+                  box-shadow var(--dur-mid) var(--ease-out);
     }
-    .teaser-emoji { font-size: 1.5rem; margin-bottom: var(--sp-1); }
-    .teaser-title {
-      font-size: 0.875rem;
-      font-weight: 600;
+    .quip-note:hover {
+      transform: rotate(0deg) translateY(-4px);
+      box-shadow: var(--shadow-lg);
+    }
+    /* magnet holding the note to the board */
+    .quip-pin {
+      position: absolute;
+      top: -11px; left: 50%;
+      width: 20px; height: 20px;
+      margin-left: -10px;
+      border-radius: 50%;
+      background: var(--quip-accent, var(--col-primary));
+      box-shadow: inset 0 -2px 3px rgba(0,0,0,0.28), 0 2px 5px rgba(0,0,0,0.22);
+    }
+    .quip-pin::after {
+      content: "";
+      position: absolute;
+      top: 5px; left: 6px;
+      width: 6px; height: 6px;
+      border-radius: 50%;
+      background: rgba(255,255,255,0.65);
+    }
+    .quip-stars {
+      color: var(--mag-pantry);
+      letter-spacing: 2px;
+      font-size: 0.8rem;
+      margin-bottom: var(--sp-1);
+    }
+    .quip-quote {
+      font-size: 1.0625rem;
+      line-height: 1.55;
       color: var(--col-text);
-      margin-bottom: 4px;
+      margin-bottom: var(--sp-3);
     }
-    .teaser-desc {
-      font-size: 0.75rem;
-      color: var(--col-text-muted);
-      line-height: 1.5;
+    .quip-author { display: flex; align-items: center; gap: var(--sp-2); }
+    .quip-avatar {
+      width: 38px; height: 38px;
+      flex-shrink: 0;
+      border-radius: 50%;
+      display: grid; place-items: center;
+      background: var(--quip-accent, var(--col-primary));
+      color: #FFFFFF;
+      font-weight: 700;
+      font-size: 0.85rem;
+    }
+    .quip-name { font-weight: 600; font-size: 0.9rem; color: var(--col-text); }
+    .quip-role { font-size: 0.78rem; color: var(--col-text-muted); }
+
+    @media (prefers-reduced-motion: reduce) {
+      .quip-note { transform: none; transition: none; }
+      .quip-note:hover { transform: none; }
     }
   </style>
 </head>
@@ -1495,44 +1542,108 @@
     </section>
 
     <!-- ============================================================
-         COMING SOON / POSSIBLE FEATURES TEASER
+         TESTIMONIALS — comedic relief
     ============================================================ -->
-    <section aria-labelledby="coming-heading">
+    <section class="quips-bg" aria-labelledby="quips-heading">
       <div class="container">
         <div class="section-header reveal">
-          <p class="label">On the roadmap</p>
-          <h2 class="display-lg" id="coming-heading">More goodness coming</h2>
-          <p class="body-lg">Flying Fridge is growing. Here's a taste of what's being cooked up next.</p>
+          <p class="label">Don't take our word for it</p>
+          <h2 class="display-lg" id="quips-heading">Rave reviews from the fridge door</h2>
+          <p class="body-lg">Real families. Real relief. Quotes lightly exaggerated for comedic effect, mildly true in spirit.</p>
         </div>
-        <div class="teaser-grid">
-          <div class="teaser-item reveal reveal-delay-1">
-            <div class="teaser-emoji" aria-hidden="true">
-              <svg width="28" height="28" viewBox="0 0 28 28" fill="none"><path d="M14 3C8.477 3 4 7.477 4 13s4.477 10 10 10 10-4.477 10-10S19.523 3 14 3z" stroke="var(--col-primary)" stroke-width="1.8"/><path d="M14 8v6l4 2" stroke="var(--col-primary)" stroke-width="1.8" stroke-linecap="round"/></svg>
-            </div>
-            <div class="teaser-title">Reminders</div>
-            <div class="teaser-desc">Nudges for tasks with deadlines and expiring pantry items.</div>
+
+        <div class="quips-grid">
+
+          <div class="reveal reveal-delay-1">
+            <figure class="quip-note" style="--quip-accent:var(--mag-tasks);--tilt:-2.5deg;">
+              <span class="quip-pin" aria-hidden="true"></span>
+              <div class="quip-stars" aria-label="Five out of five stars">★★★★★</div>
+              <blockquote class="quip-quote">"I used to discover we were out of milk <em>while</em> pouring it into my coffee. Now the board tells me first. I have wept."</blockquote>
+              <figcaption class="quip-author">
+                <span class="quip-avatar" aria-hidden="true">DR</span>
+                <span>
+                  <span class="quip-name">Dave R.</span><br>
+                  <span class="quip-role">Reluctant Grocery Runner</span>
+                </span>
+              </figcaption>
+            </figure>
           </div>
-          <div class="teaser-item reveal reveal-delay-2">
-            <div class="teaser-emoji" aria-hidden="true">
-              <svg width="28" height="28" viewBox="0 0 28 28" fill="none"><rect x="4" y="4" width="20" height="20" rx="4" stroke="var(--col-accent)" stroke-width="1.8"/><path d="M9 14l3 3 7-7" stroke="var(--col-accent)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
-            </div>
-            <div class="teaser-title">Voting &amp; Polls</div>
-            <div class="teaser-desc">Let the family vote on questions and group decisions.</div>
+
+          <div class="reveal reveal-delay-2">
+            <figure class="quip-note" style="--quip-accent:var(--mag-lostfound);--tilt:1.8deg;">
+              <span class="quip-pin" aria-hidden="true"></span>
+              <div class="quip-stars" aria-label="Five out of five stars">★★★★★</div>
+              <blockquote class="quip-quote">"My keys have gone 'missing' 47 times this month. Lost &amp; Found found them 47 times. My marriage: also found."</blockquote>
+              <figcaption class="quip-author">
+                <span class="quip-avatar" aria-hidden="true">PM</span>
+                <span>
+                  <span class="quip-name">Priya M.</span><br>
+                  <span class="quip-role">Serial Key Misplacer</span>
+                </span>
+              </figcaption>
+            </figure>
           </div>
-          <div class="teaser-item reveal reveal-delay-3">
-            <div class="teaser-emoji" aria-hidden="true">
-              <svg width="28" height="28" viewBox="0 0 28 28" fill="none"><circle cx="14" cy="10" r="4" stroke="#7B5EA7" stroke-width="1.8"/><path d="M6 22c0-4.418 3.582-8 8-8s8 3.582 8 8" stroke="#7B5EA7" stroke-width="1.8" stroke-linecap="round"/><circle cx="22" cy="8" r="3" fill="#7B5EA7" opacity="0.4" stroke="#7B5EA7" stroke-width="1.2"/></svg>
-            </div>
-            <div class="teaser-title">Guest access</div>
-            <div class="teaser-desc">Share read-only access with grandparents or carers.</div>
+
+          <div class="reveal reveal-delay-3">
+            <figure class="quip-note" style="--quip-accent:var(--mag-notices);--tilt:-1.5deg;">
+              <span class="quip-pin" aria-hidden="true"></span>
+              <div class="quip-stars" aria-label="Five out of five stars">★★★★★</div>
+              <blockquote class="quip-quote">"I posted 'back late, dinner's in the fridge' and — for the first time in recorded family history — someone actually read it."</blockquote>
+              <figcaption class="quip-author">
+                <span class="quip-avatar" aria-hidden="true">MT</span>
+                <span>
+                  <span class="quip-name">Marcus T.</span><br>
+                  <span class="quip-role">Amazed Father of Three</span>
+                </span>
+              </figcaption>
+            </figure>
           </div>
-          <div class="teaser-item reveal reveal-delay-4">
-            <div class="teaser-emoji" aria-hidden="true">
-              <svg width="28" height="28" viewBox="0 0 28 28" fill="none"><path d="M14 4L4 9v6c0 5.25 4.25 10.15 10 11 5.75-.85 10-5.75 10-11V9L14 4z" stroke="#D4A017" stroke-width="1.8" stroke-linejoin="round"/><path d="M9 14l3 3 7-7" stroke="#D4A017" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>
-            </div>
-            <div class="teaser-title">Smart pantry</div>
-            <div class="teaser-desc">Auto-generate a shopping list from what's running low.</div>
+
+          <div class="reveal reveal-delay-1">
+            <figure class="quip-note" style="--quip-accent:var(--mag-pantry);--tilt:2.2deg;">
+              <span class="quip-pin" aria-hidden="true"></span>
+              <div class="quip-stars" aria-label="Five out of five stars">★★★★★</div>
+              <blockquote class="quip-quote">"My teenager swears he 'never saw' the chore. The board says he opened it at 2:14pm. I am now Chief Evidence Officer."</blockquote>
+              <figcaption class="quip-author">
+                <span class="quip-avatar" aria-hidden="true">LO</span>
+                <span>
+                  <span class="quip-name">Linda O.</span><br>
+                  <span class="quip-role">Reformed Nagger</span>
+                </span>
+              </figcaption>
+            </figure>
           </div>
+
+          <div class="reveal reveal-delay-2">
+            <figure class="quip-note" style="--quip-accent:var(--mag-questions);--tilt:-2deg;">
+              <span class="quip-pin" aria-hidden="true"></span>
+              <div class="quip-stars" aria-label="Five out of five stars">★★★★★</div>
+              <blockquote class="quip-quote">"We resolved 'whose turn is it to walk the dog' with zero slammed doors. The dog is confused but deeply grateful."</blockquote>
+              <figcaption class="quip-author">
+                <span class="quip-avatar" aria-hidden="true">TO</span>
+                <span>
+                  <span class="quip-name">The Okonkwos</span><br>
+                  <span class="quip-role">A Newly Peaceful Household</span>
+                </span>
+              </figcaption>
+            </figure>
+          </div>
+
+          <div class="reveal reveal-delay-3">
+            <figure class="quip-note" style="--quip-accent:var(--mag-tasks);--tilt:1.4deg;">
+              <span class="quip-pin" aria-hidden="true"></span>
+              <div class="quip-stars" aria-label="Four and a half out of five stars">★★★★½</div>
+              <blockquote class="quip-quote">"Our real fridge held 200 magnets and 0 useful facts. Flying Fridge holds oat milk reminders and I am thriving. Half a star off — it can't fetch the oat milk. Yet."</blockquote>
+              <figcaption class="quip-author">
+                <span class="quip-avatar" aria-hidden="true">SA</span>
+                <span>
+                  <span class="quip-name">Sam &amp; Alex</span><br>
+                  <span class="quip-role">Formerly Overwhelmed</span>
+                </span>
+              </figcaption>
+            </figure>
+          </div>
+
         </div>
       </div>
     </section>
