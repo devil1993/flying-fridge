@@ -5,6 +5,14 @@ import type { ReactElement } from 'react'
  * currentColor so the surrounding section can tint it with the module accent.
  */
 const ICONS: Record<string, ReactElement> = {
+  dashboard: (
+    <svg width="24" height="24" viewBox="0 0 28 28" fill="none" aria-hidden="true">
+      <rect x="3" y="3" width="9" height="11" rx="2" stroke="currentColor" strokeWidth="2" />
+      <rect x="3" y="18" width="9" height="7" rx="2" stroke="currentColor" strokeWidth="2" />
+      <rect x="16" y="3" width="9" height="7" rx="2" stroke="currentColor" strokeWidth="2" />
+      <rect x="16" y="14" width="9" height="11" rx="2" stroke="currentColor" strokeWidth="2" />
+    </svg>
+  ),
   tasks: (
     <svg width="24" height="24" viewBox="0 0 28 28" fill="none" aria-hidden="true">
       <rect x="3" y="5" width="22" height="18" rx="3" stroke="currentColor" strokeWidth="2" />

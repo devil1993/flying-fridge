@@ -75,6 +75,9 @@ model {
       notifications = component 'features/notifications' {
         description 'Family notification feed: each board publishes on add; members subscribe in real time (bell + unread badge). Append-only, family-scoped. Background push via FCM is future work (ADR-0013).'
       }
+      dashboard = component 'features/dashboard' {
+        description 'Informed overview: module counts plus a cross-module agenda — recent items (overdue + next 2 days by each relevant date) and a month calendar. Read-only aggregation over the five boards (requirement-6, ADR-0015).'
+      }
 
       pages -> features 'uses'
       pages -> guide 'routes to'
@@ -92,6 +95,12 @@ model {
       pantry -> notifications 'publishes on add'
       questions -> notifications 'publishes on add'
       notifications -> firestore 'appends + subscribes (family-scoped)'
+      dashboard -> tasks 'aggregates'
+      dashboard -> notices 'aggregates'
+      dashboard -> lostfound 'aggregates'
+      dashboard -> pantry 'aggregates'
+      dashboard -> questions 'aggregates'
+      dashboard -> family 'scoped to'
       notices -> firestore 'reads/writes, subscribes (family-scoped)'
       lostfound -> firestore 'reads/writes, subscribes (family-scoped)'
       pantry -> firestore 'reads/writes, subscribes (family-scoped)'

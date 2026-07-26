@@ -18,6 +18,7 @@ export interface GuideModule {
 }
 
 export const GUIDE_MODULES: GuideModule[] = [
+  { id: 'dashboard', slug: 'dashboard', accentVar: '--col-primary' },
   { id: 'tasks', slug: 'tasks', accentVar: '--mag-tasks' },
   { id: 'notices', slug: 'notices', accentVar: '--mag-notices' },
   { id: 'lostFound', slug: 'lost-found', accentVar: '--mag-lostfound' },

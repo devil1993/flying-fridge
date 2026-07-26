@@ -56,3 +56,4 @@ Files are named `NNNN-short-slug.md` where `NNNN` is a zero-padded four-digit in
 | [0012](0012-in-app-guide-and-docs-currency-policy.md) | In-App Guide (Data-Driven + Contract-Tested) and Documentation-Currency Policy | Accepted | 2026-07-25 |
 | [0013](0013-soft-delete-and-in-app-notification-feed.md) | Preserve-by-Default (Soft Delete) and an In-App Notification Feed | Accepted | 2026-07-26 |
 | [0014](0014-deploy-to-github-pages.md) | Deploy to GitHub Pages via GitHub Actions | Accepted | 2026-07-26 |
+| [0015](0015-dashboard-agenda-aggregation.md) | Dashboard Agenda: Cross-Module Aggregation & Relevant-Date Mapping | Accepted | 2026-07-26 |

@@ -236,6 +236,29 @@ Source: `requirements/requirement-5.md`. Four parts, built as increments.
 
 ---
 
+## Requirement 6 — Informed dashboard ✅
+
+Source: `requirements/requirement-6.md`. A split view below the module overview.
+
+- ✅ **Cross-module agenda** — `src/features/dashboard/` aggregates all five
+  boards client-side (no new collection) into one list via pure, tested
+  `agenda.ts`. Each type contributes one relevant date (task `targetDate`,
+  notice `date`, pantry expiry = `madeOn + keepsDays`; Lost & Found + Questions
+  undated). **ADR-0015.**
+- ✅ **Tap-switchable split** (`AgendaSplit`, WAI-ARIA tabs): **Recent** +
+  **Calendar**.
+- ✅ **Recent** — **Overdue** items first (priority; all items before the focus
+  date), then **Coming up** (focus … +2 days, forward-only per UAT), then
+  **undated** at the bottom. Colour-coded by type; each row opens its module.
+- ✅ **Calendar** — current month grid with a colour-coded dot per type on each
+  day; tapping a day opens Recent focused on that date; **Back to today** when
+  off-today. Weekday/month names localised via `Intl` (en/bn).
+- ✅ Docs currency: Guide gains a Dashboard section (registry + icon + content);
+  C4 gains a `features/dashboard` component; data-model §6g; ADR-0015. 16 new
+  tests.
+
+---
+
 ## Deployment — GitHub Pages ✅
 
 - ✅ **`deploy-pages.yml`** builds and publishes to **GitHub Pages** on push to

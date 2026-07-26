@@ -46,7 +46,17 @@
     "lostSearching": "খোঁজা হচ্ছে",
     "pantryInStock": "মজুত আছে",
     "questionsOpen": "খোলা",
-    "open": "খুলুন"
+    "open": "খুলুন",
+    "agenda": "সাম্প্রতিক ও ক্যালেন্ডার",
+    "recent": "সাম্প্রতিক",
+    "calendar": "ক্যালেন্ডার",
+    "today": "আজ",
+    "overdue": "সময় পার",
+    "comingUp": "আসছে",
+    "backToToday": "আজকে ফিরুন",
+    "noDate": "তারিখ নেই",
+    "recentEmpty": "এই তারিখের আশেপাশে কিছু নেই।",
+    "dayItems": "{{day}} — {{count}}টি আইটেম"
   },
   "theme": {
     "palette": "রঙের থিম",

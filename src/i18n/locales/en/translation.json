@@ -46,7 +46,17 @@
     "lostSearching": "still searching",
     "pantryInStock": "in stock",
     "questionsOpen": "open",
-    "open": "Open"
+    "open": "Open",
+    "agenda": "Recent and calendar",
+    "recent": "Recent",
+    "calendar": "Calendar",
+    "today": "Today",
+    "overdue": "Overdue",
+    "comingUp": "Coming up",
+    "backToToday": "Back to today",
+    "noDate": "No date",
+    "recentEmpty": "Nothing around this date.",
+    "dayItems": "{{day}} — {{count}} items"
   },
   "theme": {
     "palette": "Colour theme",
@@ -212,6 +222,17 @@
       "body": "Flying Fridge is your family's shared noticeboard: one place for the everyday things that are easy to forget. Here's what each part does and how to use it — pick a section below."
     },
     "modules": {
+      "dashboard": {
+        "title": "Dashboard",
+        "summary": "One glance at the whole board — a count per module, a recent-items list, and a month calendar.",
+        "steps": [
+          "The cards at the top summarise each module (open tasks, notices on the board, and so on) — select one to jump straight in.",
+          "Below the cards, switch between Recent and Calendar by tapping the tabs.",
+          "Recent lists everything happening within a couple of days of the chosen date, colour-coded by type; undated things sit at the bottom.",
+          "Calendar shows this month with a coloured dot per type on each day — tap a day to see it in Recent, and use 'Back to today' to return."
+        ],
+        "tip": "Dates come from each item itself — a task's due date, a notice's date, or when a pantry item stops being fresh."
+      },
       "tasks": {
         "title": "Tasks",
         "summary": "Chores and to-dos for the family, colour-coded by their target date so what's urgent stands out.",

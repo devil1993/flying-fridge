@@ -345,6 +345,17 @@ hard `delete` on every board collection outright, so the invariant holds even if
 a client tries. This keeps the family timeline/history intact and leaves room
 for a future "recently removed" / restore view.
 
+## 6g. Dashboard agenda (requirement-6) — read-only, no new collection
+
+The informed dashboard (`src/features/dashboard/`) aggregates the five board
+collections **client-side** into one agenda — there is **no `agenda` collection**
+and no extra writes. Each active item contributes one *relevant date*:
+tasks → `targetDate`, notices → `date`, pantry → `madeOn + keepsDays` (expiry),
+Lost & Found and Questions → undated. Recent groups items into **overdue**
+(before the focus date), **around** (focus … +2 days) and **undated** (bottom);
+the calendar dots a day per type. Pure logic lives in `agenda.ts` (tested); see
+ADR-0015.
+
 ## 7. Open questions (tracked, not resolved)
 
 - Subcollections vs. top-level collections with a `familyId` filter.

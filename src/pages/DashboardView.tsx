@@ -16,6 +16,8 @@ import { pantryRepository } from '../features/pantry/pantryRepositoryInstance'
 import { isInStock } from '../features/pantry/pantryLogic'
 import { useQuestions } from '../features/questions/useQuestions'
 import { questionRepository } from '../features/questions/questionRepositoryInstance'
+import { buildAgenda } from '../features/dashboard/agenda'
+import AgendaSplit from '../features/dashboard/AgendaSplit'
 import FridgeDoodle from '../components/FridgeDoodle'
 import './dashboard.css'
 
@@ -43,6 +45,11 @@ export default function DashboardView() {
   const searching = lostItems.filter(isSearching).length
   const inStock = pantryItems.filter(isInStock).length
   const openQuestions = questions.filter((q) => q.status === 'open').length
+
+  const agendaItems = buildAgenda(
+    { tasks, notices, lostItems, pantryItems, questions },
+    now,
+  )
 
   return (
     <section className="module dashboard" aria-labelledby="dashboard-heading">
@@ -132,6 +139,8 @@ export default function DashboardView() {
           </button>
         </article>
       </div>
+
+      <AgendaSplit items={agendaItems} />
     </section>
   )
 }
