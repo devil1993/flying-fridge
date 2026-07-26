@@ -1,7 +1,7 @@
 import type { AppNotification, NewNotificationInput, Actor } from './types'
 
 /** How many recent notifications a client keeps in view. */
-export const NOTIFICATION_FEED_LIMIT = 50
+export const NOTIFICATION_FEED_LIMIT = 10
 
 export interface NotificationRepository {
   /** Subscribe to a family's notifications (newest first). */

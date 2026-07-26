@@ -69,6 +69,12 @@ export default function NotificationBell() {
     onIncoming,
   )
 
+  // Viewing the feed marks it read: clear the badge whenever the panel is open,
+  // and again if new items stream in while it's open.
+  useEffect(() => {
+    if (open) markAllRead()
+  }, [open, items, markAllRead])
+
   useEffect(() => {
     if (!open) return
     function onKey(e: KeyboardEvent) {
@@ -90,10 +96,7 @@ export default function NotificationBell() {
   const toggle = () => {
     setOpen((v) => {
       const next = !v
-      if (next) {
-        void track('notifications_open', { unread: unreadCount })
-        markAllRead()
-      }
+      if (next) void track('notifications_open', { unread: unreadCount })
       return next
     })
   }

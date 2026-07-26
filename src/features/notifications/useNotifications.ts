@@ -73,14 +73,18 @@ export function useNotifications(
 
   const markAllRead = useCallback(() => {
     if (!familyId) return
-    const max = items.reduce((m, n) => Math.max(m, n.createdAt), lastSeen)
-    try {
-      localStorage.setItem(lastSeenKey(familyId, meId), String(max))
-    } catch {
-      /* storage unavailable — read state is best-effort */
-    }
-    setLastSeen(max)
-  }, [familyId, meId, items, lastSeen])
+    // Functional update (no `lastSeen` dep) keeps this callback stable, so an
+    // effect can depend on it without re-firing every time read state changes.
+    setLastSeen((prev) => {
+      const max = items.reduce((m, n) => Math.max(m, n.createdAt), prev)
+      try {
+        localStorage.setItem(lastSeenKey(familyId, meId), String(max))
+      } catch {
+        /* storage unavailable — read state is best-effort */
+      }
+      return max
+    })
+  }, [familyId, meId, items])
 
   return { items, unreadCount, lastSeen, markAllRead }
 }

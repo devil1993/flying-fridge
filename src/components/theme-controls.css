@@ -19,6 +19,12 @@
   background-repeat: no-repeat;
   background-position: right 9px center;
 }
+/* The native option popup doesn't inherit the select's colours in every
+   browser — pin them so the list stays readable in dark mode. */
+.theme-controls .palette-select option {
+  color: var(--col-text);
+  background-color: var(--col-surface);
+}
 .theme-controls .palette-select:hover {
   border-color: var(--col-primary);
 }
