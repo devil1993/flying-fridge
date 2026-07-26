@@ -274,6 +274,10 @@ Small fixes from user acceptance testing:
   + settings language) to theme tokens.
 - ✅ **Notifications** — badge clears reliably on view (mark-read effect while the
   panel is open) and the feed is capped at 10.
+- ✅ **Signed-in users skip the welcome screen** — the root route (`Home`)
+  redirects authenticated users to `/app` with `replace`, so `/` is never left
+  in history; pressing Back can't return to the welcome page (any back-nav to
+  `/` bounces straight to `/app`).
 
 ---
 

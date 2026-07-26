@@ -1,5 +1,5 @@
 import { useEffect, type ReactNode } from 'react'
-import { Routes, Route, useLocation } from 'react-router-dom'
+import { Routes, Route, Navigate, useLocation } from 'react-router-dom'
 import { useTranslation } from 'react-i18next'
 
 import SkipLink from './components/a11y/SkipLink'
@@ -14,6 +14,20 @@ import SignInPage from './features/auth/SignInPage'
 import { FamilyProvider } from './features/family/FamilyProvider'
 import { AppNavProvider } from './features/app/AppNavProvider'
 import { useNavShortcuts } from './lib/shortcuts'
+
+/**
+ * The root route. Signed-in users skip the welcome/landing screen and land
+ * straight in the app — with `replace`, so `/` is never left in history and the
+ * Back button can't return them to the welcome screen. Signed-out visitors get
+ * the landing page; during the brief auth check we render nothing to avoid a
+ * welcome flash for members.
+ */
+export function Home() {
+  const { status } = useAuth()
+  if (status === 'loading') return null
+  if (status === 'authenticated') return <Navigate to="/app" replace />
+  return <LandingPage />
+}
 
 /** Gates a route behind authentication; shows sign-in when signed out. */
 function RequireAuth({ children }: { children: ReactNode }) {
@@ -53,7 +67,7 @@ export default function App() {
           <SkipLink />
           {showTopBar && <TopBar />}
           <Routes>
-          <Route path="/" element={<LandingPage />} />
+          <Route path="/" element={<Home />} />
           <Route path="/guide" element={<GuidePage />} />
           <Route
             path="/app"
