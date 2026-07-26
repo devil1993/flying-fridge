@@ -70,6 +70,13 @@ export const firestoreLostRepository: LostRepository = {
     })
   },
 
+  async restore(itemId) {
+    await updateDoc(doc(getDb(), COLLECTION, itemId), {
+      status: 'searching' satisfies LostStatus,
+      updatedAt: serverTimestamp(),
+    })
+  },
+
   async remove(itemId) {
     await deleteDoc(doc(getDb(), COLLECTION, itemId))
   },

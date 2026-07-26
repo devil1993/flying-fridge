@@ -3,6 +3,7 @@ import { useTranslation } from 'react-i18next'
 import { useAuth } from '../auth/authContext'
 import { useFamily } from '../family/familyContext'
 import { useDraft } from '../app/useDraft'
+import RecentlyClosed from '../app/RecentlyClosed'
 import { useLostFound } from './useLostFound'
 import { isSearching, daysSince } from './lostLogic'
 import { lostRepository } from './lostRepositoryInstance'
@@ -19,7 +20,7 @@ export default function LostFoundBoard({
   const { familyId } = useFamily()
   const actor = { id: user?.id ?? '', name: user?.name ?? '' }
 
-  const { items, addItem, markFound, takeDown } = useLostFound(
+  const { items, addItem, markFound, takeDown, restore } = useLostFound(
     repository,
     familyId,
     actor,
@@ -27,6 +28,9 @@ export default function LostFoundBoard({
   const [desc, setDesc, clearDesc] = useDraft('lostfound.desc')
   const now = Date.now()
   const searching = items.filter(isSearching)
+  const closed = items
+    .filter((i) => i.status === 'found' || i.status === 'down')
+    .map((i) => ({ id: i.id, title: i.description, updatedAt: i.updatedAt }))
 
   function onAdd(e: FormEvent) {
     e.preventDefault()
@@ -89,6 +93,8 @@ export default function LostFoundBoard({
           })}
         </ul>
       )}
+
+      <RecentlyClosed entries={closed} onRestore={restore} />
     </section>
   )
 }

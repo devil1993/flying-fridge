@@ -36,6 +36,13 @@ export function useLostFound(
     [repo],
   )
   const takeDown = useCallback((id: string) => void repo.takeDown(id), [repo])
+  const restore = useCallback(
+    (id: string) => {
+      void repo.restore(id)
+      void track('lost_restore')
+    },
+    [repo],
+  )
 
-  return { items, addItem, markFound, takeDown }
+  return { items, addItem, markFound, takeDown, restore }
 }

@@ -91,6 +91,13 @@ export const firestoreNoticeRepository: NoticeRepository = {
     })
   },
 
+  async restore(noticeId) {
+    await updateDoc(doc(getDb(), COLLECTION, noticeId), {
+      status: 'up' satisfies NoticeStatus,
+      updatedAt: serverTimestamp(),
+    })
+  },
+
   // Soft delete: data is never destroyed, only taken off the board (ADR-0013).
   async remove(noticeId) {
     await updateDoc(doc(getDb(), COLLECTION, noticeId), {

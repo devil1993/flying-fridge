@@ -39,6 +39,13 @@ export function usePantry(
     },
     [repo],
   )
+  const restore = useCallback(
+    (id: string) => {
+      void repo.restore(id)
+      void track('pantry_restore')
+    },
+    [repo],
+  )
 
-  return { items, addItem, changeQuantity, markConsumed }
+  return { items, addItem, changeQuantity, markConsumed, restore }
 }

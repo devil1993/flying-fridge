@@ -81,6 +81,13 @@ export const firestorePantryRepository: PantryRepository = {
     })
   },
 
+  async restore(itemId) {
+    await updateDoc(doc(getDb(), COLLECTION, itemId), {
+      status: 'instock' satisfies PantryStatus,
+      updatedAt: serverTimestamp(),
+    })
+  },
+
   async remove(itemId) {
     await deleteDoc(doc(getDb(), COLLECTION, itemId))
   },

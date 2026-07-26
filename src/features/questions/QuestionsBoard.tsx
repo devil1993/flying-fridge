@@ -3,6 +3,7 @@ import { useTranslation } from 'react-i18next'
 import { useAuth } from '../auth/authContext'
 import { useFamily } from '../family/familyContext'
 import { useDraft } from '../app/useDraft'
+import RecentlyClosed from '../app/RecentlyClosed'
 import { useQuestions } from './useQuestions'
 import QuestionCard from './QuestionCard'
 import { questionRepository } from './questionRepositoryInstance'
@@ -19,13 +20,16 @@ export default function QuestionsBoard({
   const { familyId } = useFamily()
   const actor = { id: user?.id ?? '', name: user?.name ?? '' }
 
-  const { questions, addQuestion, addAnswer, close } = useQuestions(
+  const { questions, addQuestion, addAnswer, close, reopen } = useQuestions(
     repository,
     familyId,
     actor,
   )
   const [text, setText, clearText] = useDraft('questions.text')
   const open = questions.filter((q) => q.status === 'open')
+  const closed = questions
+    .filter((q) => q.status === 'closed')
+    .map((q) => ({ id: q.id, title: q.text, updatedAt: q.updatedAt }))
 
   function onAsk(e: FormEvent) {
     e.preventDefault()
@@ -70,6 +74,8 @@ export default function QuestionsBoard({
           ))}
         </ul>
       )}
+
+      <RecentlyClosed entries={closed} onRestore={reopen} />
     </section>
   )
 }

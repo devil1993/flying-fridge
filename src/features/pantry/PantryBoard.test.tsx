@@ -43,6 +43,13 @@ describe('PantryBoard', () => {
     expect(screen.getByText('2')).toBeInTheDocument()
 
     fireEvent.click(screen.getByRole('button', { name: 'Consumed' }))
-    expect(screen.queryByText('Milk')).not.toBeInTheDocument()
+    // Off the stock list, now under Recently closed with a Restore action.
+    expect(screen.getByRole('button', { name: 'Restore' })).toBeInTheDocument()
+    expect(
+      screen.queryByRole('button', { name: 'Consumed' }),
+    ).not.toBeInTheDocument()
+
+    fireEvent.click(screen.getByRole('button', { name: 'Restore' }))
+    expect(screen.getByRole('button', { name: 'Consumed' })).toBeInTheDocument()
   })
 })

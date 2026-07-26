@@ -46,6 +46,11 @@ describe('QuestionsBoard', () => {
     expect(screen.getByText('Pizza')).toBeInTheDocument()
 
     fireEvent.click(screen.getByRole('button', { name: 'Close' }))
-    expect(screen.queryByText('Pizza or pasta?')).not.toBeInTheDocument()
+    // Off the open list, now under Recently closed with a Restore action.
+    expect(screen.getByRole('button', { name: 'Restore' })).toBeInTheDocument()
+    expect(screen.queryByRole('button', { name: 'Close' })).not.toBeInTheDocument()
+
+    fireEvent.click(screen.getByRole('button', { name: 'Restore' }))
+    expect(screen.getByRole('button', { name: 'Close' })).toBeInTheDocument()
   })
 })

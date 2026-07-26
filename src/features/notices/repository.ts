@@ -7,6 +7,8 @@ export interface NoticeRepository {
   setPermanent(noticeId: string, permanent: boolean): Promise<void>
   /** Take a notice off the board (kept/timelined). */
   takeDown(noticeId: string): Promise<void>
+  /** Put a taken-down notice back on the board (undo). */
+  restore(noticeId: string): Promise<void>
   remove(noticeId: string): Promise<void>
 }
 
@@ -82,6 +84,11 @@ export class InMemoryNoticeRepository implements NoticeRepository {
 
   takeDown(noticeId: string): Promise<void> {
     this.patch(noticeId, { status: 'down' })
+    return Promise.resolve()
+  }
+
+  restore(noticeId: string): Promise<void> {
+    this.patch(noticeId, { status: 'up' })
     return Promise.resolve()
   }
 

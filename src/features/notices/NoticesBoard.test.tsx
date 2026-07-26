@@ -41,7 +41,16 @@ describe('NoticesBoard', () => {
     expect(screen.getByText('Wi-Fi is FRIDGE123')).toBeInTheDocument()
 
     fireEvent.click(screen.getByRole('button', { name: /take down/i }))
-    expect(screen.queryByText('Wi-Fi is FRIDGE123')).not.toBeInTheDocument()
+    // Off the board, now under Recently closed with a Restore action.
+    expect(screen.getByRole('button', { name: 'Restore' })).toBeInTheDocument()
+    expect(
+      screen.queryByRole('button', { name: /take down/i }),
+    ).not.toBeInTheDocument()
+
+    fireEvent.click(screen.getByRole('button', { name: 'Restore' }))
+    expect(
+      screen.getByRole('button', { name: /take down/i }),
+    ).toBeInTheDocument()
   })
 
   it('makes a notice permanent', () => {

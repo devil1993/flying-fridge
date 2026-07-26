@@ -5,6 +5,8 @@ export interface LostRepository {
   add(familyId: string, input: NewLostInput, author: Actor): Promise<void>
   markFound(itemId: string): Promise<void>
   takeDown(itemId: string): Promise<void>
+  /** Bring a found/taken-down item back to the board (undo). */
+  restore(itemId: string): Promise<void>
   remove(itemId: string): Promise<void>
 }
 
@@ -70,6 +72,11 @@ export class InMemoryLostRepository implements LostRepository {
 
   takeDown(itemId: string): Promise<void> {
     this.setStatus(itemId, 'down')
+    return Promise.resolve()
+  }
+
+  restore(itemId: string): Promise<void> {
+    this.setStatus(itemId, 'searching')
     return Promise.resolve()
   }
 

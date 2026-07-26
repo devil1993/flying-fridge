@@ -3,6 +3,7 @@ import { useTranslation } from 'react-i18next'
 import { useAuth } from '../auth/authContext'
 import { useFamily } from '../family/familyContext'
 import { useDraft } from '../app/useDraft'
+import RecentlyClosed from '../app/RecentlyClosed'
 import { useNotices } from './useNotices'
 import { isOnBoard } from './noticeLogic'
 import NoticeCard from './NoticeCard'
@@ -20,7 +21,7 @@ export default function NoticesBoard({
   const { familyId } = useFamily()
   const actor = { id: user?.id ?? '', name: user?.name ?? '' }
 
-  const { notices, addNotice, setImportant, setPermanent, takeDown } =
+  const { notices, addNotice, setImportant, setPermanent, takeDown, restore } =
     useNotices(repository, familyId, actor)
   const [text, setText, clearText] = useDraft('notices.text')
   const [date, setDate, clearDate] = useDraft('notices.date')
@@ -29,6 +30,9 @@ export default function NoticesBoard({
 
   const now = Date.now()
   const onBoard = notices.filter((n) => isOnBoard(n, now))
+  const closed = notices
+    .filter((n) => n.status === 'down' && !n.deleted)
+    .map((n) => ({ id: n.id, title: n.text, updatedAt: n.updatedAt }))
 
   function onAdd(e: FormEvent) {
     e.preventDefault()
@@ -105,6 +109,8 @@ export default function NoticesBoard({
           ))}
         </ul>
       )}
+
+      <RecentlyClosed entries={closed} onRestore={restore} />
     </section>
   )
 }

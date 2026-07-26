@@ -3,6 +3,7 @@ import { useTranslation } from 'react-i18next'
 import { useAuth } from '../auth/authContext'
 import { useFamily } from '../family/familyContext'
 import { useDraft } from '../app/useDraft'
+import RecentlyClosed from '../app/RecentlyClosed'
 import { usePantry } from './usePantry'
 import { isInStock, freshnessDaysLeft } from './pantryLogic'
 import { pantryRepository } from './pantryRepositoryInstance'
@@ -21,7 +22,7 @@ export default function PantryBoard({
   const { familyId } = useFamily()
   const actor = { id: user?.id ?? '', name: user?.name ?? '' }
 
-  const { items, addItem, changeQuantity, markConsumed } = usePantry(
+  const { items, addItem, changeQuantity, markConsumed, restore } = usePantry(
     repository,
     familyId,
     actor,
@@ -33,6 +34,9 @@ export default function PantryBoard({
 
   const now = Date.now()
   const inStock = items.filter(isInStock)
+  const closed = items
+    .filter((i) => i.status === 'consumed')
+    .map((i) => ({ id: i.id, title: i.name, updatedAt: i.updatedAt }))
 
   function onAdd(e: FormEvent) {
     e.preventDefault()
@@ -162,6 +166,8 @@ export default function PantryBoard({
           ))}
         </ul>
       )}
+
+      <RecentlyClosed entries={closed} onRestore={restore} />
     </section>
   )
 }

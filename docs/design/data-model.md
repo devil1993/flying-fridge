@@ -342,8 +342,13 @@ notifications/{id}
 `deleted: true` marker (or a status like `down`/`consumed`/`closed` where the
 type already has one) and reads filter it out. Firestore Security Rules deny
 hard `delete` on every board collection outright, so the invariant holds even if
-a client tries. This keeps the family timeline/history intact and leaves room
-for a future "recently removed" / restore view.
+a client tries. This keeps the family timeline/history intact.
+
+Because nothing is destroyed, every board shows a **"Recently closed"** list of
+its closed items with a **Restore** action (`restore()` on the repository puts
+the status back — task→open, notice→up, lost&found→searching, pantry→instock,
+question→open), so a mistakenly completed/taken-down/consumed/closed item can be
+brought straight back. Tasks already reopen from the board.
 
 ## 6g. Dashboard agenda (requirement-6) — read-only, no new collection
 

@@ -31,7 +31,7 @@ function renderBoard(repo: InMemoryLostRepository) {
 }
 
 describe('LostFoundBoard', () => {
-  it('posts a search and marks it found', () => {
+  it('posts a search, marks it found, and can restore it', () => {
     renderBoard(new InMemoryLostRepository())
     fireEvent.change(screen.getByLabelText(/what are you looking for/i), {
       target: { value: 'My keys' },
@@ -40,6 +40,13 @@ describe('LostFoundBoard', () => {
     expect(screen.getByText('My keys')).toBeInTheDocument()
 
     fireEvent.click(screen.getByRole('button', { name: /found it/i }))
-    expect(screen.queryByText('My keys')).not.toBeInTheDocument()
+    // Off the active board, now under Recently closed with a Restore action.
+    expect(screen.getByRole('button', { name: 'Restore' })).toBeInTheDocument()
+    expect(
+      screen.queryByRole('button', { name: /found it/i }),
+    ).not.toBeInTheDocument()
+
+    fireEvent.click(screen.getByRole('button', { name: 'Restore' }))
+    expect(screen.getByRole('button', { name: /found it/i })).toBeInTheDocument()
   })
 })

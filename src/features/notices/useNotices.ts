@@ -44,6 +44,13 @@ export function useNotices(
     },
     [repo],
   )
+  const restore = useCallback(
+    (id: string) => {
+      void repo.restore(id)
+      void track('notice_restore')
+    },
+    [repo],
+  )
 
-  return { notices, addNotice, setImportant, setPermanent, takeDown }
+  return { notices, addNotice, setImportant, setPermanent, takeDown, restore }
 }

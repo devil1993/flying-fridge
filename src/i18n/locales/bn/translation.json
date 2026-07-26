@@ -191,6 +191,10 @@
     "answerBy": "— {{name}}",
     "close": "বন্ধ করুন"
   },
+  "closed": {
+    "title": "সম্প্রতি বন্ধ",
+    "restore": "ফিরিয়ে আনুন"
+  },
   "notifications": {
     "title": "বিজ্ঞপ্তি",
     "bell": "বিজ্ঞপ্তি",

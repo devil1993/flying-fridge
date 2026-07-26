@@ -259,6 +259,24 @@ Source: `requirements/requirement-6.md`. A split view below the module overview.
 
 ---
 
+## UAT follow-ups ✅
+
+Small fixes from user acceptance testing:
+
+- ✅ **Form drafts persist across navigation** — `useDraft` (localStorage) on
+  every add-form; drafts restore on remount, clear on submit. (Switching modules
+  unmounts the board, so a route-per-feature wouldn't help — the data itself is
+  persisted.)
+- ✅ **Recently closed + restore** on all boards — a completed/taken-down/
+  consumed/closed item shows in a "Recently closed" list with a **Restore**
+  action (repository `restore()` puts the status back). Tasks already reopen.
+- ✅ **Dark-mode readability** — pinned `<select>` option colours (theme palette
+  + settings language) to theme tokens.
+- ✅ **Notifications** — badge clears reliably on view (mark-read effect while the
+  panel is open) and the feed is capped at 10.
+
+---
+
 ## Deployment — GitHub Pages ✅
 
 - ✅ **`deploy-pages.yml`** builds and publishes to **GitHub Pages** on push to

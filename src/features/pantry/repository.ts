@@ -6,6 +6,8 @@ export interface PantryRepository {
   /** Adjust quantity by delta (clamped at 0). */
   changeQuantity(itemId: string, delta: number): Promise<void>
   markConsumed(itemId: string): Promise<void>
+  /** Bring a consumed item back in stock (undo). */
+  restore(itemId: string): Promise<void>
   remove(itemId: string): Promise<void>
 }
 
@@ -72,6 +74,16 @@ export class InMemoryPantryRepository implements PantryRepository {
     const item = this.items.get(itemId)
     if (item) {
       item.status = 'consumed'
+      item.updatedAt = this.now()
+      this.emit()
+    }
+    return Promise.resolve()
+  }
+
+  restore(itemId: string): Promise<void> {
+    const item = this.items.get(itemId)
+    if (item) {
+      item.status = 'instock'
       item.updatedAt = this.now()
       this.emit()
     }
