@@ -1,7 +1,8 @@
-import { useState, type FormEvent } from 'react'
+import { type FormEvent } from 'react'
 import { useTranslation } from 'react-i18next'
 import { useAuth } from '../auth/authContext'
 import { useFamily } from '../family/familyContext'
+import { useDraft } from '../app/useDraft'
 import { useQuestions } from './useQuestions'
 import QuestionCard from './QuestionCard'
 import { questionRepository } from './questionRepositoryInstance'
@@ -23,14 +24,14 @@ export default function QuestionsBoard({
     familyId,
     actor,
   )
-  const [text, setText] = useState('')
+  const [text, setText, clearText] = useDraft('questions.text')
   const open = questions.filter((q) => q.status === 'open')
 
   function onAsk(e: FormEvent) {
     e.preventDefault()
     if (!text.trim()) return
     addQuestion({ text: text.trim() })
-    setText('')
+    clearText()
   }
 
   return (

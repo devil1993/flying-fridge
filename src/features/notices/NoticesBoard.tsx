@@ -2,6 +2,7 @@ import { useState, type FormEvent } from 'react'
 import { useTranslation } from 'react-i18next'
 import { useAuth } from '../auth/authContext'
 import { useFamily } from '../family/familyContext'
+import { useDraft } from '../app/useDraft'
 import { useNotices } from './useNotices'
 import { isOnBoard } from './noticeLogic'
 import NoticeCard from './NoticeCard'
@@ -21,8 +22,8 @@ export default function NoticesBoard({
 
   const { notices, addNotice, setImportant, setPermanent, takeDown } =
     useNotices(repository, familyId, actor)
-  const [text, setText] = useState('')
-  const [date, setDate] = useState('')
+  const [text, setText, clearText] = useDraft('notices.text')
+  const [date, setDate, clearDate] = useDraft('notices.date')
   const [important, setImp] = useState(false)
   const [permanent, setPerm] = useState(false)
 
@@ -33,8 +34,8 @@ export default function NoticesBoard({
     e.preventDefault()
     if (!text.trim()) return
     addNotice({ text: text.trim(), date: date || null, important, permanent })
-    setText('')
-    setDate('')
+    clearText()
+    clearDate()
     setImp(false)
     setPerm(false)
   }

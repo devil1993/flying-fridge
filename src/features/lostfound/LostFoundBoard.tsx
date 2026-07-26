@@ -1,7 +1,8 @@
-import { useState, type FormEvent } from 'react'
+import { type FormEvent } from 'react'
 import { useTranslation } from 'react-i18next'
 import { useAuth } from '../auth/authContext'
 import { useFamily } from '../family/familyContext'
+import { useDraft } from '../app/useDraft'
 import { useLostFound } from './useLostFound'
 import { isSearching, daysSince } from './lostLogic'
 import { lostRepository } from './lostRepositoryInstance'
@@ -23,7 +24,7 @@ export default function LostFoundBoard({
     familyId,
     actor,
   )
-  const [desc, setDesc] = useState('')
+  const [desc, setDesc, clearDesc] = useDraft('lostfound.desc')
   const now = Date.now()
   const searching = items.filter(isSearching)
 
@@ -31,7 +32,7 @@ export default function LostFoundBoard({
     e.preventDefault()
     if (!desc.trim()) return
     addItem({ description: desc.trim() })
-    setDesc('')
+    clearDesc()
   }
 
   return (

@@ -1,7 +1,8 @@
-import { useState, type FormEvent } from 'react'
+import { type FormEvent } from 'react'
 import { useTranslation } from 'react-i18next'
 import { useAuth } from '../auth/authContext'
 import { useFamily } from '../family/familyContext'
+import { useDraft } from '../app/useDraft'
 import { usePantry } from './usePantry'
 import { isInStock, freshnessDaysLeft } from './pantryLogic'
 import { pantryRepository } from './pantryRepositoryInstance'
@@ -25,10 +26,10 @@ export default function PantryBoard({
     familyId,
     actor,
   )
-  const [name, setName] = useState('')
-  const [madeOn, setMadeOn] = useState('')
-  const [keeps, setKeeps] = useState('')
-  const [qty, setQty] = useState('1')
+  const [name, setName, clearName] = useDraft('pantry.name')
+  const [madeOn, setMadeOn, clearMadeOn] = useDraft('pantry.madeOn')
+  const [keeps, setKeeps, clearKeeps] = useDraft('pantry.keeps')
+  const [qty, setQty, clearQty] = useDraft('pantry.qty', '1')
 
   const now = Date.now()
   const inStock = items.filter(isInStock)
@@ -42,10 +43,10 @@ export default function PantryBoard({
       keepsDays: keeps ? Number(keeps) : null,
       quantity: qty ? Math.max(0, Number(qty)) : 1,
     })
-    setName('')
-    setMadeOn('')
-    setKeeps('')
-    setQty('1')
+    clearName()
+    clearMadeOn()
+    clearKeeps()
+    clearQty()
   }
 
   function freshnessLabel(item: PantryItem): string {

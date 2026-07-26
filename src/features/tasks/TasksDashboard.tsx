@@ -1,7 +1,8 @@
-import { useState, type FormEvent } from 'react'
+import { type FormEvent } from 'react'
 import { useTranslation } from 'react-i18next'
 import { useAuth } from '../auth/authContext'
 import { useFamily } from '../family/familyContext'
+import { useDraft } from '../app/useDraft'
 import { useTasks } from './useTasks'
 import { partitionForUser } from './taskLogic'
 import TaskCard from './TaskCard'
@@ -25,8 +26,8 @@ export default function TasksDashboard({
     familyId,
     actor,
   )
-  const [desc, setDesc] = useState('')
-  const [date, setDate] = useState('')
+  const [desc, setDesc, clearDesc] = useDraft('tasks.desc')
+  const [date, setDate, clearDate] = useDraft('tasks.date')
 
   const { mine, board } = partitionForUser(tasks, actor.id)
 
@@ -34,8 +35,8 @@ export default function TasksDashboard({
     e.preventDefault()
     if (!desc.trim()) return
     addTask({ description: desc.trim(), targetDate: date || null })
-    setDesc('')
-    setDate('')
+    clearDesc()
+    clearDate()
   }
 
   const renderList = (list: Task[]) =>
