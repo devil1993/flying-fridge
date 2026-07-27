@@ -278,6 +278,10 @@ Small fixes from user acceptance testing:
   redirects authenticated users to `/app` with `replace`, so `/` is never left
   in history; pressing Back can't return to the welcome page (any back-nav to
   `/` bounces straight to `/app`).
+- ✅ **Mobile bottom navigation** — icon-only bottom bar (`BottomNav`) for the six
+  content boards on screens <720px; Settings + Guide remain in the top hamburger
+  as overflow; desktop keeps inline top tabs. Reuses the Guide icon set.
+  **ADR-0016.**
 
 ---
 

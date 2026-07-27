@@ -72,6 +72,14 @@
   outline-offset: 2px;
 }
 
+/* On mobile the board tabs live in the fixed bottom-nav, so hide them from the
+   hamburger menu (Settings + Guide remain as overflow). Shown again ≥720px. */
+@media (max-width: 719px) {
+  .topbar-tab--board {
+    display: none;
+  }
+}
+
 /* Collapsible menu (dropdown on mobile). */
 .topbar-menu {
   display: none;

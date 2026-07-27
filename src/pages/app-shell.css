@@ -5,8 +5,10 @@
 
 .app-shell {
   min-height: 100dvh;
-  /* Tighter on mobile: sp-3 top (24 px) saves ~16 px vs sp-5 */
-  padding: var(--sp-3) var(--sp-2);
+  /* Tighter on mobile: sp-3 top (24 px) saves ~16 px vs sp-5.
+     Extra bottom room so the fixed mobile bottom-nav never covers content
+     (only needed <720px, where the bottom-nav is shown — see below). */
+  padding: var(--sp-3) var(--sp-2) calc(var(--sp-3) + 64px);
   /* Subtle dot-matrix pattern echoing fridge magnets;
      falls back cleanly when CSS gradients aren't available.
      Uses only theming tokens so it works on all palettes + dark + HC. */
@@ -102,7 +104,15 @@ html[data-palette="contrast"] .module::before {
 
 @media (min-width: 560px) {
   .app-shell {
-    padding: var(--sp-3) var(--sp-3);
+    /* Keep the bottom clearance — the bottom-nav is still shown up to 720px. */
+    padding: var(--sp-3) var(--sp-3) calc(var(--sp-3) + 64px);
+  }
+}
+
+/* Bottom-nav hidden from here up: drop the reserved space. */
+@media (min-width: 720px) {
+  .app-shell {
+    padding-bottom: var(--sp-3);
   }
 }
 

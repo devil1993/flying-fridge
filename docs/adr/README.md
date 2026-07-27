@@ -57,3 +57,4 @@ Files are named `NNNN-short-slug.md` where `NNNN` is a zero-padded four-digit in
 | [0013](0013-soft-delete-and-in-app-notification-feed.md) | Preserve-by-Default (Soft Delete) and an In-App Notification Feed | Accepted | 2026-07-26 |
 | [0014](0014-deploy-to-github-pages.md) | Deploy to GitHub Pages via GitHub Actions | Accepted | 2026-07-26 |
 | [0015](0015-dashboard-agenda-aggregation.md) | Dashboard Agenda: Cross-Module Aggregation & Relevant-Date Mapping | Accepted | 2026-07-26 |
+| [0016](0016-mobile-bottom-navigation.md) | Bottom Navigation on Small Screens | Accepted | 2026-07-26 |

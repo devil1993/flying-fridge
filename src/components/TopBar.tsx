@@ -94,7 +94,15 @@ export default function TopBar() {
                 <button
                   key={m.id}
                   type="button"
-                  className={m.id === active ? 'topbar-tab is-active' : 'topbar-tab'}
+                  className={[
+                    'topbar-tab',
+                    m.id === active ? 'is-active' : '',
+                    // Board tabs live in the mobile bottom-nav, so hide them from
+                    // the hamburger on small screens (ADR-0016). Settings stays.
+                    m.id !== 'settings' ? 'topbar-tab--board' : '',
+                  ]
+                    .filter(Boolean)
+                    .join(' ')}
                   aria-current={m.id === active ? 'page' : undefined}
                   title={`${t(m.labelKey)} · ${t('nav.shortcut', { key: m.shortcut.toUpperCase() })}`}
                   onClick={() => {

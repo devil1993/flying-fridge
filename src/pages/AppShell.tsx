@@ -9,6 +9,7 @@ import LostFoundBoard from '../features/lostfound/LostFoundBoard'
 import PantryBoard from '../features/pantry/PantryBoard'
 import QuestionsBoard from '../features/questions/QuestionsBoard'
 import SettingsView from './SettingsView'
+import BottomNav from '../features/app/BottomNav'
 import './app-shell.css'
 
 const VIEWS: Record<string, ComponentType> = {
@@ -31,10 +32,13 @@ export default function AppShell() {
   const { onClickCapture } = useFeatureTelemetry(active)
   const Active = VIEWS[active] ?? DashboardView
   return (
-    <main id="main-content" className="app-shell" onClickCapture={onClickCapture}>
-      <div className="app-shell-wrap">
-        <Active />
-      </div>
-    </main>
+    <>
+      <main id="main-content" className="app-shell" onClickCapture={onClickCapture}>
+        <div className="app-shell-wrap">
+          <Active />
+        </div>
+      </main>
+      <BottomNav />
+    </>
   )
 }

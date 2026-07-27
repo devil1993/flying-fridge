@@ -1,0 +1,59 @@
+.bottom-nav {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  z-index: 40;
+  display: flex;
+  justify-content: space-around;
+  align-items: stretch;
+  gap: 2px;
+  /* Frosted glass matching the top bar. */
+  background: color-mix(in srgb, var(--col-bg) 90%, transparent);
+  backdrop-filter: saturate(180%) blur(10px);
+  border-top: 1px solid var(--col-border);
+  /* Respect the iOS home indicator / gesture area. */
+  padding: 5px 4px calc(5px + env(safe-area-inset-bottom, 0px));
+}
+
+.bottom-nav-item {
+  flex: 1 1 0;
+  display: grid;
+  place-items: center;
+  min-height: 46px;
+  padding: 4px 0;
+  border: none;
+  background: none;
+  color: var(--col-text-2);
+  border-radius: 12px;
+  cursor: pointer;
+  transition: color var(--dur-fast) var(--ease-out),
+              background-color var(--dur-fast) var(--ease-out);
+}
+.bottom-nav-item:hover {
+  color: var(--col-text);
+}
+.bottom-nav-item.is-active {
+  color: var(--col-primary);
+  background: var(--col-primary-lt);
+}
+.bottom-nav-item:focus-visible {
+  outline: 3px solid var(--col-primary);
+  outline-offset: -3px;
+}
+
+.bottom-nav-icon {
+  display: inline-grid;
+  place-items: center;
+}
+.bottom-nav-icon svg {
+  width: 24px;
+  height: 24px;
+}
+
+/* Wide screens use the top bar's inline tabs instead. */
+@media (min-width: 720px) {
+  .bottom-nav {
+    display: none;
+  }
+}
