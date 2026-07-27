@@ -3,8 +3,16 @@
   <head>
     <meta charset="UTF-8" />
     <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <link rel="apple-touch-icon" href="/apple-touch-icon.png" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
     <meta name="theme-color" content="#4F6DF5" />
+    <!-- Launch as a standalone app (no browser URL bar / back button) once added
+         to the home screen. `display: standalone` in the manifest covers
+         Android/Chrome/desktop; iOS needs these apple-* tags. -->
+    <meta name="mobile-web-app-capable" content="yes" />
+    <meta name="apple-mobile-web-app-capable" content="yes" />
+    <meta name="apple-mobile-web-app-status-bar-style" content="default" />
+    <meta name="apple-mobile-web-app-title" content="Flying Fridge" />
     <meta
       name="description"
       content="Flying Fridge — the digital noticeboard for families. Tasks, notices, pantry, lost & found and questions, on a fridge door that travels with you."

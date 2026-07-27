@@ -15,7 +15,8 @@
     "test:coverage": "vitest run --coverage",
     "arch": "likec4 start docs/design/architecture",
     "arch:build": "likec4 build -o docs/design/architecture/dist docs/design/architecture",
-    "arch:check": "likec4 validate docs/design/architecture"
+    "arch:check": "likec4 validate docs/design/architecture",
+    "icons": "node scripts/gen-icons.mjs"
   },
   "dependencies": {
     "firebase": "^12.16.0",

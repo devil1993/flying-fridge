@@ -29,21 +29,28 @@ integration risk; it is called out here deliberately.
 ## 2. Web App Manifest & install
 
 `vite-plugin-pwa` generates the web app manifest from config in
-`vite.config.ts`. Intended contents (mobile-first):
+`vite.config.ts`. **As implemented:**
 
-- `name` / `short_name` — "Flying Fridge" / "Fridge".
-- `start_url` — the app entry (respecting the SPA route).
-- `display` — `standalone` (feels like an installed app).
-- `theme_color` / `background_color` — aligned with the light/dark theme
-  tokens.
-- `icons` — a full set (192/512 + maskable) served from `public/`.
-- `orientation` — `portrait` leaning, since phones are the primary medium.
+- `name` / `short_name` — "Flying Fridge".
+- `display: standalone` + `orientation: portrait` — installs and launches like a
+  native app: **no browser URL bar or back button**.
+- `start_url` / `scope` — base-relative (`.`) so it works both at `/` and under
+  a GitHub Pages sub-path (`/flying-fridge/`).
+- `theme_color` `#4F6DF5` / `background_color` `#F7F9FC`; `lang`, `categories`.
+- `icons` — `favicon.svg` (`any`) plus a raster set generated from the logo by
+  **`scripts/gen-icons.mjs`** (`pnpm icons`, no external deps): `pwa-192.png`,
+  `pwa-512.png` (`any`) and `maskable-512.png` (`maskable`, safe-zoned for
+  Android adaptive launchers). All served from `public/`.
+
+**iOS:** Safari ignores the manifest's `display` for launch mode, so `index.html`
+carries the `apple-mobile-web-app-capable` / `mobile-web-app-capable` meta tags
+(plus status-bar style, app title, and an `apple-touch-icon.png`) — that's what
+makes "Add to Home Screen" open **chrome-free** on iPhone/iPad.
 
 **Install flow:** on a supported browser the manifest + a registered service
-worker make the app installable. The app may surface a custom "Add to Home
-Screen" prompt by capturing the `beforeinstallprompt` event and offering it at a
-sensible moment (not on first paint). HTTPS is mandatory for install (and for
-FCM).
+worker make the app installable. A custom "Add to Home Screen" prompt
+(capturing `beforeinstallprompt`) could be added at a sensible moment later.
+HTTPS is mandatory for install (and for FCM) — GitHub Pages provides it.
 
 ## 3. Offline & caching strategy (Workbox)
 
