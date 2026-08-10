@@ -35,9 +35,10 @@ describe('Home (root route)', () => {
     expect(screen.getByRole('heading', { name: 'App home' })).toBeInTheDocument()
   })
 
-  it('renders nothing while auth is still resolving (no welcome flash)', () => {
-    const { container } = renderHome('loading')
-    expect(container).toBeEmptyDOMElement()
+  it('shows the landing page (not a blank) while auth is still resolving', () => {
+    renderHome('loading')
+    // Firebase resolves auth asynchronously, so "loading" must not blank out.
+    expect(screen.getByRole('main')).toBeInTheDocument()
     expect(screen.queryByRole('heading', { name: 'App home' })).not.toBeInTheDocument()
   })
 

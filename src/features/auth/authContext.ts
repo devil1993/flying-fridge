@@ -10,6 +10,12 @@ export interface AuthContextValue {
   registerEmail: (email: string, password: string) => Promise<void>
   signInGoogle: () => Promise<void>
   signOut: () => Promise<void>
+  /** True while exploring the ephemeral demo (seeded, in-memory, never saved). */
+  isDemo?: boolean
+  /** When the demo auto-ends (epoch ms), or null. */
+  demoEndsAt?: number | null
+  /** Enter demo mode as a guest of the sample family. */
+  startDemo?: () => void
 }
 
 export const AuthContext = createContext<AuthContextValue | null>(null)

@@ -1,6 +1,9 @@
 import { render, screen, fireEvent } from '@testing-library/react'
 import { AuthProvider } from './AuthProvider'
+import { AuthContext, type AuthContextValue } from './authContext'
 import SignInPage from './SignInPage'
+
+const noop = async () => {}
 
 // Firebase is unconfigured in tests, so AuthProvider resolves to "signed out"
 // and the sign-in actions are safe no-ops we don't invoke here.
@@ -42,5 +45,25 @@ describe('SignInPage', () => {
     expect(
       screen.getByRole('button', { name: 'Create account' }),
     ).toBeInTheDocument()
+  })
+
+  it('offers the demo and starts it on click', () => {
+    const startDemo = vi.fn()
+    const value: AuthContextValue = {
+      user: null,
+      status: 'unauthenticated',
+      signInEmail: noop,
+      registerEmail: noop,
+      signInGoogle: noop,
+      signOut: noop,
+      startDemo,
+    }
+    render(
+      <AuthContext.Provider value={value}>
+        <SignInPage />
+      </AuthContext.Provider>,
+    )
+    fireEvent.click(screen.getByRole('button', { name: 'Try the demo' }))
+    expect(startDemo).toHaveBeenCalledTimes(1)
   })
 })

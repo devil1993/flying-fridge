@@ -5,7 +5,7 @@ import './auth.css'
 
 export default function SignInPage() {
   const { t } = useTranslation()
-  const { signInEmail, registerEmail, signInGoogle } = useAuth()
+  const { signInEmail, registerEmail, signInGoogle, startDemo } = useAuth()
   const [mode, setMode] = useState<'signIn' | 'register'>('signIn')
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
@@ -112,6 +112,19 @@ export default function SignInPage() {
             ? t('auth.signIn.needAccount')
             : t('auth.signIn.haveAccount')}
         </button>
+
+        {startDemo && (
+          <div className="auth-demo-box">
+            <button
+              className="auth-demo"
+              type="button"
+              onClick={() => startDemo()}
+            >
+              {t('auth.signIn.demo')}
+            </button>
+            <p className="auth-demo-hint">{t('auth.signIn.demoHint')}</p>
+          </div>
+        )}
       </div>
     </main>
   )

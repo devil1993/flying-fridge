@@ -78,6 +78,9 @@ model {
       dashboard = component 'features/dashboard' {
         description 'Informed overview: module counts plus a cross-module agenda — recent items (overdue + next 2 days by each relevant date) and a month calendar. Read-only aggregation over the five boards (requirement-6, ADR-0015).'
       }
+      demo = component 'features/demo' {
+        description 'Ephemeral "Try the demo": swaps every board repository (via a switchable proxy) to seeded in-memory stores for a sample family. Never touches Firebase; auto-resets after 30 min (ADR-0017).'
+      }
 
       pages -> features 'uses'
       pages -> guide 'routes to'
@@ -101,6 +104,8 @@ model {
       dashboard -> pantry 'aggregates'
       dashboard -> questions 'aggregates'
       dashboard -> family 'scoped to'
+      authFeature -> demo 'activates (guest)'
+      demo -> features 'seeds in-memory (no Firebase)'
       notices -> firestore 'reads/writes, subscribes (family-scoped)'
       lostfound -> firestore 'reads/writes, subscribes (family-scoped)'
       pantry -> firestore 'reads/writes, subscribes (family-scoped)'

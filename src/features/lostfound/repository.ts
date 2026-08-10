@@ -29,6 +29,12 @@ export class InMemoryLostRepository implements LostRepository {
     for (const listener of this.listeners) listener(snap)
   }
 
+  /** Bulk-load fully-formed records (used to seed demo mode). */
+  seed(items: LostItem[]): void {
+    for (const it of items) this.items.set(it.id, it)
+    this.emit()
+  }
+
   subscribe(familyId: string, onChange: (items: LostItem[]) => void): () => void {
     const listener = (items: LostItem[]) =>
       onChange(items.filter((i) => i.familyId === familyId))

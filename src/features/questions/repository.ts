@@ -28,6 +28,12 @@ export class InMemoryQuestionRepository implements QuestionRepository {
     for (const listener of this.listeners) listener(snap)
   }
 
+  /** Bulk-load fully-formed records (used to seed demo mode). */
+  seed(items: Question[]): void {
+    for (const it of items) this.questions.set(it.id, it)
+    this.emit()
+  }
+
   subscribe(familyId: string, onChange: (questions: Question[]) => void): () => void {
     const listener = (questions: Question[]) =>
       onChange(questions.filter((q) => q.familyId === familyId))

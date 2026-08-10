@@ -38,6 +38,12 @@ export class InMemoryNotificationRepository implements NotificationRepository {
     for (const listener of this.listeners) listener(snap)
   }
 
+  /** Bulk-load fully-formed records (used to seed demo mode). */
+  seed(items: AppNotification[]): void {
+    for (const it of items) this.items.set(it.id, it)
+    this.emit()
+  }
+
   subscribe(
     familyId: string,
     onChange: (items: AppNotification[]) => void,

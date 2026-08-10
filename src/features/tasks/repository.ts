@@ -41,6 +41,12 @@ export class InMemoryTaskRepository implements TaskRepository {
     for (const listener of this.listeners) listener(snap)
   }
 
+  /** Bulk-load fully-formed records (used to seed demo mode). */
+  seed(items: Task[]): void {
+    for (const it of items) this.tasks.set(it.id, it)
+    this.emit()
+  }
+
   subscribe(familyId: string, onChange: (tasks: Task[]) => void): () => void {
     const listener = (tasks: Task[]) =>
       onChange(tasks.filter((t) => t.familyId === familyId))

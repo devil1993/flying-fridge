@@ -76,7 +76,9 @@
       "or": "or",
       "needFields": "Enter your email and password.",
       "failed": "That didn't work — check your details and try again.",
-      "loading": "Loading…"
+      "loading": "Loading…",
+      "demo": "Try the demo",
+      "demoHint": "No sign-up — explore a sample family for 30 minutes"
     },
     "appTitle": "Your board",
     "signedInAs": "Signed in as {{name}}",
@@ -198,6 +200,12 @@
   "closed": {
     "title": "Recently closed",
     "restore": "Restore"
+  },
+  "demo": {
+    "banner": "Demo — exploring {{family}}. Nothing here is saved.",
+    "family": "a sample family",
+    "endsIn": "resets in {{time}}",
+    "exit": "Exit demo"
   },
   "notifications": {
     "title": "Notifications",

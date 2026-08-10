@@ -4,6 +4,7 @@ import { useTranslation } from 'react-i18next'
 
 import SkipLink from './components/a11y/SkipLink'
 import TopBar from './components/TopBar'
+import DemoBanner from './features/demo/DemoBanner'
 import LandingPage from './pages/landing/LandingPage'
 import GuidePage from './features/guide/GuidePage'
 import NotFound from './pages/NotFound'
@@ -18,13 +19,13 @@ import { useNavShortcuts } from './lib/shortcuts'
 /**
  * The root route. Signed-in users skip the welcome/landing screen and land
  * straight in the app — with `replace`, so `/` is never left in history and the
- * Back button can't return them to the welcome screen. Signed-out visitors get
- * the landing page; during the brief auth check we render nothing to avoid a
- * welcome flash for members.
+ * Back button can't return them to the welcome screen. Everyone else (including
+ * while auth is still resolving) gets the landing page — showing it during the
+ * brief check avoids a blank flash, which matters because with Firebase
+ * configured `onAuthStateChanged` resolves asynchronously.
  */
 export function Home() {
   const { status } = useAuth()
-  if (status === 'loading') return null
   if (status === 'authenticated') return <Navigate to="/app" replace />
   return <LandingPage />
 }
@@ -65,6 +66,7 @@ export default function App() {
       <FamilyProvider>
         <AppNavProvider>
           <SkipLink />
+          <DemoBanner />
           {showTopBar && <TopBar />}
           <Routes>
           <Route path="/" element={<Home />} />

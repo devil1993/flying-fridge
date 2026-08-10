@@ -34,6 +34,12 @@ export class InMemoryNoticeRepository implements NoticeRepository {
     for (const listener of this.listeners) listener(snap)
   }
 
+  /** Bulk-load fully-formed records (used to seed demo mode). */
+  seed(items: Notice[]): void {
+    for (const it of items) this.notices.set(it.id, it)
+    this.emit()
+  }
+
   subscribe(familyId: string, onChange: (notices: Notice[]) => void): () => void {
     const listener = (notices: Notice[]) =>
       onChange(notices.filter((n) => n.familyId === familyId))

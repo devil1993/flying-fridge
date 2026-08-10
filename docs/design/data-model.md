@@ -361,6 +361,15 @@ Lost & Found and Questions → undated. Recent groups items into **overdue**
 the calendar dots a day per type. Pure logic lives in `agenda.ts` (tested); see
 ADR-0015.
 
+## 6h. Demo mode (requirement / ADR-0017) — no persistence
+
+"Try the demo" runs entirely **in memory**: every board's repository is swapped
+(via a `switchable` proxy) to a freshly **seeded `InMemory*` store** for a sample
+family (`demo-family`, "Ghosh Bari"). **No demo document is ever written to
+Firestore** — reads and writes stay local — so there is no schema, no cleanup
+job, and the "auto-delete after 30 min" guarantee is inherent (a timer restores
+the real repositories; a reload also ends it). See `features/demo/` and ADR-0017.
+
 ## 7. Open questions (tracked, not resolved)
 
 - Subcollections vs. top-level collections with a `familyId` filter.

@@ -130,9 +130,12 @@
 /* ---- Task card ---- */
 .task-card {
   display: flex;
+  /* Mobile-first: stack so the description always gets the full width. On a
+     narrow phone a side-by-side actions column (with the long "Assign to me"
+     button) squeezed the text to one character per line. Row layout ≥480px. */
+  flex-direction: column;
   gap: var(--sp-1);
-  align-items: flex-start;
-  justify-content: space-between;
+  align-items: stretch;
   background: var(--col-surface);
   border: 1px solid var(--col-border);
   border-left: 3px solid var(--mag-tasks);
@@ -177,7 +180,8 @@
   gap: 4px;
   flex-shrink: 0;
   flex-wrap: wrap;
-  justify-content: flex-end;
+  /* Stacked (mobile): actions sit under the text, left-aligned. */
+  justify-content: flex-start;
 }
 .task-actions button {
   font: 600 0.74rem var(--font-sans);
@@ -188,6 +192,7 @@
   padding: 5px 10px;
   cursor: pointer;
   min-height: 28px;
+  white-space: nowrap;
   transition: border-color var(--dur-fast) var(--ease-out);
 }
 .task-actions button:hover {
@@ -201,6 +206,18 @@
   padding: 5px 8px !important;
   line-height: 1;
   font-size: 0.95rem !important;
+}
+
+/* Roomier screens: back to side-by-side (text left, actions right). */
+@media (min-width: 480px) {
+  .task-card {
+    flex-direction: row;
+    align-items: flex-start;
+    justify-content: space-between;
+  }
+  .task-actions {
+    justify-content: flex-end;
+  }
 }
 
 @media (min-width: 560px) {
