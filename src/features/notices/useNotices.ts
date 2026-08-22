@@ -1,7 +1,7 @@
 import { useCallback, useEffect, useState } from 'react'
 import { track } from '../../lib/firebase'
 import { notifyItemAdded } from '../notifications/notify'
-import type { Notice, NewNoticeInput, Actor } from './types'
+import type { Notice, NewNoticeInput, EditNoticeInput, Actor } from './types'
 import type { NoticeRepository } from './repository'
 
 export function useNotices(
@@ -29,6 +29,13 @@ export function useNotices(
     [repo, familyId, actor],
   )
 
+  const editNotice = useCallback(
+    (id: string, changes: EditNoticeInput) => {
+      void repo.update(id, changes)
+      void track('notice_edit')
+    },
+    [repo],
+  )
   const setImportant = useCallback(
     (id: string, important: boolean) => void repo.setImportant(id, important),
     [repo],
@@ -52,5 +59,13 @@ export function useNotices(
     [repo],
   )
 
-  return { notices, addNotice, setImportant, setPermanent, takeDown, restore }
+  return {
+    notices,
+    addNotice,
+    editNotice,
+    setImportant,
+    setPermanent,
+    takeDown,
+    restore,
+  }
 }

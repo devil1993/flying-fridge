@@ -169,3 +169,42 @@
 .pantry-consume:hover {
   border-color: var(--mag-pantry);
 }
+
+/* ---- Inline edit ---- */
+.pantry-edit {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  width: 100%;
+}
+.pantry-edit .pantry-add-name:focus-visible,
+.pantry-edit .pantry-field input:focus-visible {
+  outline: 3px solid var(--mag-pantry);
+  outline-offset: 2px;
+  border-color: var(--mag-pantry);
+}
+.pantry-edit button,
+.pantry-edit-action {
+  font: 600 0.72rem var(--font-sans);
+  background: var(--col-surface-2);
+  color: var(--col-text);
+  border: 1px solid var(--col-border);
+  border-radius: 999px;
+  padding: 5px 10px;
+  cursor: pointer;
+  min-height: 28px;
+  transition: border-color var(--dur-fast) var(--ease-out);
+}
+.pantry-edit button:hover,
+.pantry-edit-action:hover {
+  border-color: var(--mag-pantry);
+}
+.pantry-edit button:focus-visible,
+.pantry-edit-action:focus-visible {
+  outline: 3px solid var(--mag-pantry);
+  outline-offset: 2px;
+}
+.pantry-edit button:disabled {
+  opacity: 0.5;
+  cursor: default;
+}

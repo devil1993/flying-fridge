@@ -1,7 +1,7 @@
 import { useCallback, useEffect, useState } from 'react'
 import { track } from '../../lib/firebase'
 import { notifyItemAdded } from '../notifications/notify'
-import type { Question, NewQuestionInput, Actor } from './types'
+import type { Question, NewQuestionInput, EditQuestionInput, Actor } from './types'
 import type { QuestionRepository } from './repository'
 
 export function useQuestions(
@@ -28,6 +28,13 @@ export function useQuestions(
     },
     [repo, familyId, actor],
   )
+  const editQuestion = useCallback(
+    (id: string, changes: EditQuestionInput) => {
+      void repo.update(id, changes)
+      void track('question_edit')
+    },
+    [repo],
+  )
   const addAnswer = useCallback(
     (id: string, text: string) => {
       void repo.addAnswer(id, text, actor)
@@ -38,5 +45,5 @@ export function useQuestions(
   const close = useCallback((id: string) => void repo.close(id), [repo])
   const reopen = useCallback((id: string) => void repo.reopen(id), [repo])
 
-  return { questions, addQuestion, addAnswer, close, reopen }
+  return { questions, addQuestion, editQuestion, addAnswer, close, reopen }
 }

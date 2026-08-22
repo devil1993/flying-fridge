@@ -1,4 +1,4 @@
-import { type FormEvent } from 'react'
+import { useState, type FormEvent } from 'react'
 import { useTranslation } from 'react-i18next'
 import { useAuth } from '../auth/authContext'
 import { useFamily } from '../family/familyContext'
@@ -20,12 +20,11 @@ export default function LostFoundBoard({
   const { familyId } = useFamily()
   const actor = { id: user?.id ?? '', name: user?.name ?? '' }
 
-  const { items, addItem, markFound, takeDown, restore } = useLostFound(
-    repository,
-    familyId,
-    actor,
-  )
+  const { items, addItem, editItem, markFound, takeDown, restore } =
+    useLostFound(repository, familyId, actor)
   const [desc, setDesc, clearDesc] = useDraft('lostfound.desc')
+  const [editingId, setEditingId] = useState<string | null>(null)
+  const [editDesc, setEditDesc] = useState('')
   const now = Date.now()
   const searching = items.filter(isSearching)
   const closed = items
@@ -37,6 +36,18 @@ export default function LostFoundBoard({
     if (!desc.trim()) return
     addItem({ description: desc.trim() })
     clearDesc()
+  }
+
+  function startEdit(id: string, description: string) {
+    setEditingId(id)
+    setEditDesc(description)
+  }
+
+  function saveEdit(e: FormEvent) {
+    e.preventDefault()
+    if (!editingId || !editDesc.trim()) return
+    editItem(editingId, { description: editDesc.trim() })
+    setEditingId(null)
   }
 
   return (
@@ -67,6 +78,28 @@ export default function LostFoundBoard({
         <ul className="lost-list">
           {searching.map((item) => {
             const days = daysSince(item.createdAt, now)
+            if (editingId === item.id) {
+              return (
+                <li key={item.id} className="lost-card">
+                  <form className="lost-edit" onSubmit={saveEdit}>
+                    <input
+                      className="lost-add-input"
+                      aria-label={t('lostFound.edit.descriptionLabel')}
+                      value={editDesc}
+                      onChange={(e) => setEditDesc(e.target.value)}
+                    />
+                    <div className="lost-actions">
+                      <button type="submit" disabled={!editDesc.trim()}>
+                        {t('lostFound.edit.save')}
+                      </button>
+                      <button type="button" onClick={() => setEditingId(null)}>
+                        {t('lostFound.edit.cancel')}
+                      </button>
+                    </div>
+                  </form>
+                </li>
+              )
+            }
             return (
               <li key={item.id} className="lost-card">
                 <div className="lost-main">
@@ -83,6 +116,12 @@ export default function LostFoundBoard({
                 <div className="lost-actions">
                   <button type="button" onClick={() => markFound(item.id)}>
                     {t('lostFound.markFound')}
+                  </button>
+                  <button
+                    type="button"
+                    onClick={() => startEdit(item.id, item.description)}
+                  >
+                    {t('lostFound.edit.action')}
                   </button>
                   <button type="button" onClick={() => takeDown(item.id)}>
                     {t('lostFound.takeDown')}

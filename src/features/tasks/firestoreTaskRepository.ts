@@ -11,7 +11,7 @@ import {
   type QueryDocumentSnapshot,
 } from 'firebase/firestore'
 import { getDb } from '../../lib/firebase'
-import type { Task, NewTaskInput, TaskStatus, Actor } from './types'
+import type { Task, NewTaskInput, EditTaskInput, TaskStatus, Actor } from './types'
 import type { TaskRepository } from './repository'
 
 const COLLECTION = 'tasks'
@@ -71,6 +71,14 @@ export const firestoreTaskRepository: TaskRepository = {
       status: 'open' satisfies TaskStatus,
       createdBy: author.id,
       createdAt: serverTimestamp(),
+      updatedAt: serverTimestamp(),
+    })
+  },
+
+  async update(taskId, changes: EditTaskInput) {
+    await updateDoc(doc(getDb(), COLLECTION, taskId), {
+      description: changes.description,
+      targetDate: changes.targetDate,
       updatedAt: serverTimestamp(),
     })
   },

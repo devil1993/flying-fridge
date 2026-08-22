@@ -1,8 +1,10 @@
-import type { Notice, NewNoticeInput, Actor } from './types'
+import type { Notice, NewNoticeInput, EditNoticeInput, Actor } from './types'
 
 export interface NoticeRepository {
   subscribe(familyId: string, onChange: (notices: Notice[]) => void): () => void
   add(familyId: string, input: NewNoticeInput, author: Actor): Promise<void>
+  /** Correct the author-entered fields (text, date). */
+  update(noticeId: string, changes: EditNoticeInput): Promise<void>
   setImportant(noticeId: string, important: boolean): Promise<void>
   setPermanent(noticeId: string, permanent: boolean): Promise<void>
   /** Take a notice off the board (kept/timelined). */
@@ -76,6 +78,11 @@ export class InMemoryNoticeRepository implements NoticeRepository {
       Object.assign(notice, change, { updatedAt: this.now() })
       this.emit()
     }
+  }
+
+  update(noticeId: string, changes: EditNoticeInput): Promise<void> {
+    this.patch(noticeId, { text: changes.text, date: changes.date })
+    return Promise.resolve()
   }
 
   setImportant(noticeId: string, important: boolean): Promise<void> {

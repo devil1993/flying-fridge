@@ -350,6 +350,26 @@ the status back — task→open, notice→up, lost&found→searching, pantry→i
 question→open), so a mistakenly completed/taken-down/consumed/closed item can be
 brought straight back. Tasks already reopen from the board.
 
+## 6f-2. Editing entries (ADR-0018)
+
+Every board item's **author-entered fields are editable in place** so a mistake
+can be corrected without deleting and re-adding (which would lose the timeline
+and re-notify the family). Each repository gains an `update(id, changes)` method
+(Firestore + in-memory) that writes only the content fields and bumps
+`updatedAt`; the UI is an inline Edit → Save/Cancel form on each card. The
+editable fields, per module:
+
+- **tasks** — `description`, `targetDate`
+- **notices** — `text`, `date`
+- **lostAndFound** — `description`
+- **pantry** — `name`, `madeOn`, `keepsDays` (quantity keeps its own +/- control)
+- **questions** — `text`
+
+System fields (`status`, `assignee`, `deleted`, `createdBy/At`, answers) are
+**not** touched by `update` — they have their own actions. No schema change: edit
+reuses the existing `updateDoc` path already permitted by the `allow update`
+rule that soft delete relies on (§6f, ADR-0018).
+
 ## 6g. Dashboard agenda (requirement-6) — read-only, no new collection
 
 The informed dashboard (`src/features/dashboard/`) aggregates the five board

@@ -1,4 +1,4 @@
-import type { Task, NewTaskInput, TaskStatus, Actor } from './types'
+import type { Task, NewTaskInput, EditTaskInput, TaskStatus, Actor } from './types'
 
 /**
  * Persistence boundary for tasks. The UI depends only on this interface, so it
@@ -10,6 +10,8 @@ export interface TaskRepository {
   /** Subscribe to a family's tasks (newest first). Returns an unsubscribe fn. */
   subscribe(familyId: string, onChange: (tasks: Task[]) => void): () => void
   add(familyId: string, input: NewTaskInput, author: Actor): Promise<void>
+  /** Correct the author-entered fields (description, target date). */
+  update(taskId: string, changes: EditTaskInput): Promise<void>
   /** Claim/unclaim: pass an actor to assign, or null to release. */
   assign(taskId: string, user: Actor | null): Promise<void>
   setStatus(taskId: string, status: TaskStatus): Promise<void>
@@ -73,6 +75,17 @@ export class InMemoryTaskRepository implements TaskRepository {
       updatedAt: ts,
     })
     this.emit()
+    return Promise.resolve()
+  }
+
+  update(taskId: string, changes: EditTaskInput): Promise<void> {
+    const task = this.tasks.get(taskId)
+    if (task) {
+      task.description = changes.description
+      task.targetDate = changes.targetDate
+      task.updatedAt = this.now()
+      this.emit()
+    }
     return Promise.resolve()
   }
 

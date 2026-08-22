@@ -1,13 +1,15 @@
+import { useState, type FormEvent } from 'react'
 import { useTranslation } from 'react-i18next'
 import { daysLeft } from './noticeLogic'
 import { formatIsoDate } from '../../lib/date'
-import type { Notice } from './types'
+import type { Notice, EditNoticeInput } from './types'
 
 interface Props {
   notice: Notice
   now: number
   onToggleImportant: (id: string, important: boolean) => void
   onTogglePermanent: (id: string, permanent: boolean) => void
+  onEdit: (id: string, changes: EditNoticeInput) => void
   onTakeDown: (id: string) => void
 }
 
@@ -16,10 +18,63 @@ export default function NoticeCard({
   now,
   onToggleImportant,
   onTogglePermanent,
+  onEdit,
   onTakeDown,
 }: Props) {
   const { t } = useTranslation()
   const left = daysLeft(notice, now)
+
+  const [editing, setEditing] = useState(false)
+  const [text, setText] = useState(notice.text)
+  const [date, setDate] = useState(notice.date ?? '')
+
+  function startEdit() {
+    setText(notice.text)
+    setDate(notice.date ?? '')
+    setEditing(true)
+  }
+
+  function save(e: FormEvent) {
+    e.preventDefault()
+    if (!text.trim()) return
+    onEdit(notice.id, { text: text.trim(), date: date || null })
+    setEditing(false)
+  }
+
+  if (editing) {
+    return (
+      <li
+        className={
+          notice.important ? 'notice-card notice-card--important' : 'notice-card'
+        }
+      >
+        <form className="notice-edit" onSubmit={save}>
+          <textarea
+            className="notice-add-text"
+            rows={2}
+            aria-label={t('notices.edit.textLabel')}
+            value={text}
+            onChange={(e) => setText(e.target.value)}
+          />
+          <div className="notice-add-row">
+            <input
+              className="notice-add-date"
+              type="date"
+              aria-label={t('notices.edit.dateLabel')}
+              value={date}
+              onChange={(e) => setDate(e.target.value)}
+            />
+            <button type="submit" disabled={!text.trim()}>
+              {t('notices.edit.save')}
+            </button>
+            <button type="button" onClick={() => setEditing(false)}>
+              {t('notices.edit.cancel')}
+            </button>
+          </div>
+        </form>
+      </li>
+    )
+  }
 
   return (
     <li
@@ -65,6 +120,9 @@ export default function NoticeCard({
           {notice.permanent
             ? t('notices.unmarkPermanent')
             : t('notices.makePermanent')}
+        </button>
+        <button type="button" onClick={startEdit}>
+          {t('notices.edit.action')}
         </button>
         <button type="button" onClick={() => onTakeDown(notice.id)}>
           {t('notices.takeDown')}

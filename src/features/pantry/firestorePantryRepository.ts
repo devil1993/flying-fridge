@@ -13,7 +13,7 @@ import {
   type QueryDocumentSnapshot,
 } from 'firebase/firestore'
 import { getDb } from '../../lib/firebase'
-import type { PantryItem, NewPantryInput, PantryStatus, Actor } from './types'
+import type { PantryItem, NewPantryInput, EditPantryInput, PantryStatus, Actor } from './types'
 import type { PantryRepository } from './repository'
 
 const COLLECTION = 'pantry'
@@ -59,6 +59,15 @@ export const firestorePantryRepository: PantryRepository = {
       createdBy: author.id,
       createdByName: author.name,
       createdAt: serverTimestamp(),
+      updatedAt: serverTimestamp(),
+    })
+  },
+
+  async update(itemId, changes: EditPantryInput) {
+    await updateDoc(doc(getDb(), COLLECTION, itemId), {
+      name: changes.name,
+      madeOn: changes.madeOn,
+      keepsDays: changes.keepsDays,
       updatedAt: serverTimestamp(),
     })
   },

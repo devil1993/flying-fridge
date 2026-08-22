@@ -1,8 +1,10 @@
-import type { PantryItem, NewPantryInput, Actor } from './types'
+import type { PantryItem, NewPantryInput, EditPantryInput, Actor } from './types'
 
 export interface PantryRepository {
   subscribe(familyId: string, onChange: (items: PantryItem[]) => void): () => void
   add(familyId: string, input: NewPantryInput, author: Actor): Promise<void>
+  /** Correct the author-entered fields (name, made-on, keeps-days). */
+  update(itemId: string, changes: EditPantryInput): Promise<void>
   /** Adjust quantity by delta (clamped at 0). */
   changeQuantity(itemId: string, delta: number): Promise<void>
   markConsumed(itemId: string): Promise<void>
@@ -63,6 +65,18 @@ export class InMemoryPantryRepository implements PantryRepository {
       updatedAt: ts,
     })
     this.emit()
+    return Promise.resolve()
+  }
+
+  update(itemId: string, changes: EditPantryInput): Promise<void> {
+    const item = this.items.get(itemId)
+    if (item) {
+      item.name = changes.name
+      item.madeOn = changes.madeOn
+      item.keepsDays = changes.keepsDays
+      item.updatedAt = this.now()
+      this.emit()
+    }
     return Promise.resolve()
   }
 

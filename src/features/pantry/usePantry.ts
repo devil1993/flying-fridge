@@ -1,7 +1,7 @@
 import { useCallback, useEffect, useState } from 'react'
 import { track } from '../../lib/firebase'
 import { notifyItemAdded } from '../notifications/notify'
-import type { PantryItem, NewPantryInput, Actor } from './types'
+import type { PantryItem, NewPantryInput, EditPantryInput, Actor } from './types'
 import type { PantryRepository } from './repository'
 
 export function usePantry(
@@ -28,6 +28,13 @@ export function usePantry(
     },
     [repo, familyId, actor],
   )
+  const editItem = useCallback(
+    (id: string, changes: EditPantryInput) => {
+      void repo.update(id, changes)
+      void track('pantry_edit')
+    },
+    [repo],
+  )
   const changeQuantity = useCallback(
     (id: string, delta: number) => void repo.changeQuantity(id, delta),
     [repo],
@@ -47,5 +54,5 @@ export function usePantry(
     [repo],
   )
 
-  return { items, addItem, changeQuantity, markConsumed, restore }
+  return { items, addItem, editItem, changeQuantity, markConsumed, restore }
 }

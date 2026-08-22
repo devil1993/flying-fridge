@@ -1,7 +1,7 @@
 import { useCallback, useEffect, useState } from 'react'
 import { track } from '../../lib/firebase'
 import { notifyItemAdded } from '../notifications/notify'
-import type { Task, NewTaskInput, Actor } from './types'
+import type { Task, NewTaskInput, EditTaskInput, Actor } from './types'
 import type { TaskRepository } from './repository'
 
 /**
@@ -31,6 +31,14 @@ export function useTasks(
       notifyItemAdded(familyId, 'tasks', input.description, actor)
     },
     [repo, familyId, actor],
+  )
+
+  const editTask = useCallback(
+    (taskId: string, changes: EditTaskInput) => {
+      void repo.update(taskId, changes)
+      void track('task_edit')
+    },
+    [repo],
   )
 
   const assignToSelf = useCallback(
@@ -66,5 +74,5 @@ export function useTasks(
     [repo],
   )
 
-  return { tasks, addTask, assignToSelf, release, setDone, remove }
+  return { tasks, addTask, editTask, assignToSelf, release, setDone, remove }
 }

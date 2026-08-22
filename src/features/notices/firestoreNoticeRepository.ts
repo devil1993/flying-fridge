@@ -11,7 +11,7 @@ import {
   type QueryDocumentSnapshot,
 } from 'firebase/firestore'
 import { getDb } from '../../lib/firebase'
-import type { Notice, NewNoticeInput, NoticeStatus, Actor } from './types'
+import type { Notice, NewNoticeInput, EditNoticeInput, NoticeStatus, Actor } from './types'
 import type { NoticeRepository } from './repository'
 
 const COLLECTION = 'notices'
@@ -66,6 +66,14 @@ export const firestoreNoticeRepository: NoticeRepository = {
       createdBy: author.id,
       createdByName: author.name,
       createdAt: serverTimestamp(),
+      updatedAt: serverTimestamp(),
+    })
+  },
+
+  async update(noticeId, changes: EditNoticeInput) {
+    await updateDoc(doc(getDb(), COLLECTION, noticeId), {
+      text: changes.text,
+      date: changes.date,
       updatedAt: serverTimestamp(),
     })
   },

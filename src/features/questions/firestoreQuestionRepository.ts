@@ -13,7 +13,7 @@ import {
   type QueryDocumentSnapshot,
 } from 'firebase/firestore'
 import { getDb } from '../../lib/firebase'
-import type { Question, Answer, NewQuestionInput, QuestionStatus, Actor } from './types'
+import type { Question, Answer, NewQuestionInput, EditQuestionInput, QuestionStatus, Actor } from './types'
 import type { QuestionRepository } from './repository'
 
 const COLLECTION = 'questions'
@@ -55,6 +55,13 @@ export const firestoreQuestionRepository: QuestionRepository = {
       createdBy: author.id,
       createdByName: author.name,
       createdAt: serverTimestamp(),
+      updatedAt: serverTimestamp(),
+    })
+  },
+
+  async update(questionId, changes: EditQuestionInput) {
+    await updateDoc(doc(getDb(), COLLECTION, questionId), {
+      text: changes.text,
       updatedAt: serverTimestamp(),
     })
   },

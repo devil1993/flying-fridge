@@ -1,8 +1,10 @@
-import type { Question, NewQuestionInput, Actor } from './types'
+import type { Question, NewQuestionInput, EditQuestionInput, Actor } from './types'
 
 export interface QuestionRepository {
   subscribe(familyId: string, onChange: (questions: Question[]) => void): () => void
   add(familyId: string, input: NewQuestionInput, author: Actor): Promise<void>
+  /** Correct the author-entered question text. */
+  update(questionId: string, changes: EditQuestionInput): Promise<void>
   addAnswer(questionId: string, text: string, author: Actor): Promise<void>
   close(questionId: string): Promise<void>
   reopen(questionId: string): Promise<void>
@@ -59,6 +61,16 @@ export class InMemoryQuestionRepository implements QuestionRepository {
       updatedAt: ts,
     })
     this.emit()
+    return Promise.resolve()
+  }
+
+  update(questionId: string, changes: EditQuestionInput): Promise<void> {
+    const question = this.questions.get(questionId)
+    if (question) {
+      question.text = changes.text
+      question.updatedAt = this.now()
+      this.emit()
+    }
     return Promise.resolve()
   }
 

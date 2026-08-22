@@ -49,4 +49,21 @@ describe('LostFoundBoard', () => {
     fireEvent.click(screen.getByRole('button', { name: 'Restore' }))
     expect(screen.getByRole('button', { name: /found it/i })).toBeInTheDocument()
   })
+
+  it('edits a post in place to fix a mistake', () => {
+    renderBoard(new InMemoryLostRepository())
+    fireEvent.change(screen.getByLabelText(/what are you looking for/i), {
+      target: { value: 'My kees' },
+    })
+    fireEvent.click(screen.getByRole('button', { name: 'Post' }))
+
+    fireEvent.click(screen.getByRole('button', { name: 'Edit' }))
+    fireEvent.change(screen.getByLabelText('Edit description'), {
+      target: { value: 'My keys' },
+    })
+    fireEvent.click(screen.getByRole('button', { name: 'Save' }))
+
+    expect(screen.getByText('My keys')).toBeInTheDocument()
+    expect(screen.queryByText('My kees')).not.toBeInTheDocument()
+  })
 })

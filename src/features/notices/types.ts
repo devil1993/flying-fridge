@@ -28,6 +28,12 @@ export interface NewNoticeInput {
   permanent?: boolean
 }
 
+/** The author-editable fields of a notice (correcting a mistake). */
+export interface EditNoticeInput {
+  text: string
+  date: string | null
+}
+
 export interface Actor {
   id: string
   name: string

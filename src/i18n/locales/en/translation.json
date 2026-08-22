@@ -101,6 +101,13 @@
       "dateLabel": "Target date (optional)",
       "submit": "Add task"
     },
+    "edit": {
+      "action": "Edit",
+      "save": "Save",
+      "cancel": "Cancel",
+      "descriptionLabel": "Edit task description",
+      "dateLabel": "Edit target date"
+    },
     "mine": "My tasks",
     "board": "Board",
     "empty": "Nothing here yet.",
@@ -137,6 +144,13 @@
       "dateLabel": "Date (optional)",
       "submit": "Post notice"
     },
+    "edit": {
+      "action": "Edit",
+      "save": "Save",
+      "cancel": "Cancel",
+      "textLabel": "Edit notice",
+      "dateLabel": "Edit notice date"
+    },
     "empty": "No notices on the board.",
     "on": "for {{date}}",
     "important": "Important",
@@ -156,6 +170,12 @@
       "placeholder": "e.g. My blue water bottle",
       "submit": "Post"
     },
+    "edit": {
+      "action": "Edit",
+      "save": "Save",
+      "cancel": "Cancel",
+      "descriptionLabel": "Edit description"
+    },
     "empty": "Nothing lost right now.",
     "postedToday": "posted today",
     "postedAgo": "posted {{count}}d ago",
@@ -173,6 +193,12 @@
       "quantity": "Qty",
       "submit": "Add"
     },
+    "edit": {
+      "action": "Edit",
+      "save": "Save",
+      "cancel": "Cancel",
+      "nameLabel": "Edit food item"
+    },
     "empty": "The pantry list is empty.",
     "freshUnknown": "freshness unknown",
     "expired": "past its best",
@@ -189,6 +215,12 @@
       "label": "Question",
       "placeholder": "Ask the family something…",
       "submit": "Ask"
+    },
+    "edit": {
+      "action": "Edit",
+      "save": "Save",
+      "cancel": "Cancel",
+      "textLabel": "Edit question"
     },
     "empty": "No open questions.",
     "answerLabel": "Your answer",
@@ -252,7 +284,8 @@
           "Open Tasks and add one with a short description.",
           "Optionally set a target date — the dashboard colour-codes tasks by how close that date is.",
           "Assign a task to yourself so nobody else picks it up; your assigned tasks gather in their own section.",
-          "Mark it done when finished — it stays in the timeline even after it leaves the board."
+          "Mark it done when finished — it stays in the timeline even after it leaves the board.",
+          "Made a mistake? Select Edit on a task to fix its description or target date in place."
         ],
         "tip": "No target date? The task still lives on the board — dates just drive the colour coding and calendar."
       },
@@ -264,7 +297,8 @@
           "Add an optional date if the notice is about a specific day.",
           "It stays on the noticeboard for one month, or until someone takes it down.",
           "Mark it permanent to keep it up until it's pulled down.",
-          "Mark it important to give it a colour highlight so it stands out."
+          "Mark it important to give it a colour highlight so it stands out.",
+          "Spotted a typo? Select Edit to correct the notice's text or date in place."
         ],
         "tip": "Use 'important' for things people must not miss, and 'permanent' for standing info like the Wi-Fi password."
       },
@@ -275,7 +309,8 @@
           "Add what you're looking for with a short description (a photo helps).",
           "The posting date is shown so everyone sees how long it's been missing.",
           "Family members can help locate it.",
-          "Take it down once it's found — it stays in the timeline either way."
+          "Take it down once it's found — it stays in the timeline either way.",
+          "Got the description wrong? Select Edit to fix it in place."
         ],
         "tip": "Old, unresolved posts are easy to spot by their posting date."
       },
@@ -286,7 +321,8 @@
           "Add a food item with when it was made and how long it's likely to stay good.",
           "Set an approximate quantity so everyone understands how much there is.",
           "Anyone can increase or reduce the amount as it's used.",
-          "Mark it consumed to remove it from the list — it's kept in the timeline."
+          "Mark it consumed to remove it from the list — it's kept in the timeline.",
+          "Entered something wrong? Select Edit to fix the name, made-on date, or shelf life."
         ],
         "tip": "Freshness comes from when it was made plus how long it keeps — check before you cook."
       },
@@ -297,7 +333,8 @@
           "Post a question — for example, 'Pizza or pasta on Friday?'.",
           "Family members chime in with answers.",
           "Keep the discussion in one place instead of scattered messages.",
-          "Close it once it's answered; it stays in the timeline for later."
+          "Close it once it's answered; it stays in the timeline for later.",
+          "Worded it awkwardly? Select Edit to correct the question in place."
         ],
         "tip": "Great for quick decisions without a dozen back-and-forth texts."
       },

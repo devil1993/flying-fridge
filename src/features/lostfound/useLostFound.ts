@@ -1,7 +1,7 @@
 import { useCallback, useEffect, useState } from 'react'
 import { track } from '../../lib/firebase'
 import { notifyItemAdded } from '../notifications/notify'
-import type { LostItem, NewLostInput, Actor } from './types'
+import type { LostItem, NewLostInput, EditLostInput, Actor } from './types'
 import type { LostRepository } from './repository'
 
 export function useLostFound(
@@ -28,6 +28,13 @@ export function useLostFound(
     },
     [repo, familyId, actor],
   )
+  const editItem = useCallback(
+    (id: string, changes: EditLostInput) => {
+      void repo.update(id, changes)
+      void track('lost_edit')
+    },
+    [repo],
+  )
   const markFound = useCallback(
     (id: string) => {
       void repo.markFound(id)
@@ -44,5 +51,5 @@ export function useLostFound(
     [repo],
   )
 
-  return { items, addItem, markFound, takeDown, restore }
+  return { items, addItem, editItem, markFound, takeDown, restore }
 }

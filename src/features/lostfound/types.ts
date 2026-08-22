@@ -16,6 +16,11 @@ export interface NewLostInput {
   description: string
 }
 
+/** The author-editable fields of a lost & found post (correcting a mistake). */
+export interface EditLostInput {
+  description: string
+}
+
 export interface Actor {
   id: string
   name: string

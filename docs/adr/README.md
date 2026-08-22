@@ -59,3 +59,4 @@ Files are named `NNNN-short-slug.md` where `NNNN` is a zero-padded four-digit in
 | [0015](0015-dashboard-agenda-aggregation.md) | Dashboard Agenda: Cross-Module Aggregation & Relevant-Date Mapping | Accepted | 2026-07-26 |
 | [0016](0016-mobile-bottom-navigation.md) | Bottom Navigation on Small Screens | Accepted | 2026-07-26 |
 | [0017](0017-ephemeral-demo-mode.md) | Ephemeral, Client-Only Demo Mode | Accepted | 2026-07-27 |
+| [0018](0018-editable-board-entries.md) | Editable Board Entries (In-Place Correction of Author Content) | Accepted | 2026-08-21 |

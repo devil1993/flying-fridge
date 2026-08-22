@@ -1,8 +1,10 @@
-import type { LostItem, NewLostInput, Actor } from './types'
+import type { LostItem, NewLostInput, EditLostInput, Actor } from './types'
 
 export interface LostRepository {
   subscribe(familyId: string, onChange: (items: LostItem[]) => void): () => void
   add(familyId: string, input: NewLostInput, author: Actor): Promise<void>
+  /** Correct the author-entered description. */
+  update(itemId: string, changes: EditLostInput): Promise<void>
   markFound(itemId: string): Promise<void>
   takeDown(itemId: string): Promise<void>
   /** Bring a found/taken-down item back to the board (undo). */
@@ -59,6 +61,16 @@ export class InMemoryLostRepository implements LostRepository {
       updatedAt: ts,
     })
     this.emit()
+    return Promise.resolve()
+  }
+
+  update(itemId: string, changes: EditLostInput): Promise<void> {
+    const item = this.items.get(itemId)
+    if (item) {
+      item.description = changes.description
+      item.updatedAt = this.now()
+      this.emit()
+    }
     return Promise.resolve()
   }
 

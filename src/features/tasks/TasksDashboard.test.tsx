@@ -51,6 +51,31 @@ describe('TasksDashboard', () => {
       screen.getByRole('button', { name: /reopen/i }),
     ).toBeInTheDocument()
   })
+
+  it('edits a task in place to fix a mistake', () => {
+    const repo = new InMemoryTaskRepository()
+    render(
+      <AuthContext.Provider value={authValue()}>
+        <FamilyContext.Provider value={familyValue()}>
+          <TasksDashboard repository={repo} />
+        </FamilyContext.Provider>
+      </AuthContext.Provider>,
+    )
+
+    fireEvent.change(screen.getByLabelText(/what needs doing/i), {
+      target: { value: 'Buy milk' },
+    })
+    fireEvent.click(screen.getByRole('button', { name: /add task/i }))
+
+    fireEvent.click(screen.getByRole('button', { name: 'Edit' }))
+    fireEvent.change(screen.getByLabelText('Edit task description'), {
+      target: { value: 'Buy oat milk' },
+    })
+    fireEvent.click(screen.getByRole('button', { name: 'Save' }))
+
+    expect(screen.getByText('Buy oat milk')).toBeInTheDocument()
+    expect(screen.queryByText('Buy milk')).not.toBeInTheDocument()
+  })
 })
 
 describe('AppHome (signed in with a family)', () => {

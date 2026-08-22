@@ -55,19 +55,19 @@ model {
         description 'Sign-in (Email/Password + Google), auth state, route gating.'
       }
       tasks = component 'features/tasks' {
-        description 'Tasks board: domain, repository (Firestore + in-memory), dashboard UI, telemetry.'
+        description 'Tasks board: domain, repository (Firestore + in-memory), dashboard UI, telemetry. Items are editable in place (ADR-0018).'
       }
       notices = component 'features/notices' {
-        description 'Notices board: 1-month/permanent/important notices; domain, repository, UI.'
+        description 'Notices board: 1-month/permanent/important notices; domain, repository, UI. Text/date editable in place (ADR-0018).'
       }
       lostfound = component 'features/lostfound' {
-        description 'Lost & Found: post a search until found or taken down; posting date.'
+        description 'Lost & Found: post a search until found or taken down; posting date. Description editable in place (ADR-0018).'
       }
       pantry = component 'features/pantry' {
-        description 'Pantry: made-date, shelf life, quantity +/-, mark consumed.'
+        description 'Pantry: made-date, shelf life, quantity +/-, mark consumed. Name/made-date/shelf-life editable in place (ADR-0018).'
       }
       questions = component 'features/questions' {
-        description 'Questions: ask, answer (array), close; general Q&A for the family.'
+        description 'Questions: ask, answer (array), close; general Q&A for the family. Question text editable in place (ADR-0018).'
       }
       family = component 'features/family' {
         description 'Current-family context (minimal shared code for now; Firestore-backed membership later).'

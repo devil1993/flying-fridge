@@ -23,6 +23,12 @@ export interface NewTaskInput {
   targetDate?: string | null
 }
 
+/** The author-editable fields of a task (correcting a mistake). */
+export interface EditTaskInput {
+  description: string
+  targetDate: string | null
+}
+
 export interface Actor {
   id: string
   name: string

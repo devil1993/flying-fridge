@@ -53,6 +53,23 @@ describe('NoticesBoard', () => {
     ).toBeInTheDocument()
   })
 
+  it('edits a notice in place to fix a mistake', () => {
+    renderBoard(new InMemoryNoticeRepository())
+    fireEvent.change(screen.getByLabelText('Notice'), {
+      target: { value: 'Wi-Fi is FRIDG123' },
+    })
+    fireEvent.click(screen.getByRole('button', { name: /post notice/i }))
+
+    fireEvent.click(screen.getByRole('button', { name: 'Edit' }))
+    fireEvent.change(screen.getByLabelText('Edit notice'), {
+      target: { value: 'Wi-Fi is FRIDGE123' },
+    })
+    fireEvent.click(screen.getByRole('button', { name: 'Save' }))
+
+    expect(screen.getByText('Wi-Fi is FRIDGE123')).toBeInTheDocument()
+    expect(screen.queryByText('Wi-Fi is FRIDG123')).not.toBeInTheDocument()
+  })
+
   it('makes a notice permanent', () => {
     renderBoard(new InMemoryNoticeRepository())
     fireEvent.change(screen.getByLabelText('Notice'), {

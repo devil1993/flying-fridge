@@ -12,7 +12,7 @@ import {
   type QueryDocumentSnapshot,
 } from 'firebase/firestore'
 import { getDb } from '../../lib/firebase'
-import type { LostItem, NewLostInput, LostStatus, Actor } from './types'
+import type { LostItem, NewLostInput, EditLostInput, LostStatus, Actor } from './types'
 import type { LostRepository } from './repository'
 
 const COLLECTION = 'lostAndFound'
@@ -52,6 +52,13 @@ export const firestoreLostRepository: LostRepository = {
       createdBy: author.id,
       createdByName: author.name,
       createdAt: serverTimestamp(),
+      updatedAt: serverTimestamp(),
+    })
+  },
+
+  async update(itemId, changes: EditLostInput) {
+    await updateDoc(doc(getDb(), COLLECTION, itemId), {
+      description: changes.description,
       updatedAt: serverTimestamp(),
     })
   },

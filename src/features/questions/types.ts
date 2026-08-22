@@ -24,6 +24,11 @@ export interface NewQuestionInput {
   text: string
 }
 
+/** The author-editable fields of a question (correcting a mistake). */
+export interface EditQuestionInput {
+  text: string
+}
+
 export interface Actor {
   id: string
   name: string

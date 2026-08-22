@@ -270,6 +270,17 @@ Small fixes from user acceptance testing:
 - ✅ **Recently closed + restore** on all boards — a completed/taken-down/
   consumed/closed item shows in a "Recently closed" list with a **Restore**
   action (repository `restore()` puts the status back). Tasks already reopen.
+- ✅ **Editable entries** — every board item's author-entered content is editable
+  **in place** (inline Edit → Save/Cancel), so a typo or wrong date is fixed
+  without delete + re-add (which would lose the timeline and re-notify the
+  family). Each repository gained an `update(id, changes)` method (Firestore +
+  in-memory) writing only the content fields + `updatedAt`; hooks expose an edit
+  action with telemetry (`*_edit`). Editable per module: tasks
+  (description/date), notices (text/date), lost & found (description), pantry
+  (name/made-on/keeps-days), questions (text). System fields keep their own
+  actions; no schema or rules change (`allow update` already existed for soft
+  delete). i18n en+bn, Guide/data-model §6f-2/C4 updated, tests per board.
+  **ADR-0018.**
 - ✅ **Dark-mode readability** — pinned `<select>` option colours (theme palette
   + settings language) to theme tokens.
 - ✅ **Notifications** — badge clears reliably on view (mark-read effect while the

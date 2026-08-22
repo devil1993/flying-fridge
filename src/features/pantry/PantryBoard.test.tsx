@@ -52,4 +52,21 @@ describe('PantryBoard', () => {
     fireEvent.click(screen.getByRole('button', { name: 'Restore' }))
     expect(screen.getByRole('button', { name: 'Consumed' })).toBeInTheDocument()
   })
+
+  it('edits an item in place to fix a mistake', () => {
+    renderBoard(new InMemoryPantryRepository())
+    fireEvent.change(screen.getByLabelText(/food item/i), {
+      target: { value: 'Milc' },
+    })
+    fireEvent.click(screen.getByRole('button', { name: 'Add' }))
+
+    fireEvent.click(screen.getByRole('button', { name: 'Edit' }))
+    fireEvent.change(screen.getByLabelText('Edit food item'), {
+      target: { value: 'Milk' },
+    })
+    fireEvent.click(screen.getByRole('button', { name: 'Save' }))
+
+    expect(screen.getByText('Milk')).toBeInTheDocument()
+    expect(screen.queryByText('Milc')).not.toBeInTheDocument()
+  })
 })

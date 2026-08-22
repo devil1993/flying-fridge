@@ -25,6 +25,14 @@ export interface NewPantryInput {
   quantity?: number
 }
 
+/** The author-editable fields of a pantry item (correcting a mistake).
+ *  Quantity has its own +/- control, so it isn't edited here. */
+export interface EditPantryInput {
+  name: string
+  madeOn: string | null
+  keepsDays: number | null
+}
+
 export interface Actor {
   id: string
   name: string

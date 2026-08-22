@@ -1,4 +1,4 @@
-import { type FormEvent } from 'react'
+import { useState, type FormEvent } from 'react'
 import { useTranslation } from 'react-i18next'
 import { useAuth } from '../auth/authContext'
 import { useFamily } from '../family/familyContext'
@@ -22,15 +22,16 @@ export default function PantryBoard({
   const { familyId } = useFamily()
   const actor = { id: user?.id ?? '', name: user?.name ?? '' }
 
-  const { items, addItem, changeQuantity, markConsumed, restore } = usePantry(
-    repository,
-    familyId,
-    actor,
-  )
+  const { items, addItem, editItem, changeQuantity, markConsumed, restore } =
+    usePantry(repository, familyId, actor)
   const [name, setName, clearName] = useDraft('pantry.name')
   const [madeOn, setMadeOn, clearMadeOn] = useDraft('pantry.madeOn')
   const [keeps, setKeeps, clearKeeps] = useDraft('pantry.keeps')
   const [qty, setQty, clearQty] = useDraft('pantry.qty', '1')
+  const [editingId, setEditingId] = useState<string | null>(null)
+  const [editName, setEditName] = useState('')
+  const [editMadeOn, setEditMadeOn] = useState('')
+  const [editKeeps, setEditKeeps] = useState('')
 
   const now = Date.now()
   const inStock = items.filter(isInStock)
@@ -51,6 +52,24 @@ export default function PantryBoard({
     clearMadeOn()
     clearKeeps()
     clearQty()
+  }
+
+  function startEdit(item: PantryItem) {
+    setEditingId(item.id)
+    setEditName(item.name)
+    setEditMadeOn(item.madeOn ?? '')
+    setEditKeeps(item.keepsDays != null ? String(item.keepsDays) : '')
+  }
+
+  function saveEdit(e: FormEvent) {
+    e.preventDefault()
+    if (!editingId || !editName.trim()) return
+    editItem(editingId, {
+      name: editName.trim(),
+      madeOn: editMadeOn || null,
+      keepsDays: editKeeps ? Math.max(0, Number(editKeeps)) : null,
+    })
+    setEditingId(null)
   }
 
   function freshnessLabel(item: PantryItem): string {
@@ -116,54 +135,100 @@ export default function PantryBoard({
         <p className="task-empty">{t('pantry.empty')}</p>
       ) : (
         <ul className="pantry-list">
-          {inStock.map((item) => (
-            <li key={item.id} className="pantry-card">
-              <div className="pantry-main">
-                <p className="pantry-name">{item.name}</p>
-                <div className="pantry-meta">
-                  <span>{freshnessLabel(item)}</span>
-                  {item.madeOn && (
-                    <span>
-                      {t('pantry.madeOnLabel', {
-                        date: formatIsoDate(item.madeOn),
-                      })}
-                    </span>
-                  )}
+          {inStock.map((item) =>
+            editingId === item.id ? (
+              <li key={item.id} className="pantry-card">
+                <form className="pantry-edit" onSubmit={saveEdit}>
+                  <input
+                    className="pantry-add-name"
+                    aria-label={t('pantry.edit.nameLabel')}
+                    value={editName}
+                    onChange={(e) => setEditName(e.target.value)}
+                  />
+                  <div className="pantry-add-row">
+                    <label className="pantry-field">
+                      <span>{t('pantry.add.madeOn')}</span>
+                      <input
+                        type="date"
+                        value={editMadeOn}
+                        onChange={(e) => setEditMadeOn(e.target.value)}
+                      />
+                    </label>
+                    <label className="pantry-field">
+                      <span>{t('pantry.add.keepsDays')}</span>
+                      <input
+                        type="number"
+                        min="0"
+                        inputMode="numeric"
+                        value={editKeeps}
+                        onChange={(e) => setEditKeeps(e.target.value)}
+                      />
+                    </label>
+                    <button type="submit" disabled={!editName.trim()}>
+                      {t('pantry.edit.save')}
+                    </button>
+                    <button type="button" onClick={() => setEditingId(null)}>
+                      {t('pantry.edit.cancel')}
+                    </button>
+                  </div>
+                </form>
+              </li>
+            ) : (
+              <li key={item.id} className="pantry-card">
+                <div className="pantry-main">
+                  <p className="pantry-name">{item.name}</p>
+                  <div className="pantry-meta">
+                    <span>{freshnessLabel(item)}</span>
+                    {item.madeOn && (
+                      <span>
+                        {t('pantry.madeOnLabel', {
+                          date: formatIsoDate(item.madeOn),
+                        })}
+                      </span>
+                    )}
+                  </div>
                 </div>
-              </div>
-              <div className="pantry-controls">
-                <div
-                  className="pantry-qty"
-                  role="group"
-                  aria-label={t('pantry.quantityLabel', { name: item.name })}
-                >
+                <div className="pantry-controls">
+                  <div
+                    className="pantry-qty"
+                    role="group"
+                    aria-label={t('pantry.quantityLabel', { name: item.name })}
+                  >
+                    <button
+                      type="button"
+                      aria-label={t('pantry.decrease')}
+                      disabled={item.quantity <= 0}
+                      onClick={() => changeQuantity(item.id, -1)}
+                    >
+                      −
+                    </button>
+                    <span className="pantry-qty-value">{item.quantity}</span>
+                    <button
+                      type="button"
+                      aria-label={t('pantry.increase')}
+                      onClick={() => changeQuantity(item.id, 1)}
+                    >
+                      +
+                    </button>
+                  </div>
                   <button
                     type="button"
-                    aria-label={t('pantry.decrease')}
-                    disabled={item.quantity <= 0}
-                    onClick={() => changeQuantity(item.id, -1)}
+                    className="pantry-edit-action"
+                    onClick={() => startEdit(item)}
                   >
-                    −
+                    {t('pantry.edit.action')}
                   </button>
-                  <span className="pantry-qty-value">{item.quantity}</span>
                   <button
                     type="button"
-                    aria-label={t('pantry.increase')}
-                    onClick={() => changeQuantity(item.id, 1)}
+                    className="pantry-consume"
+                    onClick={() => markConsumed(item.id)}
                   >
-                    +
+                    {t('pantry.consume')}
                   </button>
                 </div>
-                <button
-                  type="button"
-                  className="pantry-consume"
-                  onClick={() => markConsumed(item.id)}
-                >
-                  {t('pantry.consume')}
-                </button>
-              </div>
-            </li>
-          ))}
+              </li>
+            ),
+          )}
         </ul>
       )}
 

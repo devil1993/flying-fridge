@@ -53,4 +53,21 @@ describe('QuestionsBoard', () => {
     fireEvent.click(screen.getByRole('button', { name: 'Restore' }))
     expect(screen.getByRole('button', { name: 'Close' })).toBeInTheDocument()
   })
+
+  it('edits a question in place to fix a mistake', () => {
+    renderBoard(new InMemoryQuestionRepository())
+    fireEvent.change(screen.getByLabelText('Question'), {
+      target: { value: 'Piza or pasta?' },
+    })
+    fireEvent.click(screen.getByRole('button', { name: 'Ask' }))
+
+    fireEvent.click(screen.getByRole('button', { name: 'Edit' }))
+    fireEvent.change(screen.getByLabelText('Edit question'), {
+      target: { value: 'Pizza or pasta?' },
+    })
+    fireEvent.click(screen.getByRole('button', { name: 'Save' }))
+
+    expect(screen.getByText('Pizza or pasta?')).toBeInTheDocument()
+    expect(screen.queryByText('Piza or pasta?')).not.toBeInTheDocument()
+  })
 })

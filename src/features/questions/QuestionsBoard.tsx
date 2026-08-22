@@ -20,11 +20,8 @@ export default function QuestionsBoard({
   const { familyId } = useFamily()
   const actor = { id: user?.id ?? '', name: user?.name ?? '' }
 
-  const { questions, addQuestion, addAnswer, close, reopen } = useQuestions(
-    repository,
-    familyId,
-    actor,
-  )
+  const { questions, addQuestion, editQuestion, addAnswer, close, reopen } =
+    useQuestions(repository, familyId, actor)
   const [text, setText, clearText] = useDraft('questions.text')
   const open = questions.filter((q) => q.status === 'open')
   const closed = questions
@@ -69,6 +66,7 @@ export default function QuestionsBoard({
               key={q.id}
               question={q}
               onAnswer={addAnswer}
+              onEdit={editQuestion}
               onClose={close}
             />
           ))}

@@ -21,11 +21,8 @@ export default function TasksDashboard({
   const { familyId } = useFamily()
   const actor = { id: user?.id ?? '', name: user?.name ?? '' }
 
-  const { tasks, addTask, assignToSelf, release, setDone, remove } = useTasks(
-    repository,
-    familyId,
-    actor,
-  )
+  const { tasks, addTask, editTask, assignToSelf, release, setDone, remove } =
+    useTasks(repository, familyId, actor)
   const [desc, setDesc, clearDesc] = useDraft('tasks.desc')
   const [date, setDate, clearDate] = useDraft('tasks.date')
 
@@ -52,6 +49,7 @@ export default function TasksDashboard({
             onAssignSelf={assignToSelf}
             onRelease={release}
             onToggleDone={setDone}
+            onEdit={editTask}
             onRemove={remove}
           />
         ))}

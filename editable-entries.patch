@@ -1,0 +1,2099 @@
+From 474d429ad625c1620cbc72d6231cebb7c38cb52a Mon Sep 17 00:00:00 2001
+From: devil1993 <samanwayghatak@gmail.com>
+Date: Fri, 21 Aug 2026 10:30:16 +0530
+Subject: [PATCH] feat(boards): edit entries in place across all five modules
+MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+
+Board items (tasks, notices, lost & found, pantry, questions) were
+create/delete only, so a typo or wrong date meant deleting and re-adding
+— which loses the timeline (soft delete, ADR-0013) and re-notifies the
+family. This adds in-place editing of author-entered content.
+
+- Repositories: add `update(id, changes)` to every interface + both the
+  Firestore and in-memory implementations, writing only content fields +
+  updatedAt. No schema or Firestore-rules change — `allow update` already
+  existed for soft delete.
+- Hooks: each exposes an edit action with a `*_edit` telemetry event.
+- UI: inline Edit -> Save/Cancel on each card (Save disabled on empty
+  required text; no autoFocus, per the a11y baseline).
+
+Editable per module: tasks (description/date), notices (text/date),
+lost & found (description), pantry (name/made-on/keeps-days), questions
+(text). Status/assignee/soft-delete keep their own dedicated actions.
+
+Docs currency (ADR-0012): ADR-0018, data-model 6f-2, LikeC4 model,
+in-app Guide steps, PROGRESS.md. i18n en+bn. Tests: repository update
+unit test + an edit-flow test per board (94 passing).
+
+Co-Authored-By: Claude Opus 4.8 (1M context) <noreply@anthropic.com>
+---
+ PROGRESS.md                                   |  11 ++
+ docs/adr/0018-editable-board-entries.md       | 140 ++++++++++++++++
+ docs/adr/README.md                            |   1 +
+ docs/design/architecture/flying-fridge.c4     |  10 +-
+ docs/design/data-model.md                     |  20 +++
+ .../lostfound/LostFoundBoard.test.tsx         |  17 ++
+ src/features/lostfound/LostFoundBoard.tsx     |  51 +++++-
+ .../lostfound/firestoreLostRepository.ts      |   9 +-
+ src/features/lostfound/lostfound.css          |  13 ++
+ src/features/lostfound/repository.ts          |  14 +-
+ src/features/lostfound/types.ts               |   5 +
+ src/features/lostfound/useLostFound.ts        |  11 +-
+ src/features/notices/NoticeCard.tsx           |  60 ++++++-
+ src/features/notices/NoticesBoard.test.tsx    |  17 ++
+ src/features/notices/NoticesBoard.tsx         |  12 +-
+ .../notices/firestoreNoticeRepository.ts      |  10 +-
+ src/features/notices/notices.css              |  33 ++++
+ src/features/notices/repository.ts            |   9 +-
+ src/features/notices/types.ts                 |   6 +
+ src/features/notices/useNotices.ts            |  19 ++-
+ src/features/pantry/PantryBoard.test.tsx      |  17 ++
+ src/features/pantry/PantryBoard.tsx           | 153 +++++++++++++-----
+ .../pantry/firestorePantryRepository.ts       |  11 +-
+ src/features/pantry/pantry.css                |  39 +++++
+ src/features/pantry/repository.ts             |  16 +-
+ src/features/pantry/types.ts                  |   8 +
+ src/features/pantry/usePantry.ts              |  11 +-
+ src/features/questions/QuestionCard.tsx       |  66 ++++++--
+ .../questions/QuestionsBoard.test.tsx         |  17 ++
+ src/features/questions/QuestionsBoard.tsx     |   8 +-
+ .../questions/firestoreQuestionRepository.ts  |   9 +-
+ src/features/questions/questions.css          |  45 ++++++
+ src/features/questions/repository.ts          |  14 +-
+ src/features/questions/types.ts               |   5 +
+ src/features/questions/useQuestions.ts        |  11 +-
+ src/features/tasks/TaskCard.tsx               |  55 ++++++-
+ src/features/tasks/TasksDashboard.test.tsx    |  25 +++
+ src/features/tasks/TasksDashboard.tsx         |   8 +-
+ src/features/tasks/firestoreTaskRepository.ts |  10 +-
+ src/features/tasks/repository.test.ts         |  14 ++
+ src/features/tasks/repository.ts              |  15 +-
+ src/features/tasks/tasks.css                  |  27 ++++
+ src/features/tasks/types.ts                   |   6 +
+ src/features/tasks/useTasks.ts                |  12 +-
+ src/i18n/locales/bn/translation.json          |  32 ++++
+ src/i18n/locales/en/translation.json          |  47 +++++-
+ 46 files changed, 1045 insertions(+), 104 deletions(-)
+ create mode 100644 docs/adr/0018-editable-board-entries.md
+
+diff --git a/PROGRESS.md b/PROGRESS.md
+index 6ddd810..905b102 100644
+--- a/PROGRESS.md
++++ b/PROGRESS.md
+@@ -270,6 +270,17 @@ Small fixes from user acceptance testing:
+ - ✅ **Recently closed + restore** on all boards — a completed/taken-down/
+   consumed/closed item shows in a "Recently closed" list with a **Restore**
+   action (repository `restore()` puts the status back). Tasks already reopen.
++- ✅ **Editable entries** — every board item's author-entered content is editable
++  **in place** (inline Edit → Save/Cancel), so a typo or wrong date is fixed
++  without delete + re-add (which would lose the timeline and re-notify the
++  family). Each repository gained an `update(id, changes)` method (Firestore +
++  in-memory) writing only the content fields + `updatedAt`; hooks expose an edit
++  action with telemetry (`*_edit`). Editable per module: tasks
++  (description/date), notices (text/date), lost & found (description), pantry
++  (name/made-on/keeps-days), questions (text). System fields keep their own
++  actions; no schema or rules change (`allow update` already existed for soft
++  delete). i18n en+bn, Guide/data-model §6f-2/C4 updated, tests per board.
++  **ADR-0018.**
+ - ✅ **Dark-mode readability** — pinned `<select>` option colours (theme palette
+   + settings language) to theme tokens.
+ - ✅ **Notifications** — badge clears reliably on view (mark-read effect while the
+diff --git a/docs/adr/0018-editable-board-entries.md b/docs/adr/0018-editable-board-entries.md
+new file mode 100644
+index 0000000..26c7f4f
+--- /dev/null
++++ b/docs/adr/0018-editable-board-entries.md
+@@ -0,0 +1,140 @@
++# 0018 — Editable Board Entries (In-Place Correction of Author Content)
++
++- **Status:** Accepted
++- **Date:** 2026-08-21
++- **Type:** Architecture / Data model
++
++## Context
++
++All five board modules (tasks, notices, lost & found, pantry, questions) were
++**create/delete only**. A typo in a task description, a wrong date on a notice,
++or a misspelled pantry item could only be corrected by deleting and re-adding.
++That workaround has two concrete costs:
++
++1. **It pierces ADR-0013's timeline guarantee.** Soft-delete preserves the old
++   record but the corrected entry starts a fresh timeline, losing the original
++   `createdAt` and any completion/status history.
++2. **It fires a re-notification.** ADR-0013's add action appends to the
++   `notifications` feed; the family gets pinged for the same item twice, once
++   for the deletion (no notification) and once for the fresh add.
++
++The stack imposes no new constraints here. Flying Fridge is frontend-only on
++Firebase (ADR-0001/0002) and every module already follows the **repository
++pattern** (interface + Firestore impl + in-memory impl + hook + board/card UI).
++Firestore Security Rules already contain `allow update: if isMemberOf(...)` on
++all five board collections — that gate was introduced in ADR-0013 so that
++soft-delete could write its `deleted` marker. Content edits travel through the
++same rule and **require no rules change**.
++
++## Options Considered
++
++### Edit UX
++
++| Option | Assessment |
++|--------|------------|
++| **A — Inline Edit → Save / Cancel on each card (chosen)** | Matches the existing in-card action pattern (complete, remove, etc.); mobile-first; no new UI primitive; keyboard-accessible. Trade-off: the form lives in an already-dense card and must be carefully scoped to content fields only. |
++| B — Modal dialog | Cleaner visual isolation, but the app uses no modal dialogs elsewhere and introducing one is a heavier pattern than the problem warrants. Rejected. |
++| C — Delete + re-add only (status quo) | Loses timeline, re-notifies the family, violates ADR-0013 intent. Rejected. |
++
++### Field scope
++
++| Option | Assessment |
++|--------|------------|
++| **Content fields only (chosen)** | Tasks: `description` + `targetDate`. Notices: `text` + `date`. Lost & found: `description`. Pantry: `name` + `madeOn` + `keepsDays`. Questions: `text`. System fields (`status`, `assignee`, `deleted`, `createdBy`, `createdAt`, answers) keep their own dedicated controls. Pantry quantity keeps its +/- stepper and is excluded from the edit form. |
++| All fields including system fields | Allowing edits to `createdBy`, `assignee`, or answers blurs the audit trail and duplicates purpose with existing controls. Rejected. |
++
++### Persistence
++
++| Option | Assessment |
++|--------|------------|
++| **`update(id, changes)` on the repository interface (chosen)** | Firestore `updateDoc` writes only the changed content fields + `updatedAt`. In-memory impl patches the record in place. Purely additive: no new collection, no schema migration. |
++| New `edits` sub-collection per item | Full field-level history. Out of scope for the current family-board trust model; deferred explicitly below. |
++
++## Decision
++
++### Repository layer
++
++Add an `Edit<Module>Input` type per module (e.g. `EditTaskInput`,
++`EditNoticeInput`) and a corresponding `update(id, changes)` method to all five
++repository interfaces. Both implementations receive the method:
++
++- **Firestore impl** — `updateDoc` writes the content fields plus `updatedAt:
++  serverTimestamp()`.
++- **In-memory impl** — patches the record in the array in place, same field set.
++
++`createdBy` and `createdAt` are never touched by `update`. Edits do not append
++to the `notifications` feed (a correction is not an event the family needs to
++be alerted about).
++
++### Hook layer
++
++Each board hook exposes an `edit<Module>` action (e.g. `editTask`, `editNotice`,
++`editPantryItem`) that calls the repository `update` and emits a scoped
++telemetry event (`task_edit`, `notice_edit`, `lost_edit`, `pantry_edit`,
++`question_edit`).
++
++### UI layer
++
++- **Tasks, notices, questions** — an Edit button on each card toggles an inline
++  form (pre-populated with current values). Save and Cancel sit inline. Save is
++  disabled while the required text field is empty.
++- **Pantry, lost & found** — the list is rendered in the board component, so
++  edit state (`editingId`) lives at board level and the form renders inline in
++  the list row.
++- No `autoFocus` on form inputs (accessibility rule; the Save button is the
++  primary action and is reachable by Tab).
++- All strings through i18n (ADR-0007) under `<module>.edit.*` keys, both `en`
++  and `bn` locales.
++
++### Demo mode
++
++Demo mode (ADR-0017) inherits edit capability for free: it already switches the
++Firestore repositories for in-memory ones, and `update` is now present on all
++in-memory impls.
++
++### Docs currency
++
++Per ADR-0012 policy, the same change updates the LikeC4 architecture model
++(`docs/design/architecture/*.c4`), `docs/design/data-model.md` §6f-2, and the
++in-app Guide (`src/features/guide/`) with edit steps for each module. Guide
++guardrail tests must continue to pass.
++
++## Consequences
++
++**Positive:**
++- Mistakes are fixable in place; the original timeline and `createdAt` are
++  preserved.
++- No re-notification to the family for a content correction.
++- Purely additive change: no Firestore rules change, no new collection, no
++  schema migration.
++- Demo mode gets edit capability without any additional work.
++- Docs-currency policy (ADR-0012) is observed: guide, C4 model, and data-model
++  doc updated in the same change.
++
++**Negative / costs:**
++- **No per-field edit history.** Only `updatedAt` moves; there is no record of
++  what changed or what the previous value was. A full diff/history view is out
++  of scope.
++- **Any family member can edit any item.** This is consistent with the existing
++  shared-board trust model and the `allow update: if isMemberOf(...)` rule —
++  edit is not restricted to the original author. A family that wants per-author
++  restrictions would need a separate rule and UI.
++- **Last write wins.** There is no optimistic-concurrency guard. For a small
++  family board with low concurrent-write probability this is acceptable; a
++  conflict strategy is not warranted yet.
++
++**Deferred:**
++- Edit history / diff view per item.
++- Per-author edit restrictions (restrict `update` in rules to `createdBy ==
++  request.auth.uid` only if ever wanted).
++- Editing answers within a question (answers have their own data path and
++  interaction model).
++
++**Cross-references:**
++- ADR-0013 — soft delete + notifications feed; the exact reason delete + re-add
++  is an inadequate substitute.
++- ADR-0012 — docs-currency policy; this change updates the LikeC4 model,
++  `data-model.md` §6f-2, and the in-app Guide in the same commit.
++- ADR-0007 — i18n; all edit strings go through `en` / `bn` locale files.
++- `firestore.rules` is unchanged; `allow update: if isMemberOf(...)` already
++  covers content edits.
+diff --git a/docs/adr/README.md b/docs/adr/README.md
+index ef45b4d..e8b85d3 100644
+--- a/docs/adr/README.md
++++ b/docs/adr/README.md
+@@ -59,3 +59,4 @@ Files are named `NNNN-short-slug.md` where `NNNN` is a zero-padded four-digit in
+ | [0015](0015-dashboard-agenda-aggregation.md) | Dashboard Agenda: Cross-Module Aggregation & Relevant-Date Mapping | Accepted | 2026-07-26 |
+ | [0016](0016-mobile-bottom-navigation.md) | Bottom Navigation on Small Screens | Accepted | 2026-07-26 |
+ | [0017](0017-ephemeral-demo-mode.md) | Ephemeral, Client-Only Demo Mode | Accepted | 2026-07-27 |
++| [0018](0018-editable-board-entries.md) | Editable Board Entries (In-Place Correction of Author Content) | Accepted | 2026-08-21 |
+diff --git a/docs/design/architecture/flying-fridge.c4 b/docs/design/architecture/flying-fridge.c4
+index 631f60f..3f09225 100644
+--- a/docs/design/architecture/flying-fridge.c4
++++ b/docs/design/architecture/flying-fridge.c4
+@@ -55,19 +55,19 @@ model {
+         description 'Sign-in (Email/Password + Google), auth state, route gating.'
+       }
+       tasks = component 'features/tasks' {
+-        description 'Tasks board: domain, repository (Firestore + in-memory), dashboard UI, telemetry.'
++        description 'Tasks board: domain, repository (Firestore + in-memory), dashboard UI, telemetry. Items are editable in place (ADR-0018).'
+       }
+       notices = component 'features/notices' {
+-        description 'Notices board: 1-month/permanent/important notices; domain, repository, UI.'
++        description 'Notices board: 1-month/permanent/important notices; domain, repository, UI. Text/date editable in place (ADR-0018).'
+       }
+       lostfound = component 'features/lostfound' {
+-        description 'Lost & Found: post a search until found or taken down; posting date.'
++        description 'Lost & Found: post a search until found or taken down; posting date. Description editable in place (ADR-0018).'
+       }
+       pantry = component 'features/pantry' {
+-        description 'Pantry: made-date, shelf life, quantity +/-, mark consumed.'
++        description 'Pantry: made-date, shelf life, quantity +/-, mark consumed. Name/made-date/shelf-life editable in place (ADR-0018).'
+       }
+       questions = component 'features/questions' {
+-        description 'Questions: ask, answer (array), close; general Q&A for the family.'
++        description 'Questions: ask, answer (array), close; general Q&A for the family. Question text editable in place (ADR-0018).'
+       }
+       family = component 'features/family' {
+         description 'Current-family context (minimal shared code for now; Firestore-backed membership later).'
+diff --git a/docs/design/data-model.md b/docs/design/data-model.md
+index fadbb75..fa6634f 100644
+--- a/docs/design/data-model.md
++++ b/docs/design/data-model.md
+@@ -350,6 +350,26 @@ the status back — task→open, notice→up, lost&found→searching, pantry→i
+ question→open), so a mistakenly completed/taken-down/consumed/closed item can be
+ brought straight back. Tasks already reopen from the board.
+ 
++## 6f-2. Editing entries (ADR-0018)
++
++Every board item's **author-entered fields are editable in place** so a mistake
++can be corrected without deleting and re-adding (which would lose the timeline
++and re-notify the family). Each repository gains an `update(id, changes)` method
++(Firestore + in-memory) that writes only the content fields and bumps
++`updatedAt`; the UI is an inline Edit → Save/Cancel form on each card. The
++editable fields, per module:
++
++- **tasks** — `description`, `targetDate`
++- **notices** — `text`, `date`
++- **lostAndFound** — `description`
++- **pantry** — `name`, `madeOn`, `keepsDays` (quantity keeps its own +/- control)
++- **questions** — `text`
++
++System fields (`status`, `assignee`, `deleted`, `createdBy/At`, answers) are
++**not** touched by `update` — they have their own actions. No schema change: edit
++reuses the existing `updateDoc` path already permitted by the `allow update`
++rule that soft delete relies on (§6f, ADR-0018).
++
+ ## 6g. Dashboard agenda (requirement-6) — read-only, no new collection
+ 
+ The informed dashboard (`src/features/dashboard/`) aggregates the five board
+diff --git a/src/features/lostfound/LostFoundBoard.test.tsx b/src/features/lostfound/LostFoundBoard.test.tsx
+index 1618344..788e5ab 100644
+--- a/src/features/lostfound/LostFoundBoard.test.tsx
++++ b/src/features/lostfound/LostFoundBoard.test.tsx
+@@ -49,4 +49,21 @@ describe('LostFoundBoard', () => {
+     fireEvent.click(screen.getByRole('button', { name: 'Restore' }))
+     expect(screen.getByRole('button', { name: /found it/i })).toBeInTheDocument()
+   })
++
++  it('edits a post in place to fix a mistake', () => {
++    renderBoard(new InMemoryLostRepository())
++    fireEvent.change(screen.getByLabelText(/what are you looking for/i), {
++      target: { value: 'My kees' },
++    })
++    fireEvent.click(screen.getByRole('button', { name: 'Post' }))
++
++    fireEvent.click(screen.getByRole('button', { name: 'Edit' }))
++    fireEvent.change(screen.getByLabelText('Edit description'), {
++      target: { value: 'My keys' },
++    })
++    fireEvent.click(screen.getByRole('button', { name: 'Save' }))
++
++    expect(screen.getByText('My keys')).toBeInTheDocument()
++    expect(screen.queryByText('My kees')).not.toBeInTheDocument()
++  })
+ })
+diff --git a/src/features/lostfound/LostFoundBoard.tsx b/src/features/lostfound/LostFoundBoard.tsx
+index 52da78f..a1d2596 100644
+--- a/src/features/lostfound/LostFoundBoard.tsx
++++ b/src/features/lostfound/LostFoundBoard.tsx
+@@ -1,4 +1,4 @@
+-import { type FormEvent } from 'react'
++import { useState, type FormEvent } from 'react'
+ import { useTranslation } from 'react-i18next'
+ import { useAuth } from '../auth/authContext'
+ import { useFamily } from '../family/familyContext'
+@@ -20,12 +20,11 @@ export default function LostFoundBoard({
+   const { familyId } = useFamily()
+   const actor = { id: user?.id ?? '', name: user?.name ?? '' }
+ 
+-  const { items, addItem, markFound, takeDown, restore } = useLostFound(
+-    repository,
+-    familyId,
+-    actor,
+-  )
++  const { items, addItem, editItem, markFound, takeDown, restore } =
++    useLostFound(repository, familyId, actor)
+   const [desc, setDesc, clearDesc] = useDraft('lostfound.desc')
++  const [editingId, setEditingId] = useState<string | null>(null)
++  const [editDesc, setEditDesc] = useState('')
+   const now = Date.now()
+   const searching = items.filter(isSearching)
+   const closed = items
+@@ -39,6 +38,18 @@ export default function LostFoundBoard({
+     clearDesc()
+   }
+ 
++  function startEdit(id: string, description: string) {
++    setEditingId(id)
++    setEditDesc(description)
++  }
++
++  function saveEdit(e: FormEvent) {
++    e.preventDefault()
++    if (!editingId || !editDesc.trim()) return
++    editItem(editingId, { description: editDesc.trim() })
++    setEditingId(null)
++  }
++
+   return (
+     <section className="module lostfound" aria-labelledby="lost-heading">
+       <h1 id="lost-heading" className="module-title">
+@@ -67,6 +78,28 @@ export default function LostFoundBoard({
+         <ul className="lost-list">
+           {searching.map((item) => {
+             const days = daysSince(item.createdAt, now)
++            if (editingId === item.id) {
++              return (
++                <li key={item.id} className="lost-card">
++                  <form className="lost-edit" onSubmit={saveEdit}>
++                    <input
++                      className="lost-add-input"
++                      aria-label={t('lostFound.edit.descriptionLabel')}
++                      value={editDesc}
++                      onChange={(e) => setEditDesc(e.target.value)}
++                    />
++                    <div className="lost-actions">
++                      <button type="submit" disabled={!editDesc.trim()}>
++                        {t('lostFound.edit.save')}
++                      </button>
++                      <button type="button" onClick={() => setEditingId(null)}>
++                        {t('lostFound.edit.cancel')}
++                      </button>
++                    </div>
++                  </form>
++                </li>
++              )
++            }
+             return (
+               <li key={item.id} className="lost-card">
+                 <div className="lost-main">
+@@ -84,6 +117,12 @@ export default function LostFoundBoard({
+                   <button type="button" onClick={() => markFound(item.id)}>
+                     {t('lostFound.markFound')}
+                   </button>
++                  <button
++                    type="button"
++                    onClick={() => startEdit(item.id, item.description)}
++                  >
++                    {t('lostFound.edit.action')}
++                  </button>
+                   <button type="button" onClick={() => takeDown(item.id)}>
+                     {t('lostFound.takeDown')}
+                   </button>
+diff --git a/src/features/lostfound/firestoreLostRepository.ts b/src/features/lostfound/firestoreLostRepository.ts
+index 45566ac..ad0b0a0 100644
+--- a/src/features/lostfound/firestoreLostRepository.ts
++++ b/src/features/lostfound/firestoreLostRepository.ts
+@@ -12,7 +12,7 @@ import {
+   type QueryDocumentSnapshot,
+ } from 'firebase/firestore'
+ import { getDb } from '../../lib/firebase'
+-import type { LostItem, NewLostInput, LostStatus, Actor } from './types'
++import type { LostItem, NewLostInput, EditLostInput, LostStatus, Actor } from './types'
+ import type { LostRepository } from './repository'
+ 
+ const COLLECTION = 'lostAndFound'
+@@ -56,6 +56,13 @@ export const firestoreLostRepository: LostRepository = {
+     })
+   },
+ 
++  async update(itemId, changes: EditLostInput) {
++    await updateDoc(doc(getDb(), COLLECTION, itemId), {
++      description: changes.description,
++      updatedAt: serverTimestamp(),
++    })
++  },
++
+   async markFound(itemId) {
+     await updateDoc(doc(getDb(), COLLECTION, itemId), {
+       status: 'found' satisfies LostStatus,
+diff --git a/src/features/lostfound/lostfound.css b/src/features/lostfound/lostfound.css
+index 5ff4ad7..cd16f0e 100644
+--- a/src/features/lostfound/lostfound.css
++++ b/src/features/lostfound/lostfound.css
+@@ -112,3 +112,16 @@
+   outline: 3px solid var(--mag-lostfound);
+   outline-offset: 2px;
+ }
++.lost-actions button:disabled {
++  opacity: 0.5;
++  cursor: default;
++}
++
++/* ---- Inline edit ---- */
++.lost-edit {
++  display: flex;
++  flex-wrap: wrap;
++  gap: 6px;
++  width: 100%;
++  align-items: center;
++}
+diff --git a/src/features/lostfound/repository.ts b/src/features/lostfound/repository.ts
+index b4cb43e..26b5b4c 100644
+--- a/src/features/lostfound/repository.ts
++++ b/src/features/lostfound/repository.ts
+@@ -1,8 +1,10 @@
+-import type { LostItem, NewLostInput, Actor } from './types'
++import type { LostItem, NewLostInput, EditLostInput, Actor } from './types'
+ 
+ export interface LostRepository {
+   subscribe(familyId: string, onChange: (items: LostItem[]) => void): () => void
+   add(familyId: string, input: NewLostInput, author: Actor): Promise<void>
++  /** Correct the author-entered description. */
++  update(itemId: string, changes: EditLostInput): Promise<void>
+   markFound(itemId: string): Promise<void>
+   takeDown(itemId: string): Promise<void>
+   /** Bring a found/taken-down item back to the board (undo). */
+@@ -62,6 +64,16 @@ export class InMemoryLostRepository implements LostRepository {
+     return Promise.resolve()
+   }
+ 
++  update(itemId: string, changes: EditLostInput): Promise<void> {
++    const item = this.items.get(itemId)
++    if (item) {
++      item.description = changes.description
++      item.updatedAt = this.now()
++      this.emit()
++    }
++    return Promise.resolve()
++  }
++
+   private setStatus(itemId: string, status: LostItem['status']): void {
+     const item = this.items.get(itemId)
+     if (item) {
+diff --git a/src/features/lostfound/types.ts b/src/features/lostfound/types.ts
+index 047eae0..8c3c5fd 100644
+--- a/src/features/lostfound/types.ts
++++ b/src/features/lostfound/types.ts
+@@ -16,6 +16,11 @@ export interface NewLostInput {
+   description: string
+ }
+ 
++/** The author-editable fields of a lost & found post (correcting a mistake). */
++export interface EditLostInput {
++  description: string
++}
++
+ export interface Actor {
+   id: string
+   name: string
+diff --git a/src/features/lostfound/useLostFound.ts b/src/features/lostfound/useLostFound.ts
+index f3c0bb7..989d49f 100644
+--- a/src/features/lostfound/useLostFound.ts
++++ b/src/features/lostfound/useLostFound.ts
+@@ -1,7 +1,7 @@
+ import { useCallback, useEffect, useState } from 'react'
+ import { track } from '../../lib/firebase'
+ import { notifyItemAdded } from '../notifications/notify'
+-import type { LostItem, NewLostInput, Actor } from './types'
++import type { LostItem, NewLostInput, EditLostInput, Actor } from './types'
+ import type { LostRepository } from './repository'
+ 
+ export function useLostFound(
+@@ -28,6 +28,13 @@ export function useLostFound(
+     },
+     [repo, familyId, actor],
+   )
++  const editItem = useCallback(
++    (id: string, changes: EditLostInput) => {
++      void repo.update(id, changes)
++      void track('lost_edit')
++    },
++    [repo],
++  )
+   const markFound = useCallback(
+     (id: string) => {
+       void repo.markFound(id)
+@@ -44,5 +51,5 @@ export function useLostFound(
+     [repo],
+   )
+ 
+-  return { items, addItem, markFound, takeDown, restore }
++  return { items, addItem, editItem, markFound, takeDown, restore }
+ }
+diff --git a/src/features/notices/NoticeCard.tsx b/src/features/notices/NoticeCard.tsx
+index 74c04b5..bd46373 100644
+--- a/src/features/notices/NoticeCard.tsx
++++ b/src/features/notices/NoticeCard.tsx
+@@ -1,13 +1,15 @@
++import { useState, type FormEvent } from 'react'
+ import { useTranslation } from 'react-i18next'
+ import { daysLeft } from './noticeLogic'
+ import { formatIsoDate } from '../../lib/date'
+-import type { Notice } from './types'
++import type { Notice, EditNoticeInput } from './types'
+ 
+ interface Props {
+   notice: Notice
+   now: number
+   onToggleImportant: (id: string, important: boolean) => void
+   onTogglePermanent: (id: string, permanent: boolean) => void
++  onEdit: (id: string, changes: EditNoticeInput) => void
+   onTakeDown: (id: string) => void
+ }
+ 
+@@ -16,11 +18,64 @@ export default function NoticeCard({
+   now,
+   onToggleImportant,
+   onTogglePermanent,
++  onEdit,
+   onTakeDown,
+ }: Props) {
+   const { t } = useTranslation()
+   const left = daysLeft(notice, now)
+ 
++  const [editing, setEditing] = useState(false)
++  const [text, setText] = useState(notice.text)
++  const [date, setDate] = useState(notice.date ?? '')
++
++  function startEdit() {
++    setText(notice.text)
++    setDate(notice.date ?? '')
++    setEditing(true)
++  }
++
++  function save(e: FormEvent) {
++    e.preventDefault()
++    if (!text.trim()) return
++    onEdit(notice.id, { text: text.trim(), date: date || null })
++    setEditing(false)
++  }
++
++  if (editing) {
++    return (
++      <li
++        className={
++          notice.important ? 'notice-card notice-card--important' : 'notice-card'
++        }
++      >
++        <form className="notice-edit" onSubmit={save}>
++          <textarea
++            className="notice-add-text"
++            rows={2}
++            aria-label={t('notices.edit.textLabel')}
++            value={text}
++            onChange={(e) => setText(e.target.value)}
++          />
++          <div className="notice-add-row">
++            <input
++              className="notice-add-date"
++              type="date"
++              aria-label={t('notices.edit.dateLabel')}
++              value={date}
++              onChange={(e) => setDate(e.target.value)}
++            />
++            <button type="submit" disabled={!text.trim()}>
++              {t('notices.edit.save')}
++            </button>
++            <button type="button" onClick={() => setEditing(false)}>
++              {t('notices.edit.cancel')}
++            </button>
++          </div>
++        </form>
++      </li>
++    )
++  }
++
+   return (
+     <li
+       className={
+@@ -66,6 +121,9 @@ export default function NoticeCard({
+             ? t('notices.unmarkPermanent')
+             : t('notices.makePermanent')}
+         </button>
++        <button type="button" onClick={startEdit}>
++          {t('notices.edit.action')}
++        </button>
+         <button type="button" onClick={() => onTakeDown(notice.id)}>
+           {t('notices.takeDown')}
+         </button>
+diff --git a/src/features/notices/NoticesBoard.test.tsx b/src/features/notices/NoticesBoard.test.tsx
+index 1a3fda3..8e9c2e9 100644
+--- a/src/features/notices/NoticesBoard.test.tsx
++++ b/src/features/notices/NoticesBoard.test.tsx
+@@ -53,6 +53,23 @@ describe('NoticesBoard', () => {
+     ).toBeInTheDocument()
+   })
+ 
++  it('edits a notice in place to fix a mistake', () => {
++    renderBoard(new InMemoryNoticeRepository())
++    fireEvent.change(screen.getByLabelText('Notice'), {
++      target: { value: 'Wi-Fi is FRIDG123' },
++    })
++    fireEvent.click(screen.getByRole('button', { name: /post notice/i }))
++
++    fireEvent.click(screen.getByRole('button', { name: 'Edit' }))
++    fireEvent.change(screen.getByLabelText('Edit notice'), {
++      target: { value: 'Wi-Fi is FRIDGE123' },
++    })
++    fireEvent.click(screen.getByRole('button', { name: 'Save' }))
++
++    expect(screen.getByText('Wi-Fi is FRIDGE123')).toBeInTheDocument()
++    expect(screen.queryByText('Wi-Fi is FRIDG123')).not.toBeInTheDocument()
++  })
++
+   it('makes a notice permanent', () => {
+     renderBoard(new InMemoryNoticeRepository())
+     fireEvent.change(screen.getByLabelText('Notice'), {
+diff --git a/src/features/notices/NoticesBoard.tsx b/src/features/notices/NoticesBoard.tsx
+index a376c64..4b5c279 100644
+--- a/src/features/notices/NoticesBoard.tsx
++++ b/src/features/notices/NoticesBoard.tsx
+@@ -21,8 +21,15 @@ export default function NoticesBoard({
+   const { familyId } = useFamily()
+   const actor = { id: user?.id ?? '', name: user?.name ?? '' }
+ 
+-  const { notices, addNotice, setImportant, setPermanent, takeDown, restore } =
+-    useNotices(repository, familyId, actor)
++  const {
++    notices,
++    addNotice,
++    editNotice,
++    setImportant,
++    setPermanent,
++    takeDown,
++    restore,
++  } = useNotices(repository, familyId, actor)
+   const [text, setText, clearText] = useDraft('notices.text')
+   const [date, setDate, clearDate] = useDraft('notices.date')
+   const [important, setImp] = useState(false)
+@@ -104,6 +111,7 @@ export default function NoticesBoard({
+               now={now}
+               onToggleImportant={setImportant}
+               onTogglePermanent={setPermanent}
++              onEdit={editNotice}
+               onTakeDown={takeDown}
+             />
+           ))}
+diff --git a/src/features/notices/firestoreNoticeRepository.ts b/src/features/notices/firestoreNoticeRepository.ts
+index fb70fcb..6675ff7 100644
+--- a/src/features/notices/firestoreNoticeRepository.ts
++++ b/src/features/notices/firestoreNoticeRepository.ts
+@@ -11,7 +11,7 @@ import {
+   type QueryDocumentSnapshot,
+ } from 'firebase/firestore'
+ import { getDb } from '../../lib/firebase'
+-import type { Notice, NewNoticeInput, NoticeStatus, Actor } from './types'
++import type { Notice, NewNoticeInput, EditNoticeInput, NoticeStatus, Actor } from './types'
+ import type { NoticeRepository } from './repository'
+ 
+ const COLLECTION = 'notices'
+@@ -70,6 +70,14 @@ export const firestoreNoticeRepository: NoticeRepository = {
+     })
+   },
+ 
++  async update(noticeId, changes: EditNoticeInput) {
++    await updateDoc(doc(getDb(), COLLECTION, noticeId), {
++      text: changes.text,
++      date: changes.date,
++      updatedAt: serverTimestamp(),
++    })
++  },
++
+   async setImportant(noticeId, important: boolean) {
+     await updateDoc(doc(getDb(), COLLECTION, noticeId), {
+       important,
+diff --git a/src/features/notices/notices.css b/src/features/notices/notices.css
+index 3745af7..f64a4e0 100644
+--- a/src/features/notices/notices.css
++++ b/src/features/notices/notices.css
+@@ -162,3 +162,36 @@
+   outline: 3px solid var(--mag-notices);
+   outline-offset: 2px;
+ }
++
++/* ---- Inline edit ---- */
++.notice-edit {
++  display: flex;
++  flex-direction: column;
++  gap: 6px;
++  width: 100%;
++}
++.notice-edit .notice-add-row {
++  align-items: center;
++}
++.notice-edit button {
++  font: 600 0.72rem var(--font-sans);
++  background: var(--col-surface-2);
++  color: var(--col-text);
++  border: 1px solid var(--col-border);
++  border-radius: 999px;
++  padding: 5px 12px;
++  cursor: pointer;
++  min-height: 28px;
++  transition: border-color var(--dur-fast) var(--ease-out);
++}
++.notice-edit button:hover {
++  border-color: var(--mag-notices);
++}
++.notice-edit button:focus-visible {
++  outline: 3px solid var(--mag-notices);
++  outline-offset: 2px;
++}
++.notice-edit button:disabled {
++  opacity: 0.5;
++  cursor: default;
++}
+diff --git a/src/features/notices/repository.ts b/src/features/notices/repository.ts
+index ab213e2..7f82692 100644
+--- a/src/features/notices/repository.ts
++++ b/src/features/notices/repository.ts
+@@ -1,8 +1,10 @@
+-import type { Notice, NewNoticeInput, Actor } from './types'
++import type { Notice, NewNoticeInput, EditNoticeInput, Actor } from './types'
+ 
+ export interface NoticeRepository {
+   subscribe(familyId: string, onChange: (notices: Notice[]) => void): () => void
+   add(familyId: string, input: NewNoticeInput, author: Actor): Promise<void>
++  /** Correct the author-entered fields (text, date). */
++  update(noticeId: string, changes: EditNoticeInput): Promise<void>
+   setImportant(noticeId: string, important: boolean): Promise<void>
+   setPermanent(noticeId: string, permanent: boolean): Promise<void>
+   /** Take a notice off the board (kept/timelined). */
+@@ -78,6 +80,11 @@ export class InMemoryNoticeRepository implements NoticeRepository {
+     }
+   }
+ 
++  update(noticeId: string, changes: EditNoticeInput): Promise<void> {
++    this.patch(noticeId, { text: changes.text, date: changes.date })
++    return Promise.resolve()
++  }
++
+   setImportant(noticeId: string, important: boolean): Promise<void> {
+     this.patch(noticeId, { important })
+     return Promise.resolve()
+diff --git a/src/features/notices/types.ts b/src/features/notices/types.ts
+index fbc1c97..8d33430 100644
+--- a/src/features/notices/types.ts
++++ b/src/features/notices/types.ts
+@@ -28,6 +28,12 @@ export interface NewNoticeInput {
+   permanent?: boolean
+ }
+ 
++/** The author-editable fields of a notice (correcting a mistake). */
++export interface EditNoticeInput {
++  text: string
++  date: string | null
++}
++
+ export interface Actor {
+   id: string
+   name: string
+diff --git a/src/features/notices/useNotices.ts b/src/features/notices/useNotices.ts
+index d4ad44b..1c314a4 100644
+--- a/src/features/notices/useNotices.ts
++++ b/src/features/notices/useNotices.ts
+@@ -1,7 +1,7 @@
+ import { useCallback, useEffect, useState } from 'react'
+ import { track } from '../../lib/firebase'
+ import { notifyItemAdded } from '../notifications/notify'
+-import type { Notice, NewNoticeInput, Actor } from './types'
++import type { Notice, NewNoticeInput, EditNoticeInput, Actor } from './types'
+ import type { NoticeRepository } from './repository'
+ 
+ export function useNotices(
+@@ -29,6 +29,13 @@ export function useNotices(
+     [repo, familyId, actor],
+   )
+ 
++  const editNotice = useCallback(
++    (id: string, changes: EditNoticeInput) => {
++      void repo.update(id, changes)
++      void track('notice_edit')
++    },
++    [repo],
++  )
+   const setImportant = useCallback(
+     (id: string, important: boolean) => void repo.setImportant(id, important),
+     [repo],
+@@ -52,5 +59,13 @@ export function useNotices(
+     [repo],
+   )
+ 
+-  return { notices, addNotice, setImportant, setPermanent, takeDown, restore }
++  return {
++    notices,
++    addNotice,
++    editNotice,
++    setImportant,
++    setPermanent,
++    takeDown,
++    restore,
++  }
+ }
+diff --git a/src/features/pantry/PantryBoard.test.tsx b/src/features/pantry/PantryBoard.test.tsx
+index 0678962..4c4db3d 100644
+--- a/src/features/pantry/PantryBoard.test.tsx
++++ b/src/features/pantry/PantryBoard.test.tsx
+@@ -52,4 +52,21 @@ describe('PantryBoard', () => {
+     fireEvent.click(screen.getByRole('button', { name: 'Restore' }))
+     expect(screen.getByRole('button', { name: 'Consumed' })).toBeInTheDocument()
+   })
++
++  it('edits an item in place to fix a mistake', () => {
++    renderBoard(new InMemoryPantryRepository())
++    fireEvent.change(screen.getByLabelText(/food item/i), {
++      target: { value: 'Milc' },
++    })
++    fireEvent.click(screen.getByRole('button', { name: 'Add' }))
++
++    fireEvent.click(screen.getByRole('button', { name: 'Edit' }))
++    fireEvent.change(screen.getByLabelText('Edit food item'), {
++      target: { value: 'Milk' },
++    })
++    fireEvent.click(screen.getByRole('button', { name: 'Save' }))
++
++    expect(screen.getByText('Milk')).toBeInTheDocument()
++    expect(screen.queryByText('Milc')).not.toBeInTheDocument()
++  })
+ })
+diff --git a/src/features/pantry/PantryBoard.tsx b/src/features/pantry/PantryBoard.tsx
+index a252ad1..0d87ad9 100644
+--- a/src/features/pantry/PantryBoard.tsx
++++ b/src/features/pantry/PantryBoard.tsx
+@@ -1,4 +1,4 @@
+-import { type FormEvent } from 'react'
++import { useState, type FormEvent } from 'react'
+ import { useTranslation } from 'react-i18next'
+ import { useAuth } from '../auth/authContext'
+ import { useFamily } from '../family/familyContext'
+@@ -22,15 +22,16 @@ export default function PantryBoard({
+   const { familyId } = useFamily()
+   const actor = { id: user?.id ?? '', name: user?.name ?? '' }
+ 
+-  const { items, addItem, changeQuantity, markConsumed, restore } = usePantry(
+-    repository,
+-    familyId,
+-    actor,
+-  )
++  const { items, addItem, editItem, changeQuantity, markConsumed, restore } =
++    usePantry(repository, familyId, actor)
+   const [name, setName, clearName] = useDraft('pantry.name')
+   const [madeOn, setMadeOn, clearMadeOn] = useDraft('pantry.madeOn')
+   const [keeps, setKeeps, clearKeeps] = useDraft('pantry.keeps')
+   const [qty, setQty, clearQty] = useDraft('pantry.qty', '1')
++  const [editingId, setEditingId] = useState<string | null>(null)
++  const [editName, setEditName] = useState('')
++  const [editMadeOn, setEditMadeOn] = useState('')
++  const [editKeeps, setEditKeeps] = useState('')
+ 
+   const now = Date.now()
+   const inStock = items.filter(isInStock)
+@@ -53,6 +54,24 @@ export default function PantryBoard({
+     clearQty()
+   }
+ 
++  function startEdit(item: PantryItem) {
++    setEditingId(item.id)
++    setEditName(item.name)
++    setEditMadeOn(item.madeOn ?? '')
++    setEditKeeps(item.keepsDays != null ? String(item.keepsDays) : '')
++  }
++
++  function saveEdit(e: FormEvent) {
++    e.preventDefault()
++    if (!editingId || !editName.trim()) return
++    editItem(editingId, {
++      name: editName.trim(),
++      madeOn: editMadeOn || null,
++      keepsDays: editKeeps ? Math.max(0, Number(editKeeps)) : null,
++    })
++    setEditingId(null)
++  }
++
+   function freshnessLabel(item: PantryItem): string {
+     const left = freshnessDaysLeft(item, now)
+     if (left == null) return t('pantry.freshUnknown')
+@@ -116,54 +135,100 @@ export default function PantryBoard({
+         <p className="task-empty">{t('pantry.empty')}</p>
+       ) : (
+         <ul className="pantry-list">
+-          {inStock.map((item) => (
+-            <li key={item.id} className="pantry-card">
+-              <div className="pantry-main">
+-                <p className="pantry-name">{item.name}</p>
+-                <div className="pantry-meta">
+-                  <span>{freshnessLabel(item)}</span>
+-                  {item.madeOn && (
+-                    <span>
+-                      {t('pantry.madeOnLabel', {
+-                        date: formatIsoDate(item.madeOn),
+-                      })}
+-                    </span>
+-                  )}
++          {inStock.map((item) =>
++            editingId === item.id ? (
++              <li key={item.id} className="pantry-card">
++                <form className="pantry-edit" onSubmit={saveEdit}>
++                  <input
++                    className="pantry-add-name"
++                    aria-label={t('pantry.edit.nameLabel')}
++                    value={editName}
++                    onChange={(e) => setEditName(e.target.value)}
++                  />
++                  <div className="pantry-add-row">
++                    <label className="pantry-field">
++                      <span>{t('pantry.add.madeOn')}</span>
++                      <input
++                        type="date"
++                        value={editMadeOn}
++                        onChange={(e) => setEditMadeOn(e.target.value)}
++                      />
++                    </label>
++                    <label className="pantry-field">
++                      <span>{t('pantry.add.keepsDays')}</span>
++                      <input
++                        type="number"
++                        min="0"
++                        inputMode="numeric"
++                        value={editKeeps}
++                        onChange={(e) => setEditKeeps(e.target.value)}
++                      />
++                    </label>
++                    <button type="submit" disabled={!editName.trim()}>
++                      {t('pantry.edit.save')}
++                    </button>
++                    <button type="button" onClick={() => setEditingId(null)}>
++                      {t('pantry.edit.cancel')}
++                    </button>
++                  </div>
++                </form>
++              </li>
++            ) : (
++              <li key={item.id} className="pantry-card">
++                <div className="pantry-main">
++                  <p className="pantry-name">{item.name}</p>
++                  <div className="pantry-meta">
++                    <span>{freshnessLabel(item)}</span>
++                    {item.madeOn && (
++                      <span>
++                        {t('pantry.madeOnLabel', {
++                          date: formatIsoDate(item.madeOn),
++                        })}
++                      </span>
++                    )}
++                  </div>
+                 </div>
+-              </div>
+-              <div className="pantry-controls">
+-                <div
+-                  className="pantry-qty"
+-                  role="group"
+-                  aria-label={t('pantry.quantityLabel', { name: item.name })}
+-                >
++                <div className="pantry-controls">
++                  <div
++                    className="pantry-qty"
++                    role="group"
++                    aria-label={t('pantry.quantityLabel', { name: item.name })}
++                  >
++                    <button
++                      type="button"
++                      aria-label={t('pantry.decrease')}
++                      disabled={item.quantity <= 0}
++                      onClick={() => changeQuantity(item.id, -1)}
++                    >
++                      −
++                    </button>
++                    <span className="pantry-qty-value">{item.quantity}</span>
++                    <button
++                      type="button"
++                      aria-label={t('pantry.increase')}
++                      onClick={() => changeQuantity(item.id, 1)}
++                    >
++                      +
++                    </button>
++                  </div>
+                   <button
+                     type="button"
+-                    aria-label={t('pantry.decrease')}
+-                    disabled={item.quantity <= 0}
+-                    onClick={() => changeQuantity(item.id, -1)}
++                    className="pantry-edit-action"
++                    onClick={() => startEdit(item)}
+                   >
+-                    −
++                    {t('pantry.edit.action')}
+                   </button>
+-                  <span className="pantry-qty-value">{item.quantity}</span>
+                   <button
+                     type="button"
+-                    aria-label={t('pantry.increase')}
+-                    onClick={() => changeQuantity(item.id, 1)}
++                    className="pantry-consume"
++                    onClick={() => markConsumed(item.id)}
+                   >
+-                    +
++                    {t('pantry.consume')}
+                   </button>
+                 </div>
+-                <button
+-                  type="button"
+-                  className="pantry-consume"
+-                  onClick={() => markConsumed(item.id)}
+-                >
+-                  {t('pantry.consume')}
+-                </button>
+-              </div>
+-            </li>
+-          ))}
++              </li>
++            ),
++          )}
+         </ul>
+       )}
+ 
+diff --git a/src/features/pantry/firestorePantryRepository.ts b/src/features/pantry/firestorePantryRepository.ts
+index 1b9ccd9..a3d7ed2 100644
+--- a/src/features/pantry/firestorePantryRepository.ts
++++ b/src/features/pantry/firestorePantryRepository.ts
+@@ -13,7 +13,7 @@ import {
+   type QueryDocumentSnapshot,
+ } from 'firebase/firestore'
+ import { getDb } from '../../lib/firebase'
+-import type { PantryItem, NewPantryInput, PantryStatus, Actor } from './types'
++import type { PantryItem, NewPantryInput, EditPantryInput, PantryStatus, Actor } from './types'
+ import type { PantryRepository } from './repository'
+ 
+ const COLLECTION = 'pantry'
+@@ -63,6 +63,15 @@ export const firestorePantryRepository: PantryRepository = {
+     })
+   },
+ 
++  async update(itemId, changes: EditPantryInput) {
++    await updateDoc(doc(getDb(), COLLECTION, itemId), {
++      name: changes.name,
++      madeOn: changes.madeOn,
++      keepsDays: changes.keepsDays,
++      updatedAt: serverTimestamp(),
++    })
++  },
++
+   async changeQuantity(itemId, delta: number) {
+     // Read-modify-write so we can clamp at 0 (increment() can't clamp).
+     const ref = doc(getDb(), COLLECTION, itemId)
+diff --git a/src/features/pantry/pantry.css b/src/features/pantry/pantry.css
+index dbf9957..925c35e 100644
+--- a/src/features/pantry/pantry.css
++++ b/src/features/pantry/pantry.css
+@@ -169,3 +169,42 @@
+ .pantry-consume:hover {
+   border-color: var(--mag-pantry);
+ }
++
++/* ---- Inline edit ---- */
++.pantry-edit {
++  display: flex;
++  flex-direction: column;
++  gap: 6px;
++  width: 100%;
++}
++.pantry-edit .pantry-add-name:focus-visible,
++.pantry-edit .pantry-field input:focus-visible {
++  outline: 3px solid var(--mag-pantry);
++  outline-offset: 2px;
++  border-color: var(--mag-pantry);
++}
++.pantry-edit button,
++.pantry-edit-action {
++  font: 600 0.72rem var(--font-sans);
++  background: var(--col-surface-2);
++  color: var(--col-text);
++  border: 1px solid var(--col-border);
++  border-radius: 999px;
++  padding: 5px 10px;
++  cursor: pointer;
++  min-height: 28px;
++  transition: border-color var(--dur-fast) var(--ease-out);
++}
++.pantry-edit button:hover,
++.pantry-edit-action:hover {
++  border-color: var(--mag-pantry);
++}
++.pantry-edit button:focus-visible,
++.pantry-edit-action:focus-visible {
++  outline: 3px solid var(--mag-pantry);
++  outline-offset: 2px;
++}
++.pantry-edit button:disabled {
++  opacity: 0.5;
++  cursor: default;
++}
+diff --git a/src/features/pantry/repository.ts b/src/features/pantry/repository.ts
+index ef2c361..9c6b862 100644
+--- a/src/features/pantry/repository.ts
++++ b/src/features/pantry/repository.ts
+@@ -1,8 +1,10 @@
+-import type { PantryItem, NewPantryInput, Actor } from './types'
++import type { PantryItem, NewPantryInput, EditPantryInput, Actor } from './types'
+ 
+ export interface PantryRepository {
+   subscribe(familyId: string, onChange: (items: PantryItem[]) => void): () => void
+   add(familyId: string, input: NewPantryInput, author: Actor): Promise<void>
++  /** Correct the author-entered fields (name, made-on, keeps-days). */
++  update(itemId: string, changes: EditPantryInput): Promise<void>
+   /** Adjust quantity by delta (clamped at 0). */
+   changeQuantity(itemId: string, delta: number): Promise<void>
+   markConsumed(itemId: string): Promise<void>
+@@ -66,6 +68,18 @@ export class InMemoryPantryRepository implements PantryRepository {
+     return Promise.resolve()
+   }
+ 
++  update(itemId: string, changes: EditPantryInput): Promise<void> {
++    const item = this.items.get(itemId)
++    if (item) {
++      item.name = changes.name
++      item.madeOn = changes.madeOn
++      item.keepsDays = changes.keepsDays
++      item.updatedAt = this.now()
++      this.emit()
++    }
++    return Promise.resolve()
++  }
++
+   changeQuantity(itemId: string, delta: number): Promise<void> {
+     const item = this.items.get(itemId)
+     if (item) {
+diff --git a/src/features/pantry/types.ts b/src/features/pantry/types.ts
+index 52443d2..219ba84 100644
+--- a/src/features/pantry/types.ts
++++ b/src/features/pantry/types.ts
+@@ -25,6 +25,14 @@ export interface NewPantryInput {
+   quantity?: number
+ }
+ 
++/** The author-editable fields of a pantry item (correcting a mistake).
++ *  Quantity has its own +/- control, so it isn't edited here. */
++export interface EditPantryInput {
++  name: string
++  madeOn: string | null
++  keepsDays: number | null
++}
++
+ export interface Actor {
+   id: string
+   name: string
+diff --git a/src/features/pantry/usePantry.ts b/src/features/pantry/usePantry.ts
+index 41870f0..43c60a6 100644
+--- a/src/features/pantry/usePantry.ts
++++ b/src/features/pantry/usePantry.ts
+@@ -1,7 +1,7 @@
+ import { useCallback, useEffect, useState } from 'react'
+ import { track } from '../../lib/firebase'
+ import { notifyItemAdded } from '../notifications/notify'
+-import type { PantryItem, NewPantryInput, Actor } from './types'
++import type { PantryItem, NewPantryInput, EditPantryInput, Actor } from './types'
+ import type { PantryRepository } from './repository'
+ 
+ export function usePantry(
+@@ -28,6 +28,13 @@ export function usePantry(
+     },
+     [repo, familyId, actor],
+   )
++  const editItem = useCallback(
++    (id: string, changes: EditPantryInput) => {
++      void repo.update(id, changes)
++      void track('pantry_edit')
++    },
++    [repo],
++  )
+   const changeQuantity = useCallback(
+     (id: string, delta: number) => void repo.changeQuantity(id, delta),
+     [repo],
+@@ -47,5 +54,5 @@ export function usePantry(
+     [repo],
+   )
+ 
+-  return { items, addItem, changeQuantity, markConsumed, restore }
++  return { items, addItem, editItem, changeQuantity, markConsumed, restore }
+ }
+diff --git a/src/features/questions/QuestionCard.tsx b/src/features/questions/QuestionCard.tsx
+index a9da32e..2a8fda7 100644
+--- a/src/features/questions/QuestionCard.tsx
++++ b/src/features/questions/QuestionCard.tsx
+@@ -1,16 +1,24 @@
+ import { useState, type FormEvent } from 'react'
+ import { useTranslation } from 'react-i18next'
+-import type { Question } from './types'
++import type { Question, EditQuestionInput } from './types'
+ 
+ interface Props {
+   question: Question
+   onAnswer: (id: string, text: string) => void
++  onEdit: (id: string, changes: EditQuestionInput) => void
+   onClose: (id: string) => void
+ }
+ 
+-export default function QuestionCard({ question, onAnswer, onClose }: Props) {
++export default function QuestionCard({
++  question,
++  onAnswer,
++  onEdit,
++  onClose,
++}: Props) {
+   const { t } = useTranslation()
+   const [answer, setAnswer] = useState('')
++  const [editing, setEditing] = useState(false)
++  const [text, setText] = useState(question.text)
+ 
+   function submit(e: FormEvent) {
+     e.preventDefault()
+@@ -19,17 +27,55 @@ export default function QuestionCard({ question, onAnswer, onClose }: Props) {
+     setAnswer('')
+   }
+ 
++  function startEdit() {
++    setText(question.text)
++    setEditing(true)
++  }
++
++  function saveEdit(e: FormEvent) {
++    e.preventDefault()
++    if (!text.trim()) return
++    onEdit(question.id, { text: text.trim() })
++    setEditing(false)
++  }
++
+   return (
+     <li className="question-card">
+       <div className="question-head">
+-        <p className="question-text">{question.text}</p>
+-        <button
+-          type="button"
+-          className="question-close"
+-          onClick={() => onClose(question.id)}
+-        >
+-          {t('questions.close')}
+-        </button>
++        {editing ? (
++          <form className="question-edit" onSubmit={saveEdit}>
++            <input
++              className="question-ask-input"
++              aria-label={t('questions.edit.textLabel')}
++              value={text}
++              onChange={(e) => setText(e.target.value)}
++            />
++            <button type="submit" disabled={!text.trim()}>
++              {t('questions.edit.save')}
++            </button>
++            <button type="button" onClick={() => setEditing(false)}>
++              {t('questions.edit.cancel')}
++            </button>
++          </form>
++        ) : (
++          <>
++            <p className="question-text">{question.text}</p>
++            <button
++              type="button"
++              className="question-edit-action"
++              onClick={startEdit}
++            >
++              {t('questions.edit.action')}
++            </button>
++            <button
++              type="button"
++              className="question-close"
++              onClick={() => onClose(question.id)}
++            >
++              {t('questions.close')}
++            </button>
++          </>
++        )}
+       </div>
+ 
+       {question.answers.length > 0 && (
+diff --git a/src/features/questions/QuestionsBoard.test.tsx b/src/features/questions/QuestionsBoard.test.tsx
+index 08af3be..7a2edba 100644
+--- a/src/features/questions/QuestionsBoard.test.tsx
++++ b/src/features/questions/QuestionsBoard.test.tsx
+@@ -53,4 +53,21 @@ describe('QuestionsBoard', () => {
+     fireEvent.click(screen.getByRole('button', { name: 'Restore' }))
+     expect(screen.getByRole('button', { name: 'Close' })).toBeInTheDocument()
+   })
++
++  it('edits a question in place to fix a mistake', () => {
++    renderBoard(new InMemoryQuestionRepository())
++    fireEvent.change(screen.getByLabelText('Question'), {
++      target: { value: 'Piza or pasta?' },
++    })
++    fireEvent.click(screen.getByRole('button', { name: 'Ask' }))
++
++    fireEvent.click(screen.getByRole('button', { name: 'Edit' }))
++    fireEvent.change(screen.getByLabelText('Edit question'), {
++      target: { value: 'Pizza or pasta?' },
++    })
++    fireEvent.click(screen.getByRole('button', { name: 'Save' }))
++
++    expect(screen.getByText('Pizza or pasta?')).toBeInTheDocument()
++    expect(screen.queryByText('Piza or pasta?')).not.toBeInTheDocument()
++  })
+ })
+diff --git a/src/features/questions/QuestionsBoard.tsx b/src/features/questions/QuestionsBoard.tsx
+index b4fb983..4447127 100644
+--- a/src/features/questions/QuestionsBoard.tsx
++++ b/src/features/questions/QuestionsBoard.tsx
+@@ -20,11 +20,8 @@ export default function QuestionsBoard({
+   const { familyId } = useFamily()
+   const actor = { id: user?.id ?? '', name: user?.name ?? '' }
+ 
+-  const { questions, addQuestion, addAnswer, close, reopen } = useQuestions(
+-    repository,
+-    familyId,
+-    actor,
+-  )
++  const { questions, addQuestion, editQuestion, addAnswer, close, reopen } =
++    useQuestions(repository, familyId, actor)
+   const [text, setText, clearText] = useDraft('questions.text')
+   const open = questions.filter((q) => q.status === 'open')
+   const closed = questions
+@@ -69,6 +66,7 @@ export default function QuestionsBoard({
+               key={q.id}
+               question={q}
+               onAnswer={addAnswer}
++              onEdit={editQuestion}
+               onClose={close}
+             />
+           ))}
+diff --git a/src/features/questions/firestoreQuestionRepository.ts b/src/features/questions/firestoreQuestionRepository.ts
+index fedd4a5..d882dc9 100644
+--- a/src/features/questions/firestoreQuestionRepository.ts
++++ b/src/features/questions/firestoreQuestionRepository.ts
+@@ -13,7 +13,7 @@ import {
+   type QueryDocumentSnapshot,
+ } from 'firebase/firestore'
+ import { getDb } from '../../lib/firebase'
+-import type { Question, Answer, NewQuestionInput, QuestionStatus, Actor } from './types'
++import type { Question, Answer, NewQuestionInput, EditQuestionInput, QuestionStatus, Actor } from './types'
+ import type { QuestionRepository } from './repository'
+ 
+ const COLLECTION = 'questions'
+@@ -59,6 +59,13 @@ export const firestoreQuestionRepository: QuestionRepository = {
+     })
+   },
+ 
++  async update(questionId, changes: EditQuestionInput) {
++    await updateDoc(doc(getDb(), COLLECTION, questionId), {
++      text: changes.text,
++      updatedAt: serverTimestamp(),
++    })
++  },
++
+   async addAnswer(questionId, text: string, author: Actor) {
+     // Answers are stored as an array; arrayUnion can't hold serverTimestamp, so
+     // the answer's time is the client clock.
+diff --git a/src/features/questions/questions.css b/src/features/questions/questions.css
+index 73f20e8..87fd248 100644
+--- a/src/features/questions/questions.css
++++ b/src/features/questions/questions.css
+@@ -155,3 +155,48 @@
+   outline: 3px solid var(--mag-questions);
+   outline-offset: 2px;
+ }
++
++/* ---- Inline edit ---- */
++.question-edit {
++  display: flex;
++  flex: 1;
++  flex-wrap: wrap;
++  gap: 6px;
++  align-items: center;
++}
++.question-edit-action {
++  flex-shrink: 0;
++  font: 600 0.72rem var(--font-sans);
++  background: var(--col-surface-2);
++  color: var(--col-text);
++  border: 1px solid var(--col-border);
++  border-radius: 999px;
++  padding: 5px 10px;
++  cursor: pointer;
++  min-height: 28px;
++  transition: border-color var(--dur-fast) var(--ease-out);
++}
++.question-edit button {
++  font: 600 0.72rem var(--font-sans);
++  background: var(--col-surface-2);
++  color: var(--col-text);
++  border: 1px solid var(--col-border);
++  border-radius: 999px;
++  padding: 5px 12px;
++  cursor: pointer;
++  min-height: 28px;
++  transition: border-color var(--dur-fast) var(--ease-out);
++}
++.question-edit button:hover,
++.question-edit-action:hover {
++  border-color: var(--mag-questions);
++}
++.question-edit button:focus-visible,
++.question-edit-action:focus-visible {
++  outline: 3px solid var(--mag-questions);
++  outline-offset: 2px;
++}
++.question-edit button:disabled {
++  opacity: 0.5;
++  cursor: default;
++}
+diff --git a/src/features/questions/repository.ts b/src/features/questions/repository.ts
+index 4a6dd53..07c0e28 100644
+--- a/src/features/questions/repository.ts
++++ b/src/features/questions/repository.ts
+@@ -1,8 +1,10 @@
+-import type { Question, NewQuestionInput, Actor } from './types'
++import type { Question, NewQuestionInput, EditQuestionInput, Actor } from './types'
+ 
+ export interface QuestionRepository {
+   subscribe(familyId: string, onChange: (questions: Question[]) => void): () => void
+   add(familyId: string, input: NewQuestionInput, author: Actor): Promise<void>
++  /** Correct the author-entered question text. */
++  update(questionId: string, changes: EditQuestionInput): Promise<void>
+   addAnswer(questionId: string, text: string, author: Actor): Promise<void>
+   close(questionId: string): Promise<void>
+   reopen(questionId: string): Promise<void>
+@@ -62,6 +64,16 @@ export class InMemoryQuestionRepository implements QuestionRepository {
+     return Promise.resolve()
+   }
+ 
++  update(questionId: string, changes: EditQuestionInput): Promise<void> {
++    const question = this.questions.get(questionId)
++    if (question) {
++      question.text = changes.text
++      question.updatedAt = this.now()
++      this.emit()
++    }
++    return Promise.resolve()
++  }
++
+   addAnswer(questionId: string, text: string, author: Actor): Promise<void> {
+     const question = this.questions.get(questionId)
+     if (question) {
+diff --git a/src/features/questions/types.ts b/src/features/questions/types.ts
+index db8653e..79e7065 100644
+--- a/src/features/questions/types.ts
++++ b/src/features/questions/types.ts
+@@ -24,6 +24,11 @@ export interface NewQuestionInput {
+   text: string
+ }
+ 
++/** The author-editable fields of a question (correcting a mistake). */
++export interface EditQuestionInput {
++  text: string
++}
++
+ export interface Actor {
+   id: string
+   name: string
+diff --git a/src/features/questions/useQuestions.ts b/src/features/questions/useQuestions.ts
+index 65924bb..2cf1ae7 100644
+--- a/src/features/questions/useQuestions.ts
++++ b/src/features/questions/useQuestions.ts
+@@ -1,7 +1,7 @@
+ import { useCallback, useEffect, useState } from 'react'
+ import { track } from '../../lib/firebase'
+ import { notifyItemAdded } from '../notifications/notify'
+-import type { Question, NewQuestionInput, Actor } from './types'
++import type { Question, NewQuestionInput, EditQuestionInput, Actor } from './types'
+ import type { QuestionRepository } from './repository'
+ 
+ export function useQuestions(
+@@ -28,6 +28,13 @@ export function useQuestions(
+     },
+     [repo, familyId, actor],
+   )
++  const editQuestion = useCallback(
++    (id: string, changes: EditQuestionInput) => {
++      void repo.update(id, changes)
++      void track('question_edit')
++    },
++    [repo],
++  )
+   const addAnswer = useCallback(
+     (id: string, text: string) => {
+       void repo.addAnswer(id, text, actor)
+@@ -38,5 +45,5 @@ export function useQuestions(
+   const close = useCallback((id: string) => void repo.close(id), [repo])
+   const reopen = useCallback((id: string) => void repo.reopen(id), [repo])
+ 
+-  return { questions, addQuestion, addAnswer, close, reopen }
++  return { questions, addQuestion, editQuestion, addAnswer, close, reopen }
+ }
+diff --git a/src/features/tasks/TaskCard.tsx b/src/features/tasks/TaskCard.tsx
+index 4a2cba0..1c0f014 100644
+--- a/src/features/tasks/TaskCard.tsx
++++ b/src/features/tasks/TaskCard.tsx
+@@ -1,7 +1,8 @@
++import { useState, type FormEvent } from 'react'
+ import { useTranslation } from 'react-i18next'
+ import { taskUrgency } from './taskLogic'
+ import { URGENCY_COLOR, formatTargetDate } from './urgency'
+-import type { Task } from './types'
++import type { Task, EditTaskInput } from './types'
+ 
+ interface Props {
+   task: Task
+@@ -9,6 +10,7 @@ interface Props {
+   onAssignSelf: (id: string) => void
+   onRelease: (id: string) => void
+   onToggleDone: (id: string, done: boolean) => void
++  onEdit: (id: string, changes: EditTaskInput) => void
+   onRemove: (id: string) => void
+ }
+ 
+@@ -18,6 +20,7 @@ export default function TaskCard({
+   onAssignSelf,
+   onRelease,
+   onToggleDone,
++  onEdit,
+   onRemove,
+ }: Props) {
+   const { t } = useTranslation()
+@@ -25,6 +28,53 @@ export default function TaskCard({
+   const done = task.status === 'done'
+   const mine = task.assigneeId === currentUserId
+ 
++  const [editing, setEditing] = useState(false)
++  const [desc, setDesc] = useState(task.description)
++  const [date, setDate] = useState(task.targetDate ?? '')
++
++  function startEdit() {
++    setDesc(task.description)
++    setDate(task.targetDate ?? '')
++    setEditing(true)
++  }
++
++  function save(e: FormEvent) {
++    e.preventDefault()
++    if (!desc.trim()) return
++    onEdit(task.id, { description: desc.trim(), targetDate: date || null })
++    setEditing(false)
++  }
++
++  if (editing) {
++    return (
++      <li className="task-card" style={{ borderLeftColor: URGENCY_COLOR[urgency] }}>
++        <form className="task-edit" onSubmit={save}>
++          <input
++            className="task-add-desc"
++            aria-label={t('tasks.edit.descriptionLabel')}
++            value={desc}
++            onChange={(e) => setDesc(e.target.value)}
++          />
++          <input
++            className="task-add-date"
++            type="date"
++            aria-label={t('tasks.edit.dateLabel')}
++            value={date}
++            onChange={(e) => setDate(e.target.value)}
++          />
++          <div className="task-actions">
++            <button type="submit" disabled={!desc.trim()}>
++              {t('tasks.edit.save')}
++            </button>
++            <button type="button" onClick={() => setEditing(false)}>
++              {t('tasks.edit.cancel')}
++            </button>
++          </div>
++        </form>
++      </li>
++    )
++  }
++
+   return (
+     <li className="task-card" style={{ borderLeftColor: URGENCY_COLOR[urgency] }}>
+       <div className="task-main">
+@@ -62,6 +112,9 @@ export default function TaskCard({
+         <button type="button" onClick={() => onToggleDone(task.id, !done)}>
+           {done ? t('tasks.markOpen') : t('tasks.markDone')}
+         </button>
++        <button type="button" onClick={startEdit}>
++          {t('tasks.edit.action')}
++        </button>
+         <button
+           type="button"
+           className="task-remove"
+diff --git a/src/features/tasks/TasksDashboard.test.tsx b/src/features/tasks/TasksDashboard.test.tsx
+index b4e0a97..6fce3b8 100644
+--- a/src/features/tasks/TasksDashboard.test.tsx
++++ b/src/features/tasks/TasksDashboard.test.tsx
+@@ -51,6 +51,31 @@ describe('TasksDashboard', () => {
+       screen.getByRole('button', { name: /reopen/i }),
+     ).toBeInTheDocument()
+   })
++
++  it('edits a task in place to fix a mistake', () => {
++    const repo = new InMemoryTaskRepository()
++    render(
++      <AuthContext.Provider value={authValue()}>
++        <FamilyContext.Provider value={familyValue()}>
++          <TasksDashboard repository={repo} />
++        </FamilyContext.Provider>
++      </AuthContext.Provider>,
++    )
++
++    fireEvent.change(screen.getByLabelText(/what needs doing/i), {
++      target: { value: 'Buy milk' },
++    })
++    fireEvent.click(screen.getByRole('button', { name: /add task/i }))
++
++    fireEvent.click(screen.getByRole('button', { name: 'Edit' }))
++    fireEvent.change(screen.getByLabelText('Edit task description'), {
++      target: { value: 'Buy oat milk' },
++    })
++    fireEvent.click(screen.getByRole('button', { name: 'Save' }))
++
++    expect(screen.getByText('Buy oat milk')).toBeInTheDocument()
++    expect(screen.queryByText('Buy milk')).not.toBeInTheDocument()
++  })
+ })
+ 
+ describe('AppHome (signed in with a family)', () => {
+diff --git a/src/features/tasks/TasksDashboard.tsx b/src/features/tasks/TasksDashboard.tsx
+index 9e91c72..8cc850b 100644
+--- a/src/features/tasks/TasksDashboard.tsx
++++ b/src/features/tasks/TasksDashboard.tsx
+@@ -21,11 +21,8 @@ export default function TasksDashboard({
+   const { familyId } = useFamily()
+   const actor = { id: user?.id ?? '', name: user?.name ?? '' }
+ 
+-  const { tasks, addTask, assignToSelf, release, setDone, remove } = useTasks(
+-    repository,
+-    familyId,
+-    actor,
+-  )
++  const { tasks, addTask, editTask, assignToSelf, release, setDone, remove } =
++    useTasks(repository, familyId, actor)
+   const [desc, setDesc, clearDesc] = useDraft('tasks.desc')
+   const [date, setDate, clearDate] = useDraft('tasks.date')
+ 
+@@ -52,6 +49,7 @@ export default function TasksDashboard({
+             onAssignSelf={assignToSelf}
+             onRelease={release}
+             onToggleDone={setDone}
++            onEdit={editTask}
+             onRemove={remove}
+           />
+         ))}
+diff --git a/src/features/tasks/firestoreTaskRepository.ts b/src/features/tasks/firestoreTaskRepository.ts
+index 67eefad..bb809fa 100644
+--- a/src/features/tasks/firestoreTaskRepository.ts
++++ b/src/features/tasks/firestoreTaskRepository.ts
+@@ -11,7 +11,7 @@ import {
+   type QueryDocumentSnapshot,
+ } from 'firebase/firestore'
+ import { getDb } from '../../lib/firebase'
+-import type { Task, NewTaskInput, TaskStatus, Actor } from './types'
++import type { Task, NewTaskInput, EditTaskInput, TaskStatus, Actor } from './types'
+ import type { TaskRepository } from './repository'
+ 
+ const COLLECTION = 'tasks'
+@@ -75,6 +75,14 @@ export const firestoreTaskRepository: TaskRepository = {
+     })
+   },
+ 
++  async update(taskId, changes: EditTaskInput) {
++    await updateDoc(doc(getDb(), COLLECTION, taskId), {
++      description: changes.description,
++      targetDate: changes.targetDate,
++      updatedAt: serverTimestamp(),
++    })
++  },
++
+   async assign(taskId, user: Actor | null) {
+     await updateDoc(doc(getDb(), COLLECTION, taskId), {
+       assigneeId: user?.id ?? null,
+diff --git a/src/features/tasks/repository.test.ts b/src/features/tasks/repository.test.ts
+index dc95efe..c106d16 100644
+--- a/src/features/tasks/repository.test.ts
++++ b/src/features/tasks/repository.test.ts
+@@ -45,6 +45,20 @@ describe('InMemoryTaskRepository', () => {
+     expect(get()[0].assigneeId).toBeNull()
+   })
+ 
++  it('edits an author-entered description and target date', async () => {
++    const { repo, get } = latest()
++    await repo.add('fam', { description: 'buy milk' }, author)
++    const id = get()[0].id
++    await repo.update(id, {
++      description: 'buy oat milk',
++      targetDate: '2026-09-01',
++    })
++    expect(get()[0]).toMatchObject({
++      description: 'buy oat milk',
++      targetDate: '2026-09-01',
++    })
++  })
++
+   it('updates status and removes', async () => {
+     const { repo, get } = latest()
+     await repo.add('fam', { description: 'x' }, author)
+diff --git a/src/features/tasks/repository.ts b/src/features/tasks/repository.ts
+index d666a4f..9b7567a 100644
+--- a/src/features/tasks/repository.ts
++++ b/src/features/tasks/repository.ts
+@@ -1,4 +1,4 @@
+-import type { Task, NewTaskInput, TaskStatus, Actor } from './types'
++import type { Task, NewTaskInput, EditTaskInput, TaskStatus, Actor } from './types'
+ 
+ /**
+  * Persistence boundary for tasks. The UI depends only on this interface, so it
+@@ -10,6 +10,8 @@ export interface TaskRepository {
+   /** Subscribe to a family's tasks (newest first). Returns an unsubscribe fn. */
+   subscribe(familyId: string, onChange: (tasks: Task[]) => void): () => void
+   add(familyId: string, input: NewTaskInput, author: Actor): Promise<void>
++  /** Correct the author-entered fields (description, target date). */
++  update(taskId: string, changes: EditTaskInput): Promise<void>
+   /** Claim/unclaim: pass an actor to assign, or null to release. */
+   assign(taskId: string, user: Actor | null): Promise<void>
+   setStatus(taskId: string, status: TaskStatus): Promise<void>
+@@ -76,6 +78,17 @@ export class InMemoryTaskRepository implements TaskRepository {
+     return Promise.resolve()
+   }
+ 
++  update(taskId: string, changes: EditTaskInput): Promise<void> {
++    const task = this.tasks.get(taskId)
++    if (task) {
++      task.description = changes.description
++      task.targetDate = changes.targetDate
++      task.updatedAt = this.now()
++      this.emit()
++    }
++    return Promise.resolve()
++  }
++
+   assign(taskId: string, user: Actor | null): Promise<void> {
+     const task = this.tasks.get(taskId)
+     if (task) {
+diff --git a/src/features/tasks/tasks.css b/src/features/tasks/tasks.css
+index bae681c..de3df0d 100644
+--- a/src/features/tasks/tasks.css
++++ b/src/features/tasks/tasks.css
+@@ -208,6 +208,33 @@
+   font-size: 0.95rem !important;
+ }
+ 
++/* ---- Inline edit ---- */
++.task-edit {
++  display: flex;
++  flex-wrap: wrap;
++  gap: 6px;
++  width: 100%;
++  align-items: center;
++}
++.task-edit input {
++  flex: 1 1 140px;
++  font: inherit;
++  font-size: 0.9rem;
++  color: var(--col-text);
++  background: var(--col-surface-2);
++  border: 1px solid var(--col-border);
++  border-radius: var(--r-sm);
++  padding: 8px 10px;
++}
++.task-edit .task-add-date {
++  flex: 0 1 150px;
++}
++.task-edit input:focus-visible {
++  outline: 3px solid var(--mag-tasks);
++  outline-offset: 2px;
++  border-color: var(--mag-tasks);
++}
++
+ /* Roomier screens: back to side-by-side (text left, actions right). */
+ @media (min-width: 480px) {
+   .task-card {
+diff --git a/src/features/tasks/types.ts b/src/features/tasks/types.ts
+index 5066dda..31648d9 100644
+--- a/src/features/tasks/types.ts
++++ b/src/features/tasks/types.ts
+@@ -23,6 +23,12 @@ export interface NewTaskInput {
+   targetDate?: string | null
+ }
+ 
++/** The author-editable fields of a task (correcting a mistake). */
++export interface EditTaskInput {
++  description: string
++  targetDate: string | null
++}
++
+ export interface Actor {
+   id: string
+   name: string
+diff --git a/src/features/tasks/useTasks.ts b/src/features/tasks/useTasks.ts
+index 8858064..4e3b315 100644
+--- a/src/features/tasks/useTasks.ts
++++ b/src/features/tasks/useTasks.ts
+@@ -1,7 +1,7 @@
+ import { useCallback, useEffect, useState } from 'react'
+ import { track } from '../../lib/firebase'
+ import { notifyItemAdded } from '../notifications/notify'
+-import type { Task, NewTaskInput, Actor } from './types'
++import type { Task, NewTaskInput, EditTaskInput, Actor } from './types'
+ import type { TaskRepository } from './repository'
+ 
+ /**
+@@ -33,6 +33,14 @@ export function useTasks(
+     [repo, familyId, actor],
+   )
+ 
++  const editTask = useCallback(
++    (taskId: string, changes: EditTaskInput) => {
++      void repo.update(taskId, changes)
++      void track('task_edit')
++    },
++    [repo],
++  )
++
+   const assignToSelf = useCallback(
+     (taskId: string) => {
+       void repo.assign(taskId, actor)
+@@ -66,5 +74,5 @@ export function useTasks(
+     [repo],
+   )
+ 
+-  return { tasks, addTask, assignToSelf, release, setDone, remove }
++  return { tasks, addTask, editTask, assignToSelf, release, setDone, remove }
+ }
+diff --git a/src/i18n/locales/bn/translation.json b/src/i18n/locales/bn/translation.json
+index 419fbad..0f7db6b 100644
+--- a/src/i18n/locales/bn/translation.json
++++ b/src/i18n/locales/bn/translation.json
+@@ -101,6 +101,13 @@
+       "dateLabel": "লক্ষ্য তারিখ (ঐচ্ছিক)",
+       "submit": "কাজ যোগ করুন"
+     },
++    "edit": {
++      "action": "সম্পাদনা",
++      "save": "সংরক্ষণ",
++      "cancel": "বাতিল",
++      "descriptionLabel": "কাজের বিবরণ সম্পাদনা",
++      "dateLabel": "লক্ষ্য তারিখ সম্পাদনা"
++    },
+     "mine": "আমার কাজ",
+     "board": "বোর্ড",
+     "empty": "এখানে এখনও কিছু নেই।",
+@@ -133,6 +140,13 @@
+       "dateLabel": "তারিখ (ঐচ্ছিক)",
+       "submit": "নোটিশ দিন"
+     },
++    "edit": {
++      "action": "সম্পাদনা",
++      "save": "সংরক্ষণ",
++      "cancel": "বাতিল",
++      "textLabel": "নোটিশ সম্পাদনা",
++      "dateLabel": "নোটিশের তারিখ সম্পাদনা"
++    },
+     "empty": "বোর্ডে কোনো নোটিশ নেই।",
+     "on": "তারিখ {{date}}",
+     "important": "গুরুত্বপূর্ণ",
+@@ -152,6 +166,12 @@
+       "placeholder": "যেমন আমার নীল জলের বোতল",
+       "submit": "পোস্ট"
+     },
++    "edit": {
++      "action": "সম্পাদনা",
++      "save": "সংরক্ষণ",
++      "cancel": "বাতিল",
++      "descriptionLabel": "বিবরণ সম্পাদনা"
++    },
+     "empty": "এখন কিছু হারায়নি।",
+     "postedToday": "আজ পোস্ট করা হয়েছে",
+     "postedAgo": "{{count}} দিন আগে পোস্ট",
+@@ -169,6 +189,12 @@
+       "quantity": "পরিমাণ",
+       "submit": "যোগ"
+     },
++    "edit": {
++      "action": "সম্পাদনা",
++      "save": "সংরক্ষণ",
++      "cancel": "বাতিল",
++      "nameLabel": "খাবার সম্পাদনা"
++    },
+     "empty": "ভাঁড়ার তালিকা খালি।",
+     "freshUnknown": "টাটকা কিনা অজানা",
+     "expired": "আর টাটকা নেই",
+@@ -186,6 +212,12 @@
+       "placeholder": "পরিবারকে কিছু জিজ্ঞাসা করুন…",
+       "submit": "জিজ্ঞাসা"
+     },
++    "edit": {
++      "action": "সম্পাদনা",
++      "save": "সংরক্ষণ",
++      "cancel": "বাতিল",
++      "textLabel": "প্রশ্ন সম্পাদনা"
++    },
+     "empty": "কোনো খোলা প্রশ্ন নেই।",
+     "answerLabel": "আপনার উত্তর",
+     "answerPlaceholder": "একটি উত্তর যোগ করুন…",
+diff --git a/src/i18n/locales/en/translation.json b/src/i18n/locales/en/translation.json
+index 3cd2c4d..95374b1 100644
+--- a/src/i18n/locales/en/translation.json
++++ b/src/i18n/locales/en/translation.json
+@@ -101,6 +101,13 @@
+       "dateLabel": "Target date (optional)",
+       "submit": "Add task"
+     },
++    "edit": {
++      "action": "Edit",
++      "save": "Save",
++      "cancel": "Cancel",
++      "descriptionLabel": "Edit task description",
++      "dateLabel": "Edit target date"
++    },
+     "mine": "My tasks",
+     "board": "Board",
+     "empty": "Nothing here yet.",
+@@ -137,6 +144,13 @@
+       "dateLabel": "Date (optional)",
+       "submit": "Post notice"
+     },
++    "edit": {
++      "action": "Edit",
++      "save": "Save",
++      "cancel": "Cancel",
++      "textLabel": "Edit notice",
++      "dateLabel": "Edit notice date"
++    },
+     "empty": "No notices on the board.",
+     "on": "for {{date}}",
+     "important": "Important",
+@@ -156,6 +170,12 @@
+       "placeholder": "e.g. My blue water bottle",
+       "submit": "Post"
+     },
++    "edit": {
++      "action": "Edit",
++      "save": "Save",
++      "cancel": "Cancel",
++      "descriptionLabel": "Edit description"
++    },
+     "empty": "Nothing lost right now.",
+     "postedToday": "posted today",
+     "postedAgo": "posted {{count}}d ago",
+@@ -173,6 +193,12 @@
+       "quantity": "Qty",
+       "submit": "Add"
+     },
++    "edit": {
++      "action": "Edit",
++      "save": "Save",
++      "cancel": "Cancel",
++      "nameLabel": "Edit food item"
++    },
+     "empty": "The pantry list is empty.",
+     "freshUnknown": "freshness unknown",
+     "expired": "past its best",
+@@ -190,6 +216,12 @@
+       "placeholder": "Ask the family something…",
+       "submit": "Ask"
+     },
++    "edit": {
++      "action": "Edit",
++      "save": "Save",
++      "cancel": "Cancel",
++      "textLabel": "Edit question"
++    },
+     "empty": "No open questions.",
+     "answerLabel": "Your answer",
+     "answerPlaceholder": "Add an answer…",
+@@ -252,7 +284,8 @@
+           "Open Tasks and add one with a short description.",
+           "Optionally set a target date — the dashboard colour-codes tasks by how close that date is.",
+           "Assign a task to yourself so nobody else picks it up; your assigned tasks gather in their own section.",
+-          "Mark it done when finished — it stays in the timeline even after it leaves the board."
++          "Mark it done when finished — it stays in the timeline even after it leaves the board.",
++          "Made a mistake? Select Edit on a task to fix its description or target date in place."
+         ],
+         "tip": "No target date? The task still lives on the board — dates just drive the colour coding and calendar."
+       },
+@@ -264,7 +297,8 @@
+           "Add an optional date if the notice is about a specific day.",
+           "It stays on the noticeboard for one month, or until someone takes it down.",
+           "Mark it permanent to keep it up until it's pulled down.",
+-          "Mark it important to give it a colour highlight so it stands out."
++          "Mark it important to give it a colour highlight so it stands out.",
++          "Spotted a typo? Select Edit to correct the notice's text or date in place."
+         ],
+         "tip": "Use 'important' for things people must not miss, and 'permanent' for standing info like the Wi-Fi password."
+       },
+@@ -275,7 +309,8 @@
+           "Add what you're looking for with a short description (a photo helps).",
+           "The posting date is shown so everyone sees how long it's been missing.",
+           "Family members can help locate it.",
+-          "Take it down once it's found — it stays in the timeline either way."
++          "Take it down once it's found — it stays in the timeline either way.",
++          "Got the description wrong? Select Edit to fix it in place."
+         ],
+         "tip": "Old, unresolved posts are easy to spot by their posting date."
+       },
+@@ -286,7 +321,8 @@
+           "Add a food item with when it was made and how long it's likely to stay good.",
+           "Set an approximate quantity so everyone understands how much there is.",
+           "Anyone can increase or reduce the amount as it's used.",
+-          "Mark it consumed to remove it from the list — it's kept in the timeline."
++          "Mark it consumed to remove it from the list — it's kept in the timeline.",
++          "Entered something wrong? Select Edit to fix the name, made-on date, or shelf life."
+         ],
+         "tip": "Freshness comes from when it was made plus how long it keeps — check before you cook."
+       },
+@@ -297,7 +333,8 @@
+           "Post a question — for example, 'Pizza or pasta on Friday?'.",
+           "Family members chime in with answers.",
+           "Keep the discussion in one place instead of scattered messages.",
+-          "Close it once it's answered; it stays in the timeline for later."
++          "Close it once it's answered; it stays in the timeline for later.",
++          "Worded it awkwardly? Select Edit to correct the question in place."
+         ],
+         "tip": "Great for quick decisions without a dozen back-and-forth texts."
+       },
+-- 
+2.50.1.windows.1
+

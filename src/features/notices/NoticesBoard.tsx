@@ -21,8 +21,15 @@ export default function NoticesBoard({
   const { familyId } = useFamily()
   const actor = { id: user?.id ?? '', name: user?.name ?? '' }
 
-  const { notices, addNotice, setImportant, setPermanent, takeDown, restore } =
-    useNotices(repository, familyId, actor)
+  const {
+    notices,
+    addNotice,
+    editNotice,
+    setImportant,
+    setPermanent,
+    takeDown,
+    restore,
+  } = useNotices(repository, familyId, actor)
   const [text, setText, clearText] = useDraft('notices.text')
   const [date, setDate, clearDate] = useDraft('notices.date')
   const [important, setImp] = useState(false)
@@ -104,6 +111,7 @@ export default function NoticesBoard({
               now={now}
               onToggleImportant={setImportant}
               onTogglePermanent={setPermanent}
+              onEdit={editNotice}
               onTakeDown={takeDown}
             />
           ))}

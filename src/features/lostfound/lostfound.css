@@ -112,3 +112,16 @@
   outline: 3px solid var(--mag-lostfound);
   outline-offset: 2px;
 }
+.lost-actions button:disabled {
+  opacity: 0.5;
+  cursor: default;
+}
+
+/* ---- Inline edit ---- */
+.lost-edit {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  width: 100%;
+  align-items: center;
+}

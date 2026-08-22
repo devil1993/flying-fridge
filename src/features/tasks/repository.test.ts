@@ -45,6 +45,20 @@ describe('InMemoryTaskRepository', () => {
     expect(get()[0].assigneeId).toBeNull()
   })
 
+  it('edits an author-entered description and target date', async () => {
+    const { repo, get } = latest()
+    await repo.add('fam', { description: 'buy milk' }, author)
+    const id = get()[0].id
+    await repo.update(id, {
+      description: 'buy oat milk',
+      targetDate: '2026-09-01',
+    })
+    expect(get()[0]).toMatchObject({
+      description: 'buy oat milk',
+      targetDate: '2026-09-01',
+    })
+  })
+
   it('updates status and removes', async () => {
     const { repo, get } = latest()
     await repo.add('fam', { description: 'x' }, author)
